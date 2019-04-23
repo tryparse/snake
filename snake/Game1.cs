@@ -65,7 +65,7 @@ namespace snake
 
             stepTime = 1000;
 
-            _snake = new Snake(_field.Cells[0, 0].Center);
+            _snake = new Snake(_field.Cells[0, 0]);
             _isPlaying = false;
 
             base.Initialize();

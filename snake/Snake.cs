@@ -10,21 +10,27 @@ namespace snake
 {
     public class Snake
     {
-        private Vector2 _headPosition;
+        private readonly Field _field;
+        private Cell _headCell;
         private IEnumerable<Vector2> _tail;
         private int _length;
 
-        public Snake(Vector2 headPosition, SnakeDirection direction = SnakeDirection.Right)
+        private int stepTime;
+        private int elapsedTime;
+
+        public Snake(Field field, Cell headCell, SnakeDirection direction = SnakeDirection.Right)
         {
-            _headPosition = headPosition;
+            _field = field;
+            _headCell = headCell;
             _tail = new HashSet<Vector2>();
             _length = 1;
             CurrentDirection = direction;
+            stepTime = 1000;
         }
 
         public SnakeDirection CurrentDirection { get; set; }
 
-        public Vector2 Position => _headPosition;
+        public Vector2 Position => _headCell.Center;
 
         public void AddTail()
         {
@@ -33,7 +39,11 @@ namespace snake
 
         public void Update(GameTime gameTime)
         {
-            //throw new NotImplementedException();
+            elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+            if (elapsedTime >= stepTime)
+            {
+                elapsedTime = elapsedTime - stepTime;
+            }
         }
     }
 }
