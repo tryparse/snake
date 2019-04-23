@@ -46,7 +46,7 @@ namespace snake
                     {
                         _spriteBatch.Draw(
                             texture: grassTexture.Texture,
-                            destinationRectangle: cell.Bounds.ToRectangle(),
+                            destinationRectangle: cell.BoundsF.ToRectangle(),
                             sourceRectangle: grassTexture.Bounds,
                             color: Color.White,
                             rotation: 0,
@@ -56,7 +56,7 @@ namespace snake
 
                         _spriteBatch.Draw(
                             texture: _treeTexture.Texture,
-                            destinationRectangle: cell.Bounds.ToRectangle(),
+                            destinationRectangle: cell.BoundsF.ToRectangle(),
                             sourceRectangle: _treeTexture.Bounds,
                             color: Color.White,
                             rotation: 0,
@@ -68,7 +68,7 @@ namespace snake
                     {
                         _spriteBatch.Draw(
                             texture: grassTexture.Texture,
-                            destinationRectangle: cell.Bounds.ToRectangle(),
+                            destinationRectangle: cell.BoundsF.ToRectangle(),
                             sourceRectangle: grassTexture.Bounds,
                             color: Color.White,
                             rotation: 0,

@@ -30,7 +30,7 @@ namespace snake
 
         public SnakeDirection CurrentDirection { get; set; }
 
-        public Vector2 Position => _headCell.Center;
+        public Vector2 Position => _headCell.Bounds.Center.ToVector2();
 
         public void AddTail()
         {
@@ -43,6 +43,11 @@ namespace snake
             if (elapsedTime >= stepTime)
             {
                 elapsedTime = elapsedTime - stepTime;
+
+                var stepX = _headCell.Indices.X >= _field.Width - 1 ? 0 : _headCell.Indices.X + 1;
+                var stepY = _headCell.Indices.Y;
+
+                _headCell = _field.Cells[stepX, stepY];
             }
         }
     }

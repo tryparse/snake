@@ -39,9 +39,11 @@ namespace snake.Renderers
 
         public void Draw(GameTime gameTime)
         {
-            
+            var tileSize = Vector2.Multiply(new Vector2(TileMetrics.Width, TileMetrics.Height), .5f);
+
             var destinationRectangle = new RectangleF(
-                Vector2.Multiply(_snake.Position, 0f).ToPoint(),
+                //new Point((int)_snake.Position.X - TileMetrics.Width / 2, (int)_snake.Position.Y - TileMetrics.Height / 2),
+                Vector2.Subtract(_snake.Position, tileSize).ToPoint(),
                 new Point(TileMetrics.Width, TileMetrics.Height));
             var origin = Vector2.Zero;
 

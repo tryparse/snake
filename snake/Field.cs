@@ -10,17 +10,15 @@ namespace snake
 {
 	public class Field
 	{
-		public int Width { get; private set; }
-		public int Height { get; private set; }
-
         public Cell[,] Cells { get; }
 
         public Field(int width, int height, Cell[,] cells)
 		{
-			Width = width;
-			Height = height;
             Cells = cells;
         }
+
+        public int Width => Cells.GetLength(0);
+        public int Height => Cells.GetLength(1);
 
         //public Cell GetNeighbour(Cell forCell, Common.Direction direction)
         //{
@@ -37,5 +35,5 @@ namespace snake
         //            }
         //    }
         //}
-	}
+    }
 }

@@ -24,6 +24,7 @@ namespace snake
 
                     cells[x, y] = new Cell(
                         position: new Vector2(x * TileMetrics.Width, y * TileMetrics.Height),
+                        indices: new Point(x, y),
                         width: 50,
                         height: 50,
                         cellType: cellType );

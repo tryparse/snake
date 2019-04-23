@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
+using snake.GameComponents;
 using snake.Renderers;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +66,7 @@ namespace snake
 
             stepTime = 1000;
 
-            _snake = new Snake(_field.Cells[0, 0]);
+            _snake = new Snake(_field, _field.Cells[0, 0]);
             _isPlaying = false;
 
             base.Initialize();
@@ -101,6 +102,12 @@ namespace snake
 
             _fieldRenderer = new FieldRenderer(_field, atlas, font, spriteBatch);
             _snakeRenderer = new SnakeRenderer(_snake, atlas, spriteBatch);
+
+            var fps = new FPSCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), spriteBatch, font, Color.Red)
+            {
+                DrawOrder = 100
+            };
+            Components.Add(fps);
         }
 
         /// <summary>
@@ -147,10 +154,10 @@ namespace snake
 
             _fieldRenderer.Draw(gameTime);
             _snakeRenderer.Draw(gameTime);
-            //spriteBatch.Draw(textureVignette, GraphicsDevice.Viewport.Bounds, Color.White);
-            spriteBatch.End();
 
             base.Draw(gameTime);
+
+            spriteBatch.End();
         }
     }
 }
