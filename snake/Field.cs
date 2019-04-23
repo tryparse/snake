@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using snake.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,20 +8,34 @@ using System.Threading.Tasks;
 
 namespace snake
 {
-	class Field : DrawableGameComponent
+	public class Field
 	{
-		public int Width { get; set; }
-		public int Height { get; set; }
+		public int Width { get; private set; }
+		public int Height { get; private set; }
 
-		public Field(Game game, int width, int height) : base(game)
+        public Cell[,] Cells { get; }
+
+        public Field(int width, int height, Cell[,] cells)
 		{
 			Width = width;
 			Height = height;
-		}
+            Cells = cells;
+        }
 
-		public override void Draw(GameTime gameTime)
-		{
-			base.Draw(gameTime);
-		}
+        //public Cell GetNeighbour(Cell forCell, Common.Direction direction)
+        //{
+        //    var fieldWidth = Cells.GetLength(0);
+        //    var fieldHeight = Cells.GetLength(1);
+
+        //    switch (direction)
+        //    {
+        //        case Direction.Down:
+        //            {
+        //                Cells.GetL
+
+        //                break;
+        //            }
+        //    }
+        //}
 	}
 }
