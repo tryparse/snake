@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace snake
+namespace snake.GameEntities
 {
     public class FieldFactory : IFieldFactory
     {

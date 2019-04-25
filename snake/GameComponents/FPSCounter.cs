@@ -24,7 +24,7 @@ namespace snake.GameComponents
             this.spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
             this.font = font;
 
-            fps = new FramesPerSecondCounter();
+            this.fps = new FramesPerSecondCounter();
         }
 
         public override void Update(GameTime gameTime)

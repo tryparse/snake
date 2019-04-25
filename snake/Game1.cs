@@ -8,6 +8,7 @@ using snake.Renderers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using snake.GameEntities;
 
 namespace snake
 {
@@ -20,7 +21,7 @@ namespace snake
         private SpriteBatch spriteBatch;
         private SpriteFont font;
 
-        IFieldFactory fieldFactory;
+        private IFieldFactory fieldFactory;
 
         private Field _field;
         private Snake _snake;
@@ -28,22 +29,16 @@ namespace snake
         private FieldRenderer _fieldRenderer;
         private SnakeRenderer _snakeRenderer;
 
-        private int stepTime;
-        private int elapsedTime;
-
-        private bool _isPlaying;
-
-        Texture2D texture;
-        Texture2D textureVignette;
-
-        TextureAtlas atlas;
+        private Texture2D texture;
+        private Texture2D textureVignette;
+        private TextureAtlas atlas;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this)
             {
 
-                PreferredBackBufferHeight = 512,
+                PreferredBackBufferHeight = 500,
                 PreferredBackBufferWidth = 1024,
                 GraphicsProfile = GraphicsProfile.HiDef
             };
@@ -63,11 +58,7 @@ namespace snake
             fieldFactory = new FieldFactory();
 
             _field = fieldFactory.GetRandomField(10, 10);
-
-            stepTime = 1000;
-
             _snake = new Snake(_field, _field.Cells[0, 0]);
-            _isPlaying = false;
 
             base.Initialize();
         }
@@ -129,12 +120,6 @@ namespace snake
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 Exit();
-            }
-
-            elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
-            if (elapsedTime >= stepTime)
-            {
-                elapsedTime = elapsedTime - stepTime;
             }
 
             _snake.Update(gameTime);

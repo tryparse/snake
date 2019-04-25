@@ -6,26 +6,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace snake
+namespace snake.GameEntities
 {
     public class Snake
     {
         private readonly Field _field;
         private Cell _headCell;
         private IEnumerable<Vector2> _tail;
-        private int _length;
 
         private int stepTime;
         private int elapsedTime;
 
         public Snake(Field field, Cell headCell, SnakeDirection direction = SnakeDirection.Right)
         {
-            _field = field;
-            _headCell = headCell;
-            _tail = new HashSet<Vector2>();
-            _length = 1;
-            CurrentDirection = direction;
-            stepTime = 1000;
+            this._field = field;
+            this._headCell = headCell;
+            this._tail = new HashSet<Vector2>();
+            this.CurrentDirection = direction;
+            this.stepTime = 1000;
         }
 
         public SnakeDirection CurrentDirection { get; set; }

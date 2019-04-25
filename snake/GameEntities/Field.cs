@@ -6,19 +6,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace snake
+namespace snake.GameEntities
 {
 	public class Field
 	{
-        public Cell[,] Cells { get; }
+        private readonly Cell[,] _cells;
 
         public Field(int width, int height, Cell[,] cells)
 		{
-            Cells = cells;
+            this._cells = cells;
         }
 
-        public int Width => Cells.GetLength(0);
-        public int Height => Cells.GetLength(1);
+        public Cell[,] Cells => _cells;
+        public int Width => _cells.GetLength(0);
+        public int Height => _cells.GetLength(1);
 
         //public Cell GetNeighbour(Cell forCell, Common.Direction direction)
         //{

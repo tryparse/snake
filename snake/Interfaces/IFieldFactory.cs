@@ -1,4 +1,6 @@
-﻿namespace snake
+﻿using snake.GameEntities;
+
+namespace snake
 {
     public interface IFieldFactory
     {

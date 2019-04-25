@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
 using snake.Common;
+using snake.GameEntities;
 
 namespace snake.Renderers
 {
@@ -26,9 +27,9 @@ namespace snake.Renderers
             this._textureRegions = textureRegions ?? throw new ArgumentNullException(nameof(textureRegions));
             this._spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
 
-            _texture = _textureRegions.GetRegion("Head");
+            this._texture = _textureRegions.GetRegion("Head");
 
-            _rotations = new Dictionary<SnakeDirection, float>
+            this._rotations = new Dictionary<SnakeDirection, float>
             {
                 { SnakeDirection.Up, MathHelper.ToRadians(-90) },
                 { SnakeDirection.Right, MathHelper.ToRadians(0) },

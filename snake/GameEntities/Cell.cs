@@ -1,19 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 
-namespace snake
+namespace snake.GameEntities
 {
     public class Cell
     {
         public Cell(Vector2 position, Point indices, int width, int height, CellType cellType)
         {
-            Position = position;
-            Indices = indices;
-            Width = width;
-            Height = height;
-            CellType = cellType;
+            this.Position = position;
+            this.Indices = indices;
+            this.Width = width;
+            this.Height = height;
+            this.CellType = cellType;
 
-            BoundsF = new RectangleF(Position.X, Position.Y, Width, Height);
+            this.BoundsF = new RectangleF(Position.X, Position.Y, Width, Height);
         }
 
         /// <summary>

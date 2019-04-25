@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
+using snake.GameEntities;
 
 namespace snake
 {
@@ -25,8 +26,7 @@ namespace snake
             this._textureRegions = textureRegions;
             this._spriteFont = spriteFont;
             this._spriteBatch = spriteBatch;
-
-            _treeTexture = _textureRegions.GetRegion("Tree");
+            this._treeTexture = _textureRegions.GetRegion("Tree");
         }
 
         public void Draw(GameTime gameTime)
