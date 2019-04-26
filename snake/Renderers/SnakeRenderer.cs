@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
+using NLog;
 using snake.Common;
 using snake.GameEntities;
 
@@ -14,6 +15,7 @@ namespace snake.Renderers
 {
     public class SnakeRenderer : IRenderer2D
     {
+        private readonly ILogger _logger;
         private readonly Snake _snake;
         private readonly TextureAtlas _textureRegions;
         private readonly SpriteBatch _spriteBatch;
@@ -21,8 +23,9 @@ namespace snake.Renderers
         private Dictionary<SnakeDirection, float> _rotations;
         private TextureRegion2D _texture;
 
-        public SnakeRenderer(Snake snake, TextureAtlas textureRegions, SpriteBatch spriteBatch)
+        public SnakeRenderer(ILogger logger, Snake snake, TextureAtlas textureRegions, SpriteBatch spriteBatch)
         {
+            this._logger = logger;
             this._snake = snake ?? throw new ArgumentNullException(nameof(snake));
             this._textureRegions = textureRegions ?? throw new ArgumentNullException(nameof(textureRegions));
             this._spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
@@ -40,13 +43,13 @@ namespace snake.Renderers
 
         public void Draw(GameTime gameTime)
         {
-            var tileSize = Vector2.Multiply(new Vector2(TileMetrics.Width, TileMetrics.Height), .5f);
-
             var destinationRectangle = new RectangleF(
-                //new Point((int)_snake.Position.X - TileMetrics.Width / 2, (int)_snake.Position.Y - TileMetrics.Height / 2),
-                Vector2.Subtract(_snake.Position, tileSize).ToPoint(),
+                new Point((int)_snake.Position.X - TileMetrics.Width / 2, (int)_snake.Position.Y - TileMetrics.Height / 2),
                 new Point(TileMetrics.Width, TileMetrics.Height));
-            var origin = Vector2.Zero;
+            var origin = new Vector2(TileMetrics.Width, TileMetrics.Height);
+
+            _logger.Debug($"SnakeRenderer.Draw()");
+            _logger.Debug($"{nameof(destinationRectangle)}={destinationRectangle}");
 
             _spriteBatch.Draw(
                 texture:_texture.Texture,

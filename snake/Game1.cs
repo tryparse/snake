@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using snake.GameEntities;
+using NLog;
 
 namespace snake
 {
@@ -21,10 +22,13 @@ namespace snake
         private SpriteBatch spriteBatch;
         private SpriteFont font;
 
+        private InputHandler _inputHandler;
+
         private IFieldFactory fieldFactory;
 
         private Field _field;
         private Snake _snake;
+        private SnakeControls _controls;
 
         private FieldRenderer _fieldRenderer;
         private SnakeRenderer _snakeRenderer;
@@ -33,8 +37,12 @@ namespace snake
         private Texture2D textureVignette;
         private TextureAtlas atlas;
 
+        private ILogger _logger;
+
         public Game1()
         {
+            _logger = LogManager.GetLogger("f");
+
             graphics = new GraphicsDeviceManager(this)
             {
 
@@ -58,7 +66,11 @@ namespace snake
             fieldFactory = new FieldFactory();
 
             _field = fieldFactory.GetRandomField(10, 10);
-            _snake = new Snake(_field, _field.Cells[0, 0]);
+            _controls = new SnakeControls(Keys.Up, Keys.Down, Keys.L, Keys.Right);
+            _snake = new Snake(_logger, _field, _field.Cells[0, 0], _controls);
+
+            _inputHandler = new InputHandler(this);
+            Components.Add(_inputHandler);
 
             base.Initialize();
         }
@@ -140,6 +152,7 @@ namespace snake
             _fieldRenderer.Draw(gameTime);
             _snakeRenderer.Draw(gameTime);
 
+            spriteBatch.DrawString(font, string.Join(";", _inputHandler.CurrentState.GetPressedKeys()), new Vector2(500, 0), Color.Blue);
             base.Draw(gameTime);
 
             spriteBatch.End();

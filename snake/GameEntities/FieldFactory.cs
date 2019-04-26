@@ -20,7 +20,7 @@ namespace snake.GameEntities
                 for (int y = 0; y < height; y++)
                 {
                     var fieldTypeDice = random.NextDouble();
-                    var cellType = fieldTypeDice <= .5d ? CellType.Grass : CellType.Tree;
+                    var cellType = fieldTypeDice <= .8d ? CellType.Grass : CellType.Tree;
 
                     cells[x, y] = new Cell(
                         position: new Vector2(x * TileMetrics.Width, y * TileMetrics.Height),
