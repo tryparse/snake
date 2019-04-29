@@ -9,12 +9,13 @@ namespace snake.GameEntities
 {
     public class SnakeControls
     {
-        public SnakeControls(Keys up, Keys down, Keys left, Keys right)
+        public SnakeControls(Keys up, Keys down, Keys left, Keys right, Keys pause)
         {
             Up = up;
             Down = down;
             Left = left;
             Right = right;
+            Pause = pause;
         }
 
         public Keys Up { get; }
@@ -24,5 +25,7 @@ namespace snake.GameEntities
         public Keys Left { get; }
 
         public Keys Right { get; }
+
+        public Keys Pause { get; }
     }
 }

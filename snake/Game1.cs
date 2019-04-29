@@ -10,6 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using snake.GameEntities;
 using NLog;
+using snake.Common;
 
 namespace snake
 {
@@ -66,7 +67,7 @@ namespace snake
             fieldFactory = new FieldFactory();
 
             _field = fieldFactory.GetRandomField(10, 10);
-            _controls = new SnakeControls(Keys.Up, Keys.Down, Keys.L, Keys.Right);
+            _controls = new SnakeControls(Keys.Up, Keys.Down, Keys.L, Keys.Right, Keys.P);
             _snake = new Snake(_logger, _field, _field.Cells[0, 0], _controls);
 
             _inputHandler = new InputHandler(this);
@@ -104,7 +105,7 @@ namespace snake
             atlas.CreateRegion("Tree", n * 4, n * 1, n, n);
 
             _fieldRenderer = new FieldRenderer(_field, atlas, font, spriteBatch);
-            _snakeRenderer = new SnakeRenderer(_snake, atlas, spriteBatch);
+            _snakeRenderer = new SnakeRenderer(_logger, _snake, atlas, spriteBatch);
 
             var fps = new FPSCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), spriteBatch, font, Color.Red)
             {
@@ -149,11 +150,23 @@ namespace snake
 
             spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack);
 
-            _fieldRenderer.Draw(gameTime);
+            //_fieldRenderer.Draw(gameTime);
             _snakeRenderer.Draw(gameTime);
 
             spriteBatch.DrawString(font, string.Join(";", _inputHandler.CurrentState.GetPressedKeys()), new Vector2(500, 0), Color.Blue);
             base.Draw(gameTime);
+
+            for (int i = 0; i < 500; i += TileMetrics.Width / 2)
+            {
+                spriteBatch.DrawLine(new Vector2(0, i), new Vector2(500, i), Color.Black, 1);
+            }
+
+            for (int i = 0; i < 500; i += TileMetrics.Height / 2)
+            {
+                spriteBatch.DrawLine(new Vector2(i, 0), new Vector2(i, 500), Color.Black, 1);
+            }
+
+            spriteBatch.DrawLine(Vector2.Zero, _field.Cells[0, 0].Bounds.Center.ToVector2(), Color.Purple, 2);
 
             spriteBatch.End();
         }

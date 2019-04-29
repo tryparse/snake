@@ -21,7 +21,7 @@ namespace snake.Renderers
         private readonly SpriteBatch _spriteBatch;
 
         private Dictionary<SnakeDirection, float> _rotations;
-        private TextureRegion2D _texture;
+        private TextureRegion2D _textureHead;
 
         public SnakeRenderer(ILogger logger, Snake snake, TextureAtlas textureRegions, SpriteBatch spriteBatch)
         {
@@ -30,7 +30,7 @@ namespace snake.Renderers
             this._textureRegions = textureRegions ?? throw new ArgumentNullException(nameof(textureRegions));
             this._spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
 
-            this._texture = _textureRegions.GetRegion("Head");
+            this._textureHead = _textureRegions.GetRegion("Head");
 
             this._rotations = new Dictionary<SnakeDirection, float>
             {
@@ -43,24 +43,25 @@ namespace snake.Renderers
 
         public void Draw(GameTime gameTime)
         {
-            var destinationRectangle = new RectangleF(
-                new Point((int)_snake.Position.X - TileMetrics.Width / 2, (int)_snake.Position.Y - TileMetrics.Height / 2),
-                new Point(TileMetrics.Width, TileMetrics.Height));
-            var origin = new Vector2(TileMetrics.Width, TileMetrics.Height);
+            var destinationRectangle = _snake.Bounds;
+            var origin = new Vector2(_textureHead.Bounds.Width / 2, _textureHead.Bounds.Height / 2);
 
             _logger.Debug($"SnakeRenderer.Draw()");
             _logger.Debug($"{nameof(destinationRectangle)}={destinationRectangle}");
+            _logger.Debug($"{nameof(origin)}={origin}");
 
             _spriteBatch.Draw(
-                texture:_texture.Texture,
-                destinationRectangle: destinationRectangle.ToRectangle(),
-                sourceRectangle: _texture.Bounds,
+                texture: _textureHead.Texture,
+                destinationRectangle: destinationRectangle,
+                sourceRectangle: _textureHead.Bounds,
                 color: Color.White,
-                rotation: _rotations[_snake.CurrentDirection],
+                rotation: 0,
                 origin: origin,
                 effects: SpriteEffects.None,
                 layerDepth: .1f
             );
+
+            _spriteBatch.DrawRectangle(destinationRectangle, Color.Red);
         }
     }
 }
