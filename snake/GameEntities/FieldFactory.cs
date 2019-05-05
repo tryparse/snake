@@ -25,8 +25,8 @@ namespace snake.GameEntities
                     cells[x, y] = new Cell(
                         position: new Vector2(x * TileMetrics.Width, y * TileMetrics.Height),
                         indices: new Point(x, y),
-                        width: 50,
-                        height: 50,
+                        width: TileMetrics.Width,
+                        height: TileMetrics.Height,
                         cellType: cellType );
                 }
             }

@@ -1,12 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
-using NLog;
 using snake.Common;
+using snake.Logging;
 using snake.GameComponents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using snake.Configuration;
 
 namespace snake.GameEntities
 {
@@ -36,7 +37,7 @@ namespace snake.GameEntities
             this._nextDirection = direction;
             this._controls = controls;
             this.stepTime = 1000;
-            _isEnabled = true;
+            _isEnabled = false;
         }
 
         public Vector2 Position => _headCell.Bounds.Center.ToVector2();
@@ -85,39 +86,39 @@ namespace snake.GameEntities
 
                 elapsedTime = elapsedTime - stepTime;
 
-                //if (_isEnabled)
-                //{
-                //    var step = _headCell.Indices;
+                if (_isEnabled)
+                {
+                    var step = _headCell.Indices;
 
-                //    switch (_nextDirection)
-                //    {
-                //        case SnakeDirection.Up:
-                //            {
-                //                step.Y--;
-                //                break;
-                //            }
-                //        case SnakeDirection.Down:
-                //            {
-                //                step.Y++;
-                //                break;
-                //            }
-                //        case SnakeDirection.Right:
-                //            {
-                //                step.X++;
-                //                break;
-                //            }
-                //        case SnakeDirection.Left:
-                //            {
-                //                step.X--;
-                //                break;
-                //            }
-                //    }
+                    switch (_nextDirection)
+                    {
+                        case SnakeDirection.Up:
+                            {
+                                step.Y--;
+                                break;
+                            }
+                        case SnakeDirection.Down:
+                            {
+                                step.Y++;
+                                break;
+                            }
+                        case SnakeDirection.Right:
+                            {
+                                step.X++;
+                                break;
+                            }
+                        case SnakeDirection.Left:
+                            {
+                                step.X--;
+                                break;
+                            }
+                    }
 
-                //    step.X = step.X > _field.Width - 1 ? 0 : step.X < 0 ? _field.Width - 1 : step.X;
-                //    step.Y = step.Y > _field.Height - 1 ? 0 : step.Y < 0 ? _field.Height - 1 : step.Y;
+                    step.X = step.X > _field.LengthX - 1 ? 0 : step.X < 0 ? _field.LengthX - 1 : step.X;
+                    step.Y = step.Y > _field.LengthY - 1 ? 0 : step.Y < 0 ? _field.LengthY - 1 : step.Y;
 
-                //    _headCell = _field.Cells[step.X, step.Y];
-                //}
+                    _headCell = _field.Cells[step.X, step.Y];
+                }
 
                 _currentDirection = _nextDirection;
             }

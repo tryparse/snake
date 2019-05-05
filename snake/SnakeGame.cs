@@ -9,15 +9,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using snake.GameEntities;
-using NLog;
 using snake.Common;
+using snake.Configuration;
+using System.Configuration;
+using snake.Logging;
 
 namespace snake
 {
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class SnakeGame : Game
     {
         private readonly GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
@@ -31,19 +33,19 @@ namespace snake
         private Snake _snake;
         private SnakeControls _controls;
 
-        private FieldRenderer _fieldRenderer;
-        private SnakeRenderer _snakeRenderer;
+        private IRenderer2D _fieldRenderer;
+        private IRenderer2D _snakeRenderer;
 
         private Texture2D texture;
         private Texture2D textureVignette;
         private TextureAtlas atlas;
 
+        private GameConfiguration _configuration;
+        private RenderConfiguration _renderConfiguration;
         private ILogger _logger;
 
-        public Game1()
+        public SnakeGame()
         {
-            _logger = LogManager.GetLogger("f");
-
             graphics = new GraphicsDeviceManager(this)
             {
 
@@ -64,16 +66,33 @@ namespace snake
         /// </summary>
         protected override void Initialize()
         {
+            Configuration();
+
+            _logger = new NLogFileLogger(_configuration);
+
             fieldFactory = new FieldFactory();
 
             _field = fieldFactory.GetRandomField(10, 10);
-            _controls = new SnakeControls(Keys.Up, Keys.Down, Keys.L, Keys.Right, Keys.P);
-            _snake = new Snake(_logger, _field, _field.Cells[0, 0], _controls);
+            _controls = new SnakeControls(Keys.Up, Keys.Down, Keys.Left, Keys.Right, Keys.P);
+            _snake = new Snake(_logger, _field, _field.Cells[5, 5], _controls);
 
             _inputHandler = new InputHandler(this);
             Components.Add(_inputHandler);
 
             base.Initialize();
+        }
+
+        private void Configuration()
+        {
+            _configuration = new GameConfiguration();
+
+            bool.TryParse(ConfigurationManager.AppSettings["IsLoggingEnabled"], out var isLoggingEnabled);
+
+            _configuration.IsLoggingEnabled = isLoggingEnabled;
+
+            bool.TryParse(ConfigurationManager.AppSettings["IsDebugRenderingEnabled"], out var isDebugRenderingEnabled);
+
+            _configuration.IsDebugRenderingEnabled = isDebugRenderingEnabled;
         }
 
         /// <summary>
@@ -104,14 +123,23 @@ namespace snake
             atlas.CreateRegion("BottomRight", n * 3, n * 1, n, n);
             atlas.CreateRegion("Tree", n * 4, n * 1, n, n);
 
-            _fieldRenderer = new FieldRenderer(_field, atlas, font, spriteBatch);
-            _snakeRenderer = new SnakeRenderer(_logger, _snake, atlas, spriteBatch);
+            _renderConfiguration = new RenderConfiguration
+            {
+                IsDebugRenderingEnabled = _configuration.IsDebugRenderingEnabled,
+                IsRenderingEnabled = true
+            };
+
+            _fieldRenderer = new FieldRendererComponent(_renderConfiguration, _field, atlas, font, spriteBatch, 1);
+            _snakeRenderer = new SnakeRendererComponent(_renderConfiguration, _logger, _snake, atlas, spriteBatch, 2);
 
             var fps = new FPSCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), spriteBatch, font, Color.Red)
             {
                 DrawOrder = 100
             };
+        
             Components.Add(fps);
+            Components.Add(_snakeRenderer);
+            Components.Add(_fieldRenderer);
         }
 
         /// <summary>
@@ -148,25 +176,11 @@ namespace snake
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack);
-
-            //_fieldRenderer.Draw(gameTime);
-            _snakeRenderer.Draw(gameTime);
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.Deferred);
 
             spriteBatch.DrawString(font, string.Join(";", _inputHandler.CurrentState.GetPressedKeys()), new Vector2(500, 0), Color.Blue);
+
             base.Draw(gameTime);
-
-            for (int i = 0; i < 500; i += TileMetrics.Width / 2)
-            {
-                spriteBatch.DrawLine(new Vector2(0, i), new Vector2(500, i), Color.Black, 1);
-            }
-
-            for (int i = 0; i < 500; i += TileMetrics.Height / 2)
-            {
-                spriteBatch.DrawLine(new Vector2(i, 0), new Vector2(i, 500), Color.Black, 1);
-            }
-
-            spriteBatch.DrawLine(Vector2.Zero, _field.Cells[0, 0].Bounds.Center.ToVector2(), Color.Purple, 2);
 
             spriteBatch.End();
         }

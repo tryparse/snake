@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace snake
 {
-    public interface IRenderer2D
+    public interface IRenderer2D : IGameComponent, IDrawable
     {
-        void Draw(GameTime gameTime);
     }
 }
