@@ -7,15 +7,14 @@ using System.Threading.Tasks;
 
 namespace snake.GameEntities
 {
-    public class SnakeControls
+    public class SnakeKeys
     {
-        public SnakeControls(Keys up, Keys down, Keys left, Keys right, Keys pause)
+        public SnakeKeys(Keys up, Keys down, Keys left, Keys right)
         {
             Up = up;
             Down = down;
             Left = left;
             Right = right;
-            Pause = pause;
         }
 
         public Keys Up { get; }
@@ -25,7 +24,5 @@ namespace snake.GameEntities
         public Keys Left { get; }
 
         public Keys Right { get; }
-
-        public Keys Pause { get; }
     }
 }

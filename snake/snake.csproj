@@ -42,6 +42,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Common\BackToFrontLayers.cs" />
     <Compile Include="GameComponents\InputHandler.cs" />
     <Compile Include="Configuration\GameConfiguration.cs" />
     <Compile Include="GameEntities\Cell.cs" />
@@ -50,10 +51,10 @@
     <Compile Include="GameEntities\Field.cs" />
     <Compile Include="GameEntities\FieldFactory.cs" />
     <Compile Include="GameComponents\FPSCounter.cs" />
-    <Compile Include="GameEntities\SnakeControls.cs" />
+    <Compile Include="GameEntities\GameKeys.cs" />
+    <Compile Include="GameEntities\SnakeKeys.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\NLogFileLogger.cs" />
-    <Compile Include="Renderers\FieldRenderer.cs" />
     <Compile Include="Renderers\FieldRendererComponent.cs" />
     <Compile Include="SnakeGame.cs" />
     <Compile Include="Interfaces\IFieldFactory.cs" />

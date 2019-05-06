@@ -1,33 +1,34 @@
 ﻿using Microsoft.Xna.Framework;
 using snake.Common;
-using snake.Logging;
+using snake.Configuration;
 using snake.GameComponents;
+using snake.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using snake.Configuration;
 
 namespace snake.GameEntities
 {
-    public class Snake
+    public class Snake : IGameComponent, IUpdateable
     {
         private readonly ILogger _logger;
         private readonly Field _field;
         private Cell _headCell;
-        private readonly SnakeControls _controls;
-        private IEnumerable<Vector2> _tail;
+        private readonly SnakeKeys _controls;
+        private readonly IEnumerable<Vector2> _tail;
 
         private SnakeDirection _currentDirection;
         private SnakeDirection _nextDirection;
 
-        private int stepTime;
+        private readonly int stepTime;
         private int elapsedTime;
 
-        private bool _isEnabled;
+        public event EventHandler<EventArgs> EnabledChanged;
+        public event EventHandler<EventArgs> UpdateOrderChanged;
 
-        public Snake(ILogger logger, Field field, Cell headCell, SnakeControls controls, SnakeDirection direction = SnakeDirection.Right)
+        public Snake(ILogger logger, Field field, Cell headCell, SnakeKeys controls, SnakeDirection direction = SnakeDirection.Right)
         {
             this._logger = logger;
             this._field = field;
@@ -37,7 +38,6 @@ namespace snake.GameEntities
             this._nextDirection = direction;
             this._controls = controls;
             this.stepTime = 1000;
-            _isEnabled = false;
         }
 
         public Vector2 Position => _headCell.Bounds.Center.ToVector2();
@@ -46,6 +46,10 @@ namespace snake.GameEntities
 
         public SnakeDirection CurrentDirection => _currentDirection;
 
+        public bool Enabled { get; set; }
+
+        public int UpdateOrder { get; set; }
+
         public void AddTail()
         {
             throw new NotImplementedException();
@@ -53,11 +57,6 @@ namespace snake.GameEntities
 
         public void Update(GameTime gameTime)
         {
-            if (InputHandler.IsKeyPressed(_controls.Pause))
-            {
-                _isEnabled = !_isEnabled;
-            }
-
             if (InputHandler.IsKeyDown(_controls.Up) && _currentDirection != SnakeDirection.Down)
             {
                 _nextDirection = SnakeDirection.Up;
@@ -74,21 +73,15 @@ namespace snake.GameEntities
             {
                 _nextDirection = SnakeDirection.Left;
             }
-            
+
             elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
             if (elapsedTime >= stepTime)
             {
-                //_logger.Debug($"Snake.Update({gameTime.TotalGameTime}) step");
-                //_logger.Debug($"{nameof(_headCell)}={_headCell.Indices}");
-                //_logger.Debug($"{nameof(_currentDirection)}={_currentDirection}; {nameof(_nextDirection)}={_nextDirection}");
-                //_logger.Debug($"{nameof(Position)}={Position}");
-                //_logger.Debug(Environment.NewLine);
-
                 elapsedTime = elapsedTime - stepTime;
 
-                if (_isEnabled)
+                if (Enabled)
                 {
-                    var step = _headCell.Indices;
+                    Point step = _headCell.Indices;
 
                     switch (_nextDirection)
                     {
@@ -127,6 +120,11 @@ namespace snake.GameEntities
         public string GetDebugText()
         {
             return $"{nameof(_currentDirection)}={_currentDirection}\n{nameof(_nextDirection)}={_nextDirection}";
+        }
+
+        public void Initialize()
+        {
+            // Nothing to initialize
         }
     }
 }

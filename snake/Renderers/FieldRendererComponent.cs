@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended;
+using MonoGame.Extended.Graphics;
 using snake.GameEntities;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace snake.Renderers
         private readonly TextureRegion2D _treeTexture;
         private readonly TextureRegion2D _grassTexture;
 
-        public FieldRendererComponent(RenderConfiguration configuration, Field field, TextureAtlas textureRegions, SpriteFont spriteFont, SpriteBatch spriteBatch, int drawOrder)
+        public FieldRendererComponent(SpriteBatch spriteBatch, RenderConfiguration configuration, Field field, TextureAtlas textureRegions, SpriteFont spriteFont, int drawOrder = 0)
         {
             this._renderConfiguration = configuration;
             this._field = field;
@@ -73,7 +74,7 @@ namespace snake.Renderers
 
         }
 
-        private void DebugRendering(GameTime gameTime)
+        private void DebugRendering()
         {
             int fieldWidth = _field.Cells.GetLength(0);
             int fieldHeight = _field.Cells.GetLength(1);
@@ -94,7 +95,16 @@ namespace snake.Renderers
                 {
                     var cell = _field.Cells[x, y];
 
-                    _spriteBatch.DrawString(_spriteFont, $"{x};{y}", cell.Position, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(
+                        spriteFont: _spriteFont, 
+                        text: $"{x};{y}", 
+                        position: cell.Position,
+                        color: Color.White,
+                        rotation: 0f,
+                        origin: Vector2.Zero,
+                        scale: 1f,
+                        effects: SpriteEffects.None,
+                        layerDepth: BackToFrontLayers.Debug);
                 }
             }
         }
@@ -108,7 +118,7 @@ namespace snake.Renderers
 
             if (_renderConfiguration.IsDebugRenderingEnabled)
             {
-                DebugRendering(gameTime);
+                DebugRendering();
             }
         }
 
@@ -133,7 +143,7 @@ namespace snake.Renderers
                             rotation: 0,
                             origin: Vector2.Zero,
                             effects: SpriteEffects.None,
-                            layerDepth: 1f);
+                            layerDepth: BackToFrontLayers.Grass);
 
                         _spriteBatch.Draw(
                             texture: _treeTexture.Texture,
@@ -143,7 +153,7 @@ namespace snake.Renderers
                             rotation: 0,
                             origin: Vector2.Zero,
                             effects: SpriteEffects.None,
-                            layerDepth: 0f);
+                            layerDepth: BackToFrontLayers.Tree);
                     }
                     else if (cell.CellType == CellType.Grass)
                     {
@@ -155,7 +165,7 @@ namespace snake.Renderers
                             rotation: 0,
                             origin: Vector2.Zero,
                             effects: SpriteEffects.None,
-                            layerDepth: 0f);
+                            layerDepth: BackToFrontLayers.Grass);
                     }
                 }
             }

@@ -24,10 +24,10 @@ namespace snake.Renderers
         private int _drawOrder;
         private bool _isVisible;
 
-        private Dictionary<SnakeDirection, float> _rotations;
-        private TextureRegion2D _textureHead;
-
-        public SnakeRendererComponent(RenderConfiguration configuration, ILogger logger, Snake snake, TextureAtlas textureRegions, SpriteBatch spriteBatch, int drawOrder)
+        private readonly Dictionary<SnakeDirection, float> _rotations;
+        private readonly TextureRegion2D _textureHead;
+        
+        public SnakeRendererComponent(SpriteBatch spriteBatch, RenderConfiguration configuration, ILogger logger, Snake snake, TextureAtlas textureRegions, int drawOrder = 0)
         {
             this._configuration = configuration;
             this._logger = logger;
@@ -72,35 +72,41 @@ namespace snake.Renderers
 
         public void Initialize()
         {
+            // Nothing to initialize
         }
 
         public void Draw(GameTime gameTime)
         {
             if (_configuration.IsRenderingEnabled)
             {
-                var origin = new Vector2(_textureHead.Bounds.Width / 2f, _textureHead.Bounds.Height / 2f);
-                var destinationRectangle = _snake.Bounds;
-                destinationRectangle.Offset(destinationRectangle.Width / 2f, destinationRectangle.Height / 2f);
-
-                _spriteBatch.Draw(
-                    texture: _textureHead.Texture,
-                    destinationRectangle: destinationRectangle,
-                    sourceRectangle: _textureHead.Bounds,
-                    color: Color.White,
-                    rotation: _rotations[_snake.CurrentDirection],
-                    origin: origin,
-                    effects: SpriteEffects.None,
-                    layerDepth: 0f
-                );
+                Rendering();
             }
 
             if (_configuration.IsDebugRenderingEnabled)
             {
-                DebugDraw(gameTime);
+                DebugRendering();
             }
         }
 
-        private void DebugDraw(GameTime gameTime)
+        private void Rendering()
+        {
+            var origin = new Vector2(_textureHead.Bounds.Width / 2f, _textureHead.Bounds.Height / 2f);
+            var destinationRectangle = _snake.Bounds;
+            destinationRectangle.Offset(destinationRectangle.Width / 2f, destinationRectangle.Height / 2f);
+
+            _spriteBatch.Draw(
+                texture: _textureHead.Texture,
+                destinationRectangle: destinationRectangle,
+                sourceRectangle: _textureHead.Bounds,
+                color: Color.White,
+                rotation: _rotations[_snake.CurrentDirection],
+                origin: origin,
+                effects: SpriteEffects.None,
+                layerDepth: BackToFrontLayers.Snake
+            );
+        }
+
+        private void DebugRendering()
         {
             _spriteBatch.DrawRectangle(_snake.Bounds, Color.Red, 3);
             _spriteBatch.DrawLine(_snake.Bounds.Center.ToVector2(), _snake.Bounds.Width / 2f, _rotations[_snake.CurrentDirection], Color.Red, 3f);

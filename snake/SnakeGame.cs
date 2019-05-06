@@ -27,18 +27,10 @@ namespace snake
 
         private InputHandler _inputHandler;
 
-        private IFieldFactory fieldFactory;
-
         private Field _field;
         private Snake _snake;
-        private SnakeControls _controls;
 
-        private IRenderer2D _fieldRenderer;
-        private IRenderer2D _snakeRenderer;
-
-        private Texture2D texture;
-        private Texture2D textureVignette;
-        private TextureAtlas atlas;
+        private GameKeys _gameKeys;
 
         private GameConfiguration _configuration;
         private RenderConfiguration _renderConfiguration;
@@ -70,14 +62,18 @@ namespace snake
 
             _logger = new NLogFileLogger(_configuration);
 
-            fieldFactory = new FieldFactory();
+            IFieldFactory fieldFactory = new FieldFactory();
 
             _field = fieldFactory.GetRandomField(10, 10);
-            _controls = new SnakeControls(Keys.Up, Keys.Down, Keys.Left, Keys.Right, Keys.P);
-            _snake = new Snake(_logger, _field, _field.Cells[5, 5], _controls);
+            var _snakeKeys = new SnakeKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
+            _gameKeys = new GameKeys(Keys.P, Keys.D, Keys.Escape);
+
+            _snake = new Snake(_logger, _field, _field.Cells[5, 5], _snakeKeys);
 
             _inputHandler = new InputHandler(this);
+
             Components.Add(_inputHandler);
+            Components.Add(_snake);
 
             base.Initialize();
         }
@@ -105,10 +101,9 @@ namespace snake
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             font = Content.Load<SpriteFont>("Fonts/joystix");
-            texture = Content.Load<Texture2D>("Textures/Textures_sp");
-            textureVignette = Content.Load<Texture2D>("Textures/Vignette_m");
+            var texture = Content.Load<Texture2D>("Textures/Textures_sp");
 
-            atlas = new TextureAtlas("Textures", texture);
+            var atlas = new TextureAtlas("Textures", texture);
 
             var n = 384;
 
@@ -129,13 +124,10 @@ namespace snake
                 IsRenderingEnabled = true
             };
 
-            _fieldRenderer = new FieldRendererComponent(_renderConfiguration, _field, atlas, font, spriteBatch, 1);
-            _snakeRenderer = new SnakeRendererComponent(_renderConfiguration, _logger, _snake, atlas, spriteBatch, 2);
+            IRenderer2D _fieldRenderer = new FieldRendererComponent(spriteBatch, _renderConfiguration, _field, atlas, font);
+            IRenderer2D _snakeRenderer = new SnakeRendererComponent(spriteBatch, _renderConfiguration, _logger, _snake, atlas);
 
-            var fps = new FPSCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), spriteBatch, font, Color.Red)
-            {
-                DrawOrder = 100
-            };
+            var fps = new FPSCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), spriteBatch, font, Color.Red);
         
             Components.Add(fps);
             Components.Add(_snakeRenderer);
@@ -158,12 +150,21 @@ namespace snake
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (InputHandler.IsKeyPressed(_gameKeys.Exit))
             {
                 Exit();
             }
 
-            _snake.Update(gameTime);
+            if (InputHandler.IsKeyPressed(_gameKeys.SwitchPause))
+            {
+                _snake.Enabled = !_snake.Enabled;
+            }
+
+            if (InputHandler.IsKeyPressed(_gameKeys.SwitchDebugRendering))
+            {
+                _renderConfiguration.IsDebugRenderingEnabled = !_renderConfiguration.IsDebugRenderingEnabled;
+                _renderConfiguration.IsRenderingEnabled = !_renderConfiguration.IsDebugRenderingEnabled;
+            }
 
             base.Update(gameTime);
         }
@@ -176,7 +177,7 @@ namespace snake
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.Deferred);
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.BackToFront);
 
             spriteBatch.DrawString(font, string.Join(";", _inputHandler.CurrentState.GetPressedKeys()), new Vector2(500, 0), Color.Blue);
 
