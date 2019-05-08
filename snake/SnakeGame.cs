@@ -68,7 +68,10 @@ namespace snake
             var _snakeKeys = new SnakeKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
             _gameKeys = new GameKeys(Keys.P, Keys.D, Keys.Escape);
 
-            _snake = new Snake(_logger, _field, _field.Cells[5, 5], _snakeKeys);
+            _snake = new Snake(_logger, _field, _field.Cells[5, 5], _snakeKeys)
+            {
+                Enabled = true
+            };
 
             _inputHandler = new InputHandler(this);
 
