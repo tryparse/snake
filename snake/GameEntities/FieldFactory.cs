@@ -10,7 +10,7 @@ namespace snake.GameEntities
 {
     public class FieldFactory : IFieldFactory
     {
-        public Field GetRandomField(int width, int height)
+        public Field GetRandomField(int width, int height, double grassProbability = .8d)
         {
             var random = new Random();
             var cells = new Cell[width, height];
@@ -20,7 +20,7 @@ namespace snake.GameEntities
                 for (int y = 0; y < height; y++)
                 {
                     var fieldTypeDice = random.NextDouble();
-                    var cellType = fieldTypeDice <= .8d ? CellType.Grass : CellType.Tree;
+                    var cellType = fieldTypeDice <= grassProbability ? CellType.Grass : CellType.Tree;
 
                     cells[x, y] = new Cell(
                         position: new Vector2(x * TileMetrics.Width, y * TileMetrics.Height),

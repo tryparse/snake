@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MonoGame.Extended;
 
 namespace snake.GameEntities
 {
@@ -15,116 +16,126 @@ namespace snake.GameEntities
     {
         private readonly ILogger _logger;
         private readonly Field _field;
-        private Cell _headCell;
         private readonly SnakeKeys _controls;
+        private List<SnakePart> _parts;
         private readonly IEnumerable<Vector2> _tail;
 
-        private SnakeDirection _currentDirection;
-        private SnakeDirection _nextDirection;
-
-        private readonly int stepTime;
+        private readonly int _stepTime;
         private int elapsedTime;
 
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
 
-        public Snake(ILogger logger, Field field, Cell headCell, SnakeKeys controls, SnakeDirection direction = SnakeDirection.Right)
+        public Snake(ILogger logger, Field field, Vector2 headPosition, SnakeKeys controls, Direction direction = Direction.Right)
         {
             this._logger = logger;
             this._field = field;
-            this._headCell = headCell;
             this._tail = new HashSet<Vector2>();
-            this._currentDirection = direction;
-            this._nextDirection = direction;
             this._controls = controls;
-            this.stepTime = 1000;
+            this._stepTime = 1000;
+            this._parts = new List<SnakePart>();
+            _parts.Add(new SnakePart(headPosition, TileMetrics.Size, direction));
+
+            AddPart();
         }
 
-        public Vector2 Position => _headCell.Bounds.Center.ToVector2();
-
-        public Rectangle Bounds => _headCell.Bounds;
-
-        public SnakeDirection CurrentDirection => _currentDirection;
+        public List<SnakePart> Parts => _parts;
 
         public bool Enabled { get; set; }
 
         public int UpdateOrder { get; set; }
 
-        public void AddTail()
+        public void Initialize()
         {
-            throw new NotImplementedException();
+            // Nothing to initialize
+        }
+
+        public void AddPart()
+        {
+            var head = _parts.First();
+            _parts.Add(new SnakePart(Vector2.Add(head.Position, new Vector2(-TileMetrics.Size.X, 0)), head.Size, Direction.Right));
         }
 
         public void Update(GameTime gameTime)
         {
-            if (InputHandler.IsKeyDown(_controls.Up) && _currentDirection != SnakeDirection.Down)
+            var head = _parts.First();
+
+            if (InputHandler.IsKeyDown(_controls.Up) && head.Direction != Direction.Down)
             {
-                _nextDirection = SnakeDirection.Up;
+                head.Direction = Direction.Up;
             }
-            else if (InputHandler.IsKeyDown(_controls.Down) && _currentDirection != SnakeDirection.Up)
+            else if (InputHandler.IsKeyDown(_controls.Down) && head.Direction != Direction.Up)
             {
-                _nextDirection = SnakeDirection.Down;
+                head.Direction = Direction.Down;
             }
-            else if (InputHandler.IsKeyDown(_controls.Right) && _currentDirection != SnakeDirection.Left)
+            else if (InputHandler.IsKeyDown(_controls.Right) && head.Direction != Direction.Left)
             {
-                _nextDirection = SnakeDirection.Right;
+                head.Direction = Direction.Right;
             }
-            else if (InputHandler.IsKeyDown(_controls.Left) && _currentDirection != SnakeDirection.Right)
+            else if (InputHandler.IsKeyDown(_controls.Left) && head.Direction != Direction.Right)
             {
-                _nextDirection = SnakeDirection.Left;
+                head.Direction = Direction.Left;
             }
 
             elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
-            if (elapsedTime >= stepTime)
+            if (elapsedTime >= _stepTime)
             {
-                elapsedTime = elapsedTime - stepTime;
+                elapsedTime = elapsedTime - _stepTime;
 
                 if (Enabled)
                 {
-                    Point step = _headCell.Indices;
-
-                    switch (_nextDirection)
-                    {
-                        case SnakeDirection.Up:
-                            {
-                                step.Y--;
-                                break;
-                            }
-                        case SnakeDirection.Down:
-                            {
-                                step.Y++;
-                                break;
-                            }
-                        case SnakeDirection.Right:
-                            {
-                                step.X++;
-                                break;
-                            }
-                        case SnakeDirection.Left:
-                            {
-                                step.X--;
-                                break;
-                            }
-                    }
-
-                    step.X = step.X > _field.LengthX - 1 ? 0 : step.X < 0 ? _field.LengthX - 1 : step.X;
-                    step.Y = step.Y > _field.LengthY - 1 ? 0 : step.Y < 0 ? _field.LengthY - 1 : step.Y;
-
-                    _headCell = _field.Cells[step.X, step.Y];
+                    MoveTail();
+                    MoveHead();
                 }
-
-                _currentDirection = _nextDirection;
             }
         }
 
-        public string GetDebugText()
+        private void MoveHead()
         {
-            return $"{nameof(_currentDirection)}={_currentDirection}\n{nameof(_nextDirection)}={_nextDirection}";
+            var head = _parts.First();
+            var x = head.Position.X;
+            var y = head.Position.Y;
+
+            var step = TileMetrics.Size;
+
+            switch (head.Direction)
+            {
+                case Direction.Up:
+                    {
+                        y -= step.Y;
+                        break;
+                    }
+                case Direction.Down:
+                    {
+                        y+= step.Y;
+                        break;
+                    }
+                case Direction.Right:
+                    {
+                        x+= step.X;
+                        break;
+                    }
+                case Direction.Left:
+                    {
+                        x -= step.X;
+                        break;
+                    }
+            }
+
+            x = x > _field.Bounds.Width ? step.X / 2 : x < 0 ? _field.Bounds.Width - step.X / 2 : x;
+            y = y > _field.Bounds.Height ? step.Y / 2
+ : y < 0 ? _field.Bounds.Height - step.Y / 2 : y;
+
+            head.Position = new Vector2(x, y);
         }
 
-        public void Initialize()
+        private void MoveTail()
         {
-            // Nothing to initialize
+            for (int i = _parts.Count - 1; i >= 1; i--)
+            {
+                _parts[i].Position = _parts[i - 1].Position;
+                _parts[i].Direction = _parts[i - 1].Direction;
+            }
         }
     }
 }

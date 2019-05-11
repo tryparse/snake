@@ -11,10 +11,10 @@ namespace snake.GameEntities
     {
         public SnakeKeys(Keys up, Keys down, Keys left, Keys right)
         {
-            Up = up;
-            Down = down;
-            Left = left;
-            Right = right;
+            this.Up = up;
+            this.Down = down;
+            this.Left = left;
+            this.Right = right;
         }
 
         public Keys Up { get; }

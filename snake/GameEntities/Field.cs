@@ -26,21 +26,5 @@ namespace snake.GameEntities
         public int LengthY => _cells.GetLength(1);
 
         public Rectangle Bounds => _bounds;
-
-        //public Cell GetNeighbour(Cell forCell, Common.Direction direction)
-        //{
-        //    var fieldWidth = Cells.GetLength(0);
-        //    var fieldHeight = Cells.GetLength(1);
-
-        //    switch (direction)
-        //    {
-        //        case Direction.Down:
-        //            {
-        //                Cells.GetL
-
-        //                break;
-        //            }
-        //    }
-        //}
     }
 }

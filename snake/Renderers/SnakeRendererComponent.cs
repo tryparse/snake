@@ -24,8 +24,9 @@ namespace snake.Renderers
         private int _drawOrder;
         private bool _isVisible;
 
-        private readonly Dictionary<SnakeDirection, float> _rotations;
+        private readonly Dictionary<Direction, float> _rotations;
         private readonly TextureRegion2D _textureHead;
+        private readonly TextureRegion2D _texturePart;
         
         public SnakeRendererComponent(SpriteBatch spriteBatch, RenderConfiguration configuration, ILogger logger, Snake snake, TextureAtlas textureRegions, int drawOrder = 0)
         {
@@ -36,14 +37,15 @@ namespace snake.Renderers
             this._spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
             this._drawOrder = drawOrder;
             this._textureHead = _textureRegions.GetRegion("Head");
+            this._texturePart = _textureRegions.GetRegion("Part");
             this._isVisible = true;
 
-            this._rotations = new Dictionary<SnakeDirection, float>
+            this._rotations = new Dictionary<Direction, float>
             {
-                { SnakeDirection.Up, MathHelper.ToRadians(-90) },
-                { SnakeDirection.Right, MathHelper.ToRadians(0) },
-                { SnakeDirection.Down, MathHelper.ToRadians(90) },
-                { SnakeDirection.Left, MathHelper.ToRadians(180) }
+                { Direction.Up, MathHelper.ToRadians(-90) },
+                { Direction.Right, MathHelper.ToRadians(0) },
+                { Direction.Down, MathHelper.ToRadians(90) },
+                { Direction.Left, MathHelper.ToRadians(180) }
             };
         }
 
@@ -91,25 +93,47 @@ namespace snake.Renderers
         private void Rendering()
         {
             var origin = new Vector2(_textureHead.Bounds.Width / 2f, _textureHead.Bounds.Height / 2f);
-            var destinationRectangle = _snake.Bounds;
-            destinationRectangle.Offset(destinationRectangle.Width / 2f, destinationRectangle.Height / 2f);
 
-            _spriteBatch.Draw(
-                texture: _textureHead.Texture,
-                destinationRectangle: destinationRectangle,
-                sourceRectangle: _textureHead.Bounds,
-                color: Color.White,
-                rotation: _rotations[_snake.CurrentDirection],
-                origin: origin,
-                effects: SpriteEffects.None,
-                layerDepth: BackToFrontLayers.Snake
-            );
+            for (int i = 0; i < _snake.Parts.Count; i++)
+            {
+                var part = _snake.Parts[i];
+
+                TextureRegion2D selectedTexture;
+
+                if (i == 0)
+                {
+                    selectedTexture = _textureHead;
+                }
+                else
+                {
+                    selectedTexture = _texturePart;
+                    // Add more variations
+                }
+
+                var destinationRectangle = part.Bounds;
+                destinationRectangle.Offset(destinationRectangle.Width / 2f, destinationRectangle.Height / 2f);
+
+                _spriteBatch.Draw(
+                    texture: selectedTexture.Texture,
+                    destinationRectangle: destinationRectangle,
+                    sourceRectangle: selectedTexture.Bounds,
+                    color: Color.White,
+                    rotation: _rotations[part.Direction],
+                    origin: origin,
+                    effects: SpriteEffects.None,
+                    layerDepth: BackToFrontLayers.Snake
+                );
+            }
         }
 
         private void DebugRendering()
         {
-            _spriteBatch.DrawRectangle(_snake.Bounds, Color.Red, 3);
-            _spriteBatch.DrawLine(_snake.Bounds.Center.ToVector2(), _snake.Bounds.Width / 2f, _rotations[_snake.CurrentDirection], Color.Red, 3f);
+            for (int i = 0; i < _snake.Parts.Count; i++)
+            {
+                var part = _snake.Parts[i];
+                _spriteBatch.DrawRectangle(part.Bounds, Color.Red, 3);
+                _spriteBatch.DrawLine(part.Bounds.Center.ToVector2(), part.Bounds.Width / 2f, _rotations[part.Direction], Color.Red, 3f);
+            }
         }
     }
 }

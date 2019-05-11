@@ -38,11 +38,13 @@ namespace snake
 
         public SnakeGame()
         {
+            ReadConfiguration();
+
             graphics = new GraphicsDeviceManager(this)
             {
 
-                PreferredBackBufferHeight = 500,
-                PreferredBackBufferWidth = 1024,
+                PreferredBackBufferHeight = _configuration.ScreenHeight,
+                PreferredBackBufferWidth = _configuration.ScreenWidth,
                 GraphicsProfile = GraphicsProfile.HiDef
             };
             IsMouseVisible = true;
@@ -58,17 +60,15 @@ namespace snake
         /// </summary>
         protected override void Initialize()
         {
-            Configuration();
-
             _logger = new NLogFileLogger(_configuration);
 
             IFieldFactory fieldFactory = new FieldFactory();
 
             _field = fieldFactory.GetRandomField(10, 10);
             var _snakeKeys = new SnakeKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
-            _gameKeys = new GameKeys(Keys.P, Keys.D, Keys.Escape);
+            _gameKeys = new GameKeys(Keys.P, Keys.D, Keys.R, Keys.Escape);
 
-            _snake = new Snake(_logger, _field, _field.Cells[5, 5], _snakeKeys)
+            _snake = new Snake(_logger, _field, _field.Cells[5,5].Bounds.Center.ToVector2(), _snakeKeys)
             {
                 Enabled = true
             };
@@ -81,7 +81,7 @@ namespace snake
             base.Initialize();
         }
 
-        private void Configuration()
+        private void ReadConfiguration()
         {
             _configuration = new GameConfiguration();
 
@@ -92,6 +92,14 @@ namespace snake
             bool.TryParse(ConfigurationManager.AppSettings["IsDebugRenderingEnabled"], out var isDebugRenderingEnabled);
 
             _configuration.IsDebugRenderingEnabled = isDebugRenderingEnabled;
+
+            int.TryParse(ConfigurationManager.AppSettings["ScreenWidth"], out var screenWidth);
+
+            _configuration.ScreenWidth = screenWidth;
+
+            int.TryParse(ConfigurationManager.AppSettings["ScreenHeight"], out var screenHeight);
+
+            _configuration.ScreenHeight = screenHeight;
         }
 
         /// <summary>
@@ -110,8 +118,8 @@ namespace snake
 
             var n = 384;
 
-            atlas.CreateRegion("LeftTail", 0, 0, n, n);
-            atlas.CreateRegion("Center", n, 0, n, n);
+            atlas.CreateRegion("Tail", 0, 0, n, n);
+            atlas.CreateRegion("Part", n, 0, n, n);
             atlas.CreateRegion("Head", n * 2, 0, n, n);
             atlas.CreateRegion("Fruit", n * 3, 0, n, n);
             atlas.CreateRegion("Grass", n * 4, 0, n, n);
@@ -166,7 +174,11 @@ namespace snake
             if (InputHandler.IsKeyPressed(_gameKeys.SwitchDebugRendering))
             {
                 _renderConfiguration.IsDebugRenderingEnabled = !_renderConfiguration.IsDebugRenderingEnabled;
-                _renderConfiguration.IsRenderingEnabled = !_renderConfiguration.IsDebugRenderingEnabled;
+            }
+
+            if (InputHandler.IsKeyPressed(_gameKeys.SwitchRendering))
+            {
+                _renderConfiguration.IsRenderingEnabled = !_renderConfiguration.IsRenderingEnabled;
             }
 
             base.Update(gameTime);

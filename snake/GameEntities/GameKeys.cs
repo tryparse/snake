@@ -9,21 +9,20 @@ namespace snake.GameEntities
 {
     public class GameKeys
     {
-        private readonly Keys _switchPause;
-        private readonly Keys _switchDebugRendering;
-        private readonly Keys _exit;
-
-        public GameKeys(Keys switchPause, Keys switchDebugRendering, Keys exit)
+        public GameKeys(Keys switchPause, Keys switchDebugRendering, Keys switchRendering, Keys exit)
         {
-            this._switchPause = switchPause;
-            this._switchDebugRendering = switchDebugRendering;
-            this._exit = exit;
+            this.SwitchPause = switchPause;
+            this.SwitchDebugRendering = switchDebugRendering;
+            this.SwitchRendering = switchRendering;
+            this.Exit = exit;
         }
 
-        public Keys SwitchPause => _switchPause;
+        public Keys SwitchPause { get; }
 
-        public Keys SwitchDebugRendering => _switchDebugRendering;
+        public Keys SwitchDebugRendering { get; }
 
-        public Keys Exit => _exit;
+        public Keys SwitchRendering { get; }
+
+        public Keys Exit { get; }
     }
 }
