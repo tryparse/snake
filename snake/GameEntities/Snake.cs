@@ -17,8 +17,7 @@ namespace snake.GameEntities
         private readonly ILogger _logger;
         private readonly Field _field;
         private readonly SnakeKeys _controls;
-        private List<SnakePart> _parts;
-        private readonly IEnumerable<Vector2> _tail;
+        private readonly List<SnakePart> _parts;
 
         private readonly int _stepTime;
         private int elapsedTime;
@@ -30,7 +29,6 @@ namespace snake.GameEntities
         {
             this._logger = logger;
             this._field = field;
-            this._tail = new HashSet<Vector2>();
             this._controls = controls;
             this._stepTime = 1000;
             this._parts = new List<SnakePart>();
@@ -52,8 +50,8 @@ namespace snake.GameEntities
 
         public void AddPart()
         {
-            var head = _parts.First();
-            _parts.Add(new SnakePart(Vector2.Add(head.Position, new Vector2(-TileMetrics.Size.X, 0)), head.Size, Direction.Right));
+            var tail = _parts.Last();
+            _parts.Add(new SnakePart(Vector2.Add(tail.Position, new Vector2(-TileMetrics.Size.X, 0)), tail.Size, tail.Direction ));
         }
 
         public void Update(GameTime gameTime)
