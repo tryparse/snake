@@ -38,6 +38,7 @@ namespace snake.GameEntities
             _parts.Add(new SnakePart(headPosition, TileMetrics.Size, direction));
 
             AddPart();
+            AddPart();
         }
 
         public List<SnakePart> Parts => _parts;
@@ -70,7 +71,13 @@ namespace snake.GameEntities
         public void AddPart()
         {
             var tail = _parts.Last();
-            _parts.Add(new SnakePart(Vector2.Add(tail.Position, new Vector2(-TileMetrics.Size.X, 0)), tail.Size, tail.Direction ));
+
+            var x = tail.Position.X;
+            var y = tail.Position.Y;
+
+            CalculateStep(DirectionHelper.GetOppositeDirection(tail.Direction), ref x, ref y, TileMetrics.Size);
+
+            _parts.Add(new SnakePart(new Vector2(x, y), tail.Size, tail.Direction ));
         }
 
         public void Update(GameTime gameTime)
@@ -114,8 +121,14 @@ namespace snake.GameEntities
             var y = head.Position.Y;
 
             var step = TileMetrics.Size;
+            CalculateStep(head.Direction, ref x, ref y, step);
 
-            switch (head.Direction)
+            head.Position = new Vector2(x, y);
+        }
+
+        private void CalculateStep(Direction direction, ref float x, ref float y, Vector2 step)
+        {
+            switch (direction)
             {
                 case Direction.Up:
                     {
@@ -124,12 +137,12 @@ namespace snake.GameEntities
                     }
                 case Direction.Down:
                     {
-                        y+= step.Y;
+                        y += step.Y;
                         break;
                     }
                 case Direction.Right:
                     {
-                        x+= step.X;
+                        x += step.X;
                         break;
                     }
                 case Direction.Left:
@@ -140,10 +153,7 @@ namespace snake.GameEntities
             }
 
             x = x > _field.Bounds.Width ? step.X / 2 : x < 0 ? _field.Bounds.Width - step.X / 2 : x;
-            y = y > _field.Bounds.Height ? step.Y / 2
- : y < 0 ? _field.Bounds.Height - step.Y / 2 : y;
-
-            head.Position = new Vector2(x, y);
+            y = y > _field.Bounds.Height ? step.Y / 2 : y < 0 ? _field.Bounds.Height - step.Y / 2 : y;
         }
 
         private void MoveTail()

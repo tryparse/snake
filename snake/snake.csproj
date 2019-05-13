@@ -43,6 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Common\BackToFrontLayers.cs" />
+    <Compile Include="Common\DirectionHelper.cs" />
     <Compile Include="GameComponents\InputHandler.cs" />
     <Compile Include="Configuration\GameConfiguration.cs" />
     <Compile Include="GameEntities\Cell.cs" />
