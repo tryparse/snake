@@ -72,12 +72,9 @@ namespace snake.GameEntities
         {
             var tail = _parts.Last();
 
-            var x = tail.Position.X;
-            var y = tail.Position.Y;
+            var partPosition = FindNeighbourPoint(DirectionHelper.GetOppositeDirection(tail.Direction), tail.Position, TileMetrics.Size);
 
-            CalculateStep(DirectionHelper.GetOppositeDirection(tail.Direction), ref x, ref y, TileMetrics.Size);
-
-            _parts.Add(new SnakePart(new Vector2(x, y), tail.Size, tail.Direction ));
+            _parts.Add(new SnakePart(new Vector2(partPosition.X, partPosition.Y), tail.Size, tail.Direction ));
         }
 
         public void Update(GameTime gameTime)
@@ -117,43 +114,45 @@ namespace snake.GameEntities
         private void MoveHead()
         {
             var head = _parts.First();
-            var x = head.Position.X;
-            var y = head.Position.Y;
 
             var step = TileMetrics.Size;
-            CalculateStep(head.Direction, ref x, ref y, step);
+            var nextPosition = FindNeighbourPoint(head.Direction, head.Position, step);
 
-            head.Position = new Vector2(x, y);
+            head.Position = new Vector2(nextPosition.X, nextPosition.Y);
         }
 
-        private void CalculateStep(Direction direction, ref float x, ref float y, Vector2 step)
+        private Vector2 FindNeighbourPoint(Direction direction, Vector2 point, Vector2 step)
         {
+            var offset = Vector2.Zero;
+
             switch (direction)
             {
                 case Direction.Up:
                     {
-                        y -= step.Y;
+                        offset.Y -= step.Y;
                         break;
                     }
                 case Direction.Down:
                     {
-                        y += step.Y;
+                        offset.Y += step.Y;
                         break;
                     }
                 case Direction.Right:
                     {
-                        x += step.X;
+                        offset.X += step.X;
                         break;
                     }
                 case Direction.Left:
                     {
-                        x -= step.X;
+                        offset.X -= step.X;
                         break;
                     }
             }
 
-            x = x > _field.Bounds.Width ? step.X / 2 : x < 0 ? _field.Bounds.Width - step.X / 2 : x;
-            y = y > _field.Bounds.Height ? step.Y / 2 : y < 0 ? _field.Bounds.Height - step.Y / 2 : y;
+            offset.X = offset.X > _field.Bounds.Width ? step.X / 2 : offset.X < 0 ? _field.Bounds.Width - step.X / 2 : offset.X;
+            offset.Y = offset.Y > _field.Bounds.Height ? step.Y / 2 : offset.Y < 0 ? _field.Bounds.Height - step.Y / 2 : offset.Y;
+
+            return Vector2.Add(point, offset);
         }
 
         private void MoveTail()
