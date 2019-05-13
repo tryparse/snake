@@ -1,15 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended.TextureAtlases;
 using MonoGame.Extended;
 using MonoGame.Extended.Graphics;
+using MonoGame.Extended.TextureAtlases;
+using snake.Common;
 using snake.GameEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using snake.Common;
 
 namespace snake.Renderers
 {
@@ -96,8 +96,8 @@ namespace snake.Renderers
                     var cell = _field.Cells[x, y];
 
                     _spriteBatch.DrawString(
-                        spriteFont: _spriteFont, 
-                        text: $"{x};{y}", 
+                        spriteFont: _spriteFont,
+                        text: $"{x};{y}",
                         position: cell.Position,
                         color: Color.White,
                         rotation: 0f,
@@ -135,40 +135,46 @@ namespace snake.Renderers
 
                     if (cell.CellType == CellType.Tree)
                     {
-                        _spriteBatch.Draw(
-                            texture: _grassTexture.Texture,
-                            destinationRectangle: cell.BoundsF.ToRectangle(),
-                            sourceRectangle: _grassTexture.Bounds,
-                            color: Color.White,
-                            rotation: 0,
-                            origin: Vector2.Zero,
-                            effects: SpriteEffects.None,
-                            layerDepth: BackToFrontLayers.Grass);
-
-                        _spriteBatch.Draw(
-                            texture: _treeTexture.Texture,
-                            destinationRectangle: cell.BoundsF.ToRectangle(),
-                            sourceRectangle: _treeTexture.Bounds,
-                            color: Color.White,
-                            rotation: 0,
-                            origin: Vector2.Zero,
-                            effects: SpriteEffects.None,
-                            layerDepth: BackToFrontLayers.Tree);
+                        DrawGrassWithTree(cell);
                     }
                     else if (cell.CellType == CellType.Grass)
                     {
-                        _spriteBatch.Draw(
-                            texture: _grassTexture.Texture,
-                            destinationRectangle: cell.BoundsF.ToRectangle(),
-                            sourceRectangle: _grassTexture.Bounds,
-                            color: Color.White,
-                            rotation: 0,
-                            origin: Vector2.Zero,
-                            effects: SpriteEffects.None,
-                            layerDepth: BackToFrontLayers.Grass);
+                        DrawGrass(cell);
                     }
                 }
             }
+        }
+
+        private void DrawGrass(Cell cell)
+        {
+            _spriteBatch.Draw(
+                texture: _grassTexture.Texture,
+                destinationRectangle: cell.BoundsF.ToRectangle(),
+                sourceRectangle: _grassTexture.Bounds,
+                color: Color.White,
+                rotation: 0,
+                origin: Vector2.Zero,
+                effects: SpriteEffects.None,
+                layerDepth: BackToFrontLayers.Grass);
+        }
+
+        private void DrawTree(Cell cell)
+        {
+            _spriteBatch.Draw(
+                texture: _treeTexture.Texture,
+                destinationRectangle: cell.BoundsF.ToRectangle(),
+                sourceRectangle: _treeTexture.Bounds,
+                color: Color.White,
+                rotation: 0,
+                origin: Vector2.Zero,
+                effects: SpriteEffects.None,
+                layerDepth: BackToFrontLayers.Tree);
+        }
+
+        private void DrawGrassWithTree(Cell cell)
+        {
+            DrawGrass(cell);
+            DrawTree(cell);
         }
     }
 }

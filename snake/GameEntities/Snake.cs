@@ -22,6 +22,9 @@ namespace snake.GameEntities
         private readonly int _stepTime;
         private int elapsedTime;
 
+        private bool _enabled;
+        private int _updateOrder;
+
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
 
@@ -39,9 +42,25 @@ namespace snake.GameEntities
 
         public List<SnakePart> Parts => _parts;
 
-        public bool Enabled { get; set; }
+        public bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                EnabledChanged?.Invoke(this, new EventArgs());
+                _enabled = value;
+            }
+        }
 
-        public int UpdateOrder { get; set; }
+        public int UpdateOrder
+        {
+            get => _updateOrder;
+            set
+            {
+                UpdateOrderChanged?.Invoke(this, new EventArgs());
+                _updateOrder = value;
+            }
+        }
 
         public void Initialize()
         {
