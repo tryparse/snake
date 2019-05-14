@@ -31,6 +31,7 @@ namespace snake
         private Snake _snake;
 
         private GameKeys _gameKeys;
+        private SnakeKeys _snakeKeys;
 
         private GameConfiguration _configuration;
         private RenderConfiguration _renderConfiguration;
@@ -65,13 +66,15 @@ namespace snake
             IFieldFactory fieldFactory = new FieldFactory();
 
             _field = fieldFactory.GetRandomField(10, 10);
-            var _snakeKeys = new SnakeKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
+            _snakeKeys = new SnakeKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
             _gameKeys = new GameKeys(Keys.P, Keys.D, Keys.R, Keys.Escape);
 
             _snake = new Snake(_logger, _field, _field.Cells[5,5].Bounds.Center.ToVector2(), _snakeKeys)
             {
                 Enabled = true
             };
+
+            GameManager.Snake = _snake;
 
             _inputHandler = new InputHandler(this);
 

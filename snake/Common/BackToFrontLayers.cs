@@ -10,6 +10,8 @@ namespace snake.Common
     {
         public const float Grass = 1f;
 
+        public const float Fruit = .3f;
+
         public const float Snake = .2f;
 
         public const float Tree = .1f;

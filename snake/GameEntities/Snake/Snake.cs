@@ -25,6 +25,8 @@ namespace snake.GameEntities
         private bool _enabled;
         private int _updateOrder;
 
+        private Direction _nextDirection;
+
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
 
@@ -33,13 +35,16 @@ namespace snake.GameEntities
             this._logger = logger;
             this._field = field;
             this._controls = controls;
-            this._stepTime = 1000;
+            this._stepTime = 200;
             this._parts = new List<SnakePart>();
             _parts.Add(new SnakePart(headPosition, TileMetrics.Size, direction));
 
-            AddPart();
-            AddPart();
-            AddPart();
+            _nextDirection = direction;
+
+            for (int i = 0; i < 4; i++)
+            {
+                AddPart();
+            }
         }
 
         public List<SnakePart> Parts => _parts;
@@ -69,13 +74,34 @@ namespace snake.GameEntities
             // Nothing to initialize
         }
 
+        public void Reset()
+        {
+            _parts.Clear();
+
+            AddPart();
+
+            Enabled = true;
+        }
+
         public void AddPart()
         {
-            var tail = _parts.Last();
+            var tail = _parts.LastOrDefault();
 
-            var partPosition = FindNeighbourPoint(DirectionHelper.GetOppositeDirection(tail.Direction), tail.Position, TileMetrics.Size);
+            var position = Vector2.Zero;
+            var direction = default(Direction);
 
-            _parts.Add(new SnakePart(new Vector2(partPosition.X, partPosition.Y), tail.Size, tail.Direction ));
+            if (tail == null)
+            {
+                position = _field.Cells[0, 0].Bounds.Center.ToVector2();
+                direction = DirectionHelper.GetRandom();
+            }
+            else
+            {
+                position = FindNeighbourPoint(DirectionHelper.GetOppositeDirection(tail.Direction), tail.Position, TileMetrics.Size);
+                direction = tail.Direction;
+            }
+
+            _parts.Add(new SnakePart(new Vector2(position.X, position.Y), TileMetrics.Size, direction));
         }
 
         public void Update(GameTime gameTime)
@@ -84,19 +110,19 @@ namespace snake.GameEntities
 
             if (InputHandler.IsKeyDown(_controls.Up) && head.Direction != Direction.Down)
             {
-                head.Direction = Direction.Up;
+                _nextDirection = Direction.Up;
             }
             else if (InputHandler.IsKeyDown(_controls.Down) && head.Direction != Direction.Up)
             {
-                head.Direction = Direction.Down;
+                _nextDirection = Direction.Down;
             }
             else if (InputHandler.IsKeyDown(_controls.Right) && head.Direction != Direction.Left)
             {
-                head.Direction = Direction.Right;
+                _nextDirection = Direction.Right;
             }
             else if (InputHandler.IsKeyDown(_controls.Left) && head.Direction != Direction.Right)
             {
-                head.Direction = Direction.Left;
+                _nextDirection = Direction.Left;
             }
 
             elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
@@ -106,8 +132,15 @@ namespace snake.GameEntities
 
                 if (Enabled)
                 {
+                    head.Direction = _nextDirection;
+
                     MoveTail();
                     MoveHead();
+
+                    if (CheckHeadCollision())
+                    {
+                        GameManager.NewGame();
+                    }
                 }
             }
         }
@@ -165,6 +198,24 @@ namespace snake.GameEntities
                 _parts[i].Position = _parts[i - 1].Position;
                 _parts[i].Direction = _parts[i - 1].Direction;
             }
+        }
+
+        private bool CheckHeadCollision()
+        {
+            var head = _parts.First();
+
+            var tail = _parts.Skip(1);
+
+            foreach (var part in tail)
+            {
+                if (head.Bounds.Intersects(part.Bounds))
+                {
+                    _enabled = false;
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

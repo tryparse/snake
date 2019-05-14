@@ -20,5 +20,16 @@ namespace snake.Common
         {
             return _opposites[direction];
         }
+
+        public static Direction GetRandom()
+        {
+            var random = new Random();
+
+            var dice = random.Next(0, 4);
+
+            var values = (Direction[])Enum.GetValues(typeof(Direction));
+
+            return values[dice];
+        }
     }
 }

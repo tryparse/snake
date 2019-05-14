@@ -107,7 +107,7 @@ namespace snake.Renderers
                 else
                 {
                     selectedTexture = _texturePart;
-                    // Add more variations
+                    // TODO: Add more variations
                 }
 
                 var destinationRectangle = part.Bounds;
