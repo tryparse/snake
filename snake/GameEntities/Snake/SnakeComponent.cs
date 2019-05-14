@@ -10,9 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using MonoGame.Extended;
 
-namespace snake.GameEntities
+namespace snake.GameEntities.Snake
 {
-    public class Snake : IGameComponent, IUpdateable
+    public class SnakeComponent : IGameComponent, IUpdateable
     {
         private readonly ILogger _logger;
         private readonly Field _field;
@@ -25,12 +25,15 @@ namespace snake.GameEntities
         private bool _enabled;
         private int _updateOrder;
 
+        private SnakeState _state;
+        private TimeSpan _transitionTime = TimeSpan.FromMilliseconds(50);
+
         private Direction _nextDirection;
 
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
 
-        public Snake(ILogger logger, Field field, Vector2 headPosition, SnakeKeys controls, Direction direction = Direction.Right)
+        public SnakeComponent(ILogger logger, Field field, Vector2 headPosition, SnakeKeys controls, Direction direction = Direction.Right)
         {
             this._logger = logger;
             this._field = field;
@@ -45,6 +48,8 @@ namespace snake.GameEntities
             {
                 AddPart();
             }
+
+            _state = SnakeState.None;
         }
 
         public List<SnakePart> Parts => _parts;
@@ -87,21 +92,21 @@ namespace snake.GameEntities
         {
             var tail = _parts.LastOrDefault();
 
-            var position = Vector2.Zero;
-            var direction = default(Direction);
+            Vector2 newPartPosition;
+            var newPartDirection = default(Direction);
 
             if (tail == null)
             {
-                position = _field.Cells[0, 0].Bounds.Center.ToVector2();
-                direction = DirectionHelper.GetRandom();
+                newPartPosition = _field.Cells[0, 0].Bounds.Center.ToVector2();
+                newPartDirection = DirectionHelper.GetRandom();
             }
             else
             {
-                position = FindNeighbourPoint(DirectionHelper.GetOppositeDirection(tail.Direction), tail.Position, TileMetrics.Size);
-                direction = tail.Direction;
+                newPartPosition = FindNeighbourPoint(DirectionHelper.GetOppositeDirection(tail.Direction), tail.Position, TileMetrics.Size);
+                newPartDirection = tail.Direction;
             }
 
-            _parts.Add(new SnakePart(new Vector2(position.X, position.Y), TileMetrics.Size, direction));
+            _parts.Add(new SnakePart(new Vector2(newPartPosition.X, newPartPosition.Y), TileMetrics.Size, newPartDirection));
         }
 
         public void Update(GameTime gameTime)
@@ -128,18 +133,26 @@ namespace snake.GameEntities
             elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
             if (elapsedTime >= _stepTime)
             {
-                elapsedTime = elapsedTime - _stepTime;
+                elapsedTime -= _stepTime;
 
                 if (Enabled)
                 {
-                    head.Direction = _nextDirection;
-
-                    MoveTail();
-                    MoveHead();
-
-                    if (CheckHeadCollision())
+                    switch (_state)
                     {
-                        GameManager.NewGame();
+                        case SnakeState.None:
+                            {
+                                head.Direction = _nextDirection;
+
+                                MoveTail();
+                                MoveHead();
+
+                                if (CheckHeadCollision())
+                                {
+                                    GameManager.NewGame();
+                                }
+
+                                break;
+                            }
                     }
                 }
             }
