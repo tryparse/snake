@@ -9,6 +9,7 @@ using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
 using snake.Common;
 using snake.GameEntities;
+using snake.GameEntities.Snake;
 using snake.Logging;
 
 namespace snake.Renderers
@@ -17,7 +18,7 @@ namespace snake.Renderers
     {
         private readonly RenderConfiguration _configuration;
         private readonly ILogger _logger;
-        private readonly Snake _snake;
+        private readonly SnakeComponent _snake;
         private readonly TextureAtlas _textureRegions;
         private readonly SpriteBatch _spriteBatch;
 
@@ -28,7 +29,7 @@ namespace snake.Renderers
         private readonly TextureRegion2D _textureHead;
         private readonly TextureRegion2D _texturePart;
         
-        public SnakeRendererComponent(SpriteBatch spriteBatch, RenderConfiguration configuration, ILogger logger, Snake snake, TextureAtlas textureRegions, int drawOrder = 0)
+        public SnakeRendererComponent(SpriteBatch spriteBatch, RenderConfiguration configuration, ILogger logger, SnakeComponent snake, TextureAtlas textureRegions, int drawOrder = 0)
         {
             this._configuration = configuration;
             this._logger = logger;

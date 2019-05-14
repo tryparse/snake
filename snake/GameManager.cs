@@ -1,4 +1,5 @@
 ﻿using snake.GameEntities;
+using snake.GameEntities.Snake;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace snake
 {
     public static class GameManager
     {
-        public static Snake Snake { get; set; }
+        public static SnakeComponent Snake { get; set; }
 
         public static void NewGame()
         {

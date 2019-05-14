@@ -13,6 +13,7 @@ using snake.Common;
 using snake.Configuration;
 using System.Configuration;
 using snake.Logging;
+using snake.GameEntities.Snake;
 
 namespace snake
 {
@@ -28,7 +29,7 @@ namespace snake
         private InputHandler _inputHandler;
 
         private Field _field;
-        private Snake _snake;
+        private SnakeComponent _snake;
 
         private GameKeys _gameKeys;
         private SnakeKeys _snakeKeys;
@@ -69,7 +70,7 @@ namespace snake
             _snakeKeys = new SnakeKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
             _gameKeys = new GameKeys(Keys.P, Keys.D, Keys.R, Keys.Escape);
 
-            _snake = new Snake(_logger, _field, _field.Cells[5,5].Bounds.Center.ToVector2(), _snakeKeys)
+            _snake = new SnakeComponent(_logger, _field, _field.Cells[5,5].Bounds.Center.ToVector2(), _snakeKeys)
             {
                 Enabled = true
             };
