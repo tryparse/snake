@@ -9,7 +9,7 @@ namespace snake.Common
 {
     public static class TileMetrics
     {
-        public const int Width = 100;
+        public const int Width = 50;
         public const int Height = 50;
 
         public static Vector2 Size => new Vector2(Width, Height);

@@ -31,16 +31,17 @@ namespace snake.Renderers
         
         public SnakeRendererComponent(SpriteBatch spriteBatch, SpriteFont spriteFont, RenderConfiguration configuration, ILogger logger, SnakeComponent snake, TextureAtlas textureRegions, int drawOrder = 0)
         {
+            this._spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
+            this._spriteFont = spriteFont ?? throw new ArgumentNullException(nameof(spriteFont));
             this._configuration = configuration;
             this._logger = logger;
             this._snake = snake ?? throw new ArgumentNullException(nameof(snake));
             this._textureRegions = textureRegions ?? throw new ArgumentNullException(nameof(textureRegions));
-            this._spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
-            this._spriteFont = spriteFont;
-            this._drawOrder = drawOrder;
             this._textureHead = _textureRegions.GetRegion("Head");
             this._texturePart = _textureRegions.GetRegion("Part");
-            this._isVisible = true;
+            this._drawOrder = drawOrder;
+
+            Initialize();
         }
 
         public int DrawOrder
@@ -68,7 +69,7 @@ namespace snake.Renderers
 
         public void Initialize()
         {
-            // Nothing to initialize
+            this._isVisible = true;
         }
 
         public void Draw(GameTime gameTime)
@@ -104,7 +105,21 @@ namespace snake.Renderers
 
                 var rotation = DirectionHelper.GetRotation(part.Direction);
                 var origin = new Vector2(selectedTexture.Bounds.Width / 2f, selectedTexture.Bounds.Height / 2f);
-                var scale = new Vector2(part.Size.X / selectedTexture.Bounds.Width, part.Size.Y / selectedTexture.Bounds.Height);
+
+                Vector2 scale;
+
+                // Hack of scaling, don't know what to do :(
+                if (part.Direction == Direction.Right
+                    || part.Direction == Direction.Left)
+                {
+                    scale = new Vector2(part.Size.X / selectedTexture.Bounds.Width, part.Size.Y / selectedTexture.Bounds.Height);
+                }
+                else
+                {
+                    scale = new Vector2(part.Size.Y / selectedTexture.Bounds.Height, part.Size.X / selectedTexture.Bounds.Width);
+                }
+
+                
 
                 _spriteBatch.Draw(
                     texture: selectedTexture.Texture,
