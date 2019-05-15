@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,14 @@ namespace snake.Common
             { Direction.Right, Direction.Left }
         };
 
+        private static Dictionary<Direction, float> _rotations = new Dictionary<Direction, float>
+            {
+                { Direction.Up, MathHelper.ToRadians(-90) },
+                { Direction.Right, MathHelper.ToRadians(0) },
+                { Direction.Down, MathHelper.ToRadians(90) },
+                { Direction.Left, MathHelper.ToRadians(180) }
+            };
+
         public static Direction GetOppositeDirection(Direction direction)
         {
             return _opposites[direction];
@@ -30,6 +39,11 @@ namespace snake.Common
             var values = (Direction[])Enum.GetValues(typeof(Direction));
 
             return values[dice];
+        }
+
+        public static float GetRotation(Direction direction)
+        {
+            return _rotations[direction];
         }
     }
 }

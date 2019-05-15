@@ -35,19 +35,16 @@ namespace snake.GameEntities.Snake
 
         public SnakeComponent(ILogger logger, Field field, Vector2 position, SnakeKeys controls, Direction direction = Direction.Right)
         {
-            this._logger = logger;
-            this._field = field;
+            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this._field = field ?? throw new ArgumentNullException(nameof(field));
             this._controls = controls;
-            this._stepTime = 200;
+            this._stepTime = 1000;
             this._parts = new List<SnakePart>();
             _parts.Add(new SnakePart(position, TileMetrics.Size, direction));
 
             _nextDirection = direction;
 
-            for (int i = 0; i < 4; i++)
-            {
-                AddPart();
-            }
+            AddPart(4);
 
             _state = SnakeState.None;
         }
@@ -88,25 +85,28 @@ namespace snake.GameEntities.Snake
             Enabled = true;
         }
 
-        public void AddPart()
+        public void AddPart(int count = 1)
         {
-            var tail = _parts.LastOrDefault();
-
-            Vector2 newPartPosition;
-            var newPartDirection = default(Direction);
-
-            if (tail == null)
+            for (int i = 0; i < count; i++)
             {
-                newPartPosition = _field.Cells[0, 0].Bounds.Center.ToVector2();
-                newPartDirection = DirectionHelper.GetRandom();
-            }
-            else
-            {
-                newPartPosition = FindNeighbourPoint(DirectionHelper.GetOppositeDirection(tail.Direction), tail.Position, TileMetrics.Size);
-                newPartDirection = tail.Direction;
-            }
+                var tail = _parts.LastOrDefault();
 
-            _parts.Add(new SnakePart(new Vector2(newPartPosition.X, newPartPosition.Y), TileMetrics.Size, newPartDirection));
+                Vector2 newPartPosition;
+                var newPartDirection = default(Direction);
+
+                if (tail == null)
+                {
+                    newPartPosition = _field.Cells[0, 0].Bounds.Center.ToVector2();
+                    newPartDirection = DirectionHelper.GetRandom();
+                }
+                else
+                {
+                    newPartPosition = FindNeighbourPoint(DirectionHelper.GetOppositeDirection(tail.Direction), tail.Position, TileMetrics.Size);
+                    newPartDirection = tail.Direction;
+                }
+
+                _parts.Add(new SnakePart(new Vector2(newPartPosition.X, newPartPosition.Y), TileMetrics.Size, newPartDirection));
+            }
         }
 
         public void Update(GameTime gameTime)

@@ -44,14 +44,14 @@
   <ItemGroup>
     <Compile Include="Common\BackToFrontLayers.cs" />
     <Compile Include="Common\DirectionHelper.cs" />
-    <Compile Include="GameComponents\InputHandler.cs" />
+    <Compile Include="CommonComponents\InputHandler.cs" />
     <Compile Include="Configuration\GameConfiguration.cs" />
     <Compile Include="GameEntities\Field\Cell.cs" />
     <Compile Include="GameEntities\Field\CellType.cs" />
     <Compile Include="Common\TileMetrics.cs" />
     <Compile Include="GameEntities\Field\Field.cs" />
     <Compile Include="GameEntities\Field\FieldFactory.cs" />
-    <Compile Include="GameComponents\FPSCounter.cs" />
+    <Compile Include="CommonComponents\FPSCounter.cs" />
     <Compile Include="GameEntities\GameKeys.cs" />
     <Compile Include="GameEntities\Snake\SnakeKeys.cs" />
     <Compile Include="GameEntities\Snake\SnakePart.cs" />

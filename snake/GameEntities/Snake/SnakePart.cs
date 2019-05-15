@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using snake.Common;
 using System;
 using System.Collections.Generic;
@@ -24,12 +25,14 @@ namespace snake.GameEntities
         {
             get
             {
-                return new Rectangle(
+                var rectangle = new Rectangle(
                     (int)(Position.X - Size.X / 2),
                     (int)(Position.Y - Size.Y / 2),
-                    (int)Size.X, 
+                    (int)Size.X,
                     (int)Size.Y
                 );
+
+                return rectangle;
             }
         }
     }

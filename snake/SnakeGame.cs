@@ -22,9 +22,9 @@ namespace snake
     /// </summary>
     public class SnakeGame : Game
     {
-        private readonly GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
-        private SpriteFont font;
+        private readonly GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+        private SpriteFont _font;
 
         private InputHandler _inputHandler;
 
@@ -42,7 +42,7 @@ namespace snake
         {
             ReadConfiguration();
 
-            graphics = new GraphicsDeviceManager(this)
+            _graphics = new GraphicsDeviceManager(this)
             {
 
                 PreferredBackBufferHeight = _configuration.ScreenHeight,
@@ -113,9 +113,9 @@ namespace snake
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            font = Content.Load<SpriteFont>("Fonts/joystix");
+            _font = Content.Load<SpriteFont>("Fonts/joystix");
             var texture = Content.Load<Texture2D>("Textures/Textures_sp");
 
             var atlas = new TextureAtlas("Textures", texture);
@@ -139,10 +139,10 @@ namespace snake
                 IsRenderingEnabled = true
             };
 
-            IRenderer2D _fieldRenderer = new FieldRendererComponent(spriteBatch, _renderConfiguration, _field, atlas, font);
-            IRenderer2D _snakeRenderer = new SnakeRendererComponent(spriteBatch, _renderConfiguration, _logger, _snake, atlas);
+            IRenderer2D _fieldRenderer = new FieldRendererComponent(_spriteBatch, _renderConfiguration, _field, atlas, _font);
+            IRenderer2D _snakeRenderer = new SnakeRendererComponent(_spriteBatch, _font, _renderConfiguration, _logger, _snake, atlas);
 
-            var fps = new FPSCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), spriteBatch, font, Color.Red);
+            var fps = new FPSCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), _spriteBatch, _font, Color.Red);
         
             Components.Add(fps);
             Components.Add(_snakeRenderer);
@@ -196,13 +196,13 @@ namespace snake
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.BackToFront);
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.BackToFront);
 
-            spriteBatch.DrawString(font, string.Join(";", _inputHandler.CurrentState.GetPressedKeys()), new Vector2(500, 0), Color.Blue);
+            _spriteBatch.DrawString(_font, string.Join(";", _inputHandler.CurrentState.GetPressedKeys()), new Vector2(500, 0), Color.Blue);
 
             base.Draw(gameTime);
 
-            spriteBatch.End();
+            _spriteBatch.End();
         }
     }
 }
