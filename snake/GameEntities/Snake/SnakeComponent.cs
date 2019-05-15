@@ -33,14 +33,14 @@ namespace snake.GameEntities.Snake
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
 
-        public SnakeComponent(ILogger logger, Field field, Vector2 headPosition, SnakeKeys controls, Direction direction = Direction.Right)
+        public SnakeComponent(ILogger logger, Field field, Vector2 position, SnakeKeys controls, Direction direction = Direction.Right)
         {
             this._logger = logger;
             this._field = field;
             this._controls = controls;
             this._stepTime = 200;
             this._parts = new List<SnakePart>();
-            _parts.Add(new SnakePart(headPosition, TileMetrics.Size, direction));
+            _parts.Add(new SnakePart(position, TileMetrics.Size, direction));
 
             _nextDirection = direction;
 
