@@ -2,7 +2,7 @@
 
 namespace snake.Renderers
 {
-    public class RenderConfiguration : IRenderSettings
+    public class RenderSettings : IRenderSettings
     {
         public bool IsRenderingEnabled { get; set; }
 

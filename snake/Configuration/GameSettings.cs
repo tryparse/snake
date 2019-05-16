@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace snake.Configuration
 {
-    public class GameConfiguration
+    public class GameSettings : IGameSettings
     {
-        public GameConfiguration()
+        public GameSettings()
         {
         }
 

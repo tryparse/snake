@@ -10,9 +10,9 @@ namespace snake.Logging
     class NLogFileLogger : ILogger
     {
         private readonly NLog.ILogger _logger;
-        private readonly GameConfiguration _configuration;
+        private readonly IGameSettings _configuration;
 
-        public NLogFileLogger(GameConfiguration configuration)
+        public NLogFileLogger(IGameSettings configuration)
         {
             _logger = NLog.LogManager.GetLogger("f");
             _configuration = configuration;

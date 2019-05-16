@@ -45,7 +45,8 @@
     <Compile Include="Common\BackToFrontLayers.cs" />
     <Compile Include="Common\DirectionHelper.cs" />
     <Compile Include="CommonComponents\InputHandler.cs" />
-    <Compile Include="Configuration\GameConfiguration.cs" />
+    <Compile Include="Configuration\GameSettings.cs" />
+    <Compile Include="Configuration\IGameSettings.cs" />
     <Compile Include="GameEntities\Field\Cell.cs" />
     <Compile Include="GameEntities\Field\CellType.cs" />
     <Compile Include="Common\TileMetrics.cs" />
@@ -69,7 +70,7 @@
     <Compile Include="Interfaces\IRenderer2D.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Renderers\RenderConfiguration.cs" />
+    <Compile Include="Renderers\RenderSettings.cs" />
     <Compile Include="Renderers\SnakeRendererComponent.cs" />
     <Compile Include="GameEntities\Snake\SnakeComponent.cs" />
     <Compile Include="Common\Direction.cs" />

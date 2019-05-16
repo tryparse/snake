@@ -16,6 +16,7 @@ using snake.Logging;
 using snake.GameEntities.Snake;
 using snake.GameEntities.Fruit;
 using snake.UIComponents;
+using snake.Interfaces;
 
 namespace snake
 {
@@ -37,8 +38,8 @@ namespace snake
         private GameKeys _gameKeys;
         private SnakeKeys _snakeKeys;
 
-        private GameConfiguration _configuration;
-        private RenderConfiguration _renderConfiguration;
+        private IGameSettings _gameSettings;
+        private IRenderSettings _renderSettings;
         private ILogger _logger;
 
         public SnakeGame()
@@ -48,8 +49,8 @@ namespace snake
             _graphics = new GraphicsDeviceManager(this)
             {
 
-                PreferredBackBufferHeight = _configuration.ScreenHeight,
-                PreferredBackBufferWidth = _configuration.ScreenWidth,
+                PreferredBackBufferHeight = _gameSettings.ScreenHeight,
+                PreferredBackBufferWidth = _gameSettings.ScreenWidth,
                 GraphicsProfile = GraphicsProfile.HiDef
             };
             IsMouseVisible = true;
@@ -65,7 +66,7 @@ namespace snake
         /// </summary>
         protected override void Initialize()
         {
-            _logger = new NLogFileLogger(_configuration);
+            _logger = new NLogFileLogger(_gameSettings);
 
             IFieldFactory fieldFactory = new FieldFactory();
 
@@ -92,23 +93,23 @@ namespace snake
 
         private void ReadConfiguration()
         {
-            _configuration = new GameConfiguration();
+            _gameSettings = new GameSettings();
 
             bool.TryParse(ConfigurationManager.AppSettings["IsLoggingEnabled"], out var isLoggingEnabled);
 
-            _configuration.IsLoggingEnabled = isLoggingEnabled;
+            _gameSettings.IsLoggingEnabled = isLoggingEnabled;
 
             bool.TryParse(ConfigurationManager.AppSettings["IsDebugRenderingEnabled"], out var isDebugRenderingEnabled);
 
-            _configuration.IsDebugRenderingEnabled = isDebugRenderingEnabled;
+            _gameSettings.IsDebugRenderingEnabled = isDebugRenderingEnabled;
 
             int.TryParse(ConfigurationManager.AppSettings["ScreenWidth"], out var screenWidth);
 
-            _configuration.ScreenWidth = screenWidth;
+            _gameSettings.ScreenWidth = screenWidth;
 
             int.TryParse(ConfigurationManager.AppSettings["ScreenHeight"], out var screenHeight);
 
-            _configuration.ScreenHeight = screenHeight;
+            _gameSettings.ScreenHeight = screenHeight;
         }
 
         /// <summary>
@@ -138,15 +139,15 @@ namespace snake
             atlas.CreateRegion("BottomRight", n * 3, n * 1, n, n);
             atlas.CreateRegion("Tree", n * 4, n * 1, n, n);
 
-            _renderConfiguration = new RenderConfiguration
+            _renderSettings = new RenderSettings
             {
-                IsDebugRenderingEnabled = _configuration.IsDebugRenderingEnabled,
+                IsDebugRenderingEnabled = _gameSettings.IsDebugRenderingEnabled,
                 IsRenderingEnabled = true
             };
 
-            IRenderer2D _fieldRenderer = new FieldRendererComponent(_spriteBatch, _spriteFont, _renderConfiguration, _field, atlas);
-            IRenderer2D _snakeRenderer = new SnakeRendererComponent(_spriteBatch, _spriteFont, _renderConfiguration, _logger, _snake, atlas);
-            IRenderer2D _fruitRenderer = new FruitRendererComponent(_fruit, _spriteBatch, atlas.GetRegion("Fruit"), _renderConfiguration);
+            IRenderer2D _fieldRenderer = new FieldRendererComponent(_spriteBatch, _spriteFont, _renderSettings, _field, atlas);
+            IRenderer2D _snakeRenderer = new SnakeRendererComponent(_spriteBatch, _spriteFont, _renderSettings, _logger, _snake, atlas);
+            IRenderer2D _fruitRenderer = new FruitRendererComponent(_fruit, _spriteBatch, atlas.GetRegion("Fruit"), _renderSettings);
 
             var fps = new FPSCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), _spriteBatch, _spriteFont, Color.Red);
 
@@ -187,12 +188,12 @@ namespace snake
 
             if (InputHandler.IsKeyPressed(_gameKeys.SwitchDebugRendering))
             {
-                _renderConfiguration.IsDebugRenderingEnabled = !_renderConfiguration.IsDebugRenderingEnabled;
+                _renderSettings.IsDebugRenderingEnabled = !_renderSettings.IsDebugRenderingEnabled;
             }
 
             if (InputHandler.IsKeyPressed(_gameKeys.SwitchRendering))
             {
-                _renderConfiguration.IsRenderingEnabled = !_renderConfiguration.IsRenderingEnabled;
+                _renderSettings.IsRenderingEnabled = !_renderSettings.IsRenderingEnabled;
             }
 
             base.Update(gameTime);
