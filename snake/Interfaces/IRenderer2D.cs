@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using snake.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace snake
 {
     public interface IRenderer2D : IGameComponent, IDrawable
     {
+        IRenderSettings Settings { get; }
     }
 }

@@ -14,6 +14,8 @@ using snake.Configuration;
 using System.Configuration;
 using snake.Logging;
 using snake.GameEntities.Snake;
+using snake.GameEntities.Fruit;
+using snake.UIComponents;
 
 namespace snake
 {
@@ -24,12 +26,13 @@ namespace snake
     {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private SpriteFont _font;
+        private SpriteFont _spriteFont;
 
         private InputHandler _inputHandler;
 
         private Field _field;
         private SnakeComponent _snake;
+        private Fruit _fruit;
 
         private GameKeys _gameKeys;
         private SnakeKeys _snakeKeys;
@@ -77,6 +80,8 @@ namespace snake
 
             GameManager.Snake = _snake;
 
+            _fruit = new Fruit(_field.Cells[1,1].Bounds.Center.ToVector2(), TileMetrics.Size);
+
             _inputHandler = new InputHandler(this);
 
             Components.Add(_inputHandler);
@@ -115,7 +120,7 @@ namespace snake
             // Create a new SpriteBatch, which can be used to draw textures.
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _font = Content.Load<SpriteFont>("Fonts/joystix");
+            _spriteFont = Content.Load<SpriteFont>("Fonts/joystix");
             var texture = Content.Load<Texture2D>("Textures/Textures_sp");
 
             var atlas = new TextureAtlas("Textures", texture);
@@ -139,14 +144,19 @@ namespace snake
                 IsRenderingEnabled = true
             };
 
-            IRenderer2D _fieldRenderer = new FieldRendererComponent(_spriteBatch, _renderConfiguration, _field, atlas, _font);
-            IRenderer2D _snakeRenderer = new SnakeRendererComponent(_spriteBatch, _font, _renderConfiguration, _logger, _snake, atlas);
+            IRenderer2D _fieldRenderer = new FieldRendererComponent(_spriteBatch, _spriteFont, _renderConfiguration, _field, atlas);
+            IRenderer2D _snakeRenderer = new SnakeRendererComponent(_spriteBatch, _spriteFont, _renderConfiguration, _logger, _snake, atlas);
+            IRenderer2D _fruitRenderer = new FruitRendererComponent(_fruit, _spriteBatch, atlas.GetRegion("Fruit"), _renderConfiguration);
 
-            var fps = new FPSCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), _spriteBatch, _font, Color.Red);
-        
+            var fps = new FPSCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), _spriteBatch, _spriteFont, Color.Red);
+
+            var keysVisualization = new KeyboardKeysComponent(this, _spriteBatch, _spriteFont, new Vector2(500, 0), new Queue<Keys>());
+
             Components.Add(fps);
+            Components.Add(keysVisualization);
             Components.Add(_snakeRenderer);
             Components.Add(_fieldRenderer);
+            Components.Add(_fruitRenderer);
         }
 
         /// <summary>
@@ -196,9 +206,7 @@ namespace snake
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.BackToFront);
-
-            _spriteBatch.DrawString(_font, string.Join(";", _inputHandler.CurrentState.GetPressedKeys()), new Vector2(500, 0), Color.Blue);
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend);
 
             base.Draw(gameTime);
 

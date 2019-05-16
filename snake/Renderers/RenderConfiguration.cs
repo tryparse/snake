@@ -1,6 +1,8 @@
-﻿namespace snake.Renderers
+﻿using snake.Interfaces;
+
+namespace snake.Renderers
 {
-    public class RenderConfiguration
+    public class RenderConfiguration : IRenderSettings
     {
         public bool IsRenderingEnabled { get; set; }
 

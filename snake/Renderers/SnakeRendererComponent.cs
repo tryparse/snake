@@ -10,6 +10,7 @@ using MonoGame.Extended.TextureAtlases;
 using snake.Common;
 using snake.GameEntities;
 using snake.GameEntities.Snake;
+using snake.Interfaces;
 using snake.Logging;
 
 namespace snake.Renderers
@@ -17,7 +18,6 @@ namespace snake.Renderers
     public class SnakeRendererComponent : IRenderer2D
     {
         private const int HEAD_INDEX = 0;
-        private readonly RenderConfiguration _configuration;
         private readonly ILogger _logger;
         private readonly SnakeComponent _snake;
         private readonly TextureAtlas _textureRegions;
@@ -28,21 +28,25 @@ namespace snake.Renderers
 
         private readonly TextureRegion2D _textureHead;
         private readonly TextureRegion2D _texturePart;
+        private readonly TextureRegion2D _textureTail;
         
-        public SnakeRendererComponent(SpriteBatch spriteBatch, SpriteFont spriteFont, RenderConfiguration configuration, ILogger logger, SnakeComponent snake, TextureAtlas textureRegions, int drawOrder = 0)
+        public SnakeRendererComponent(SpriteBatch spriteBatch, SpriteFont spriteFont, IRenderSettings settings, ILogger logger, SnakeComponent snake, TextureAtlas textureRegions, int drawOrder = 0)
         {
             this._spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
             this._spriteFont = spriteFont ?? throw new ArgumentNullException(nameof(spriteFont));
-            this._configuration = configuration;
+            this.Settings = settings;
             this._logger = logger;
             this._snake = snake ?? throw new ArgumentNullException(nameof(snake));
             this._textureRegions = textureRegions ?? throw new ArgumentNullException(nameof(textureRegions));
             this._textureHead = _textureRegions.GetRegion("Head");
             this._texturePart = _textureRegions.GetRegion("Part");
+            this._textureTail = _textureRegions.GetRegion("Tail");
             this._drawOrder = drawOrder;
 
             Initialize();
         }
+
+        public IRenderSettings Settings { get; }
 
         public int DrawOrder
         {
@@ -74,12 +78,12 @@ namespace snake.Renderers
 
         public void Draw(GameTime gameTime)
         {
-            if (_configuration.IsRenderingEnabled)
+            if (Settings.IsRenderingEnabled)
             {
                 Rendering();
             }
 
-            if (_configuration.IsDebugRenderingEnabled)
+            if (Settings.IsDebugRenderingEnabled)
             {
                 DebugRendering();
             }
@@ -97,10 +101,14 @@ namespace snake.Renderers
                 {
                     selectedTexture = _textureHead;
                 }
+                else if (i == _snake.Parts.Count - 1)
+                {
+                    // TODO: Add more variations
+                    selectedTexture = _textureTail;
+                }
                 else
                 {
                     selectedTexture = _texturePart;
-                    // TODO: Add more variations
                 }
 
                 var rotation = DirectionHelper.GetRotation(part.Direction);
@@ -108,7 +116,7 @@ namespace snake.Renderers
 
                 Vector2 scale;
 
-                // Hack of scaling, don't know what to do :(
+                // Hack of scaling, for cases when TileWidth != TileHeight
                 if (part.Direction == Direction.Right
                     || part.Direction == Direction.Left)
                 {
@@ -118,8 +126,6 @@ namespace snake.Renderers
                 {
                     scale = new Vector2(part.Size.Y / selectedTexture.Bounds.Height, part.Size.X / selectedTexture.Bounds.Width);
                 }
-
-                
 
                 _spriteBatch.Draw(
                     texture: selectedTexture.Texture,
