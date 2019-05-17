@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using MonoGame.Extended;
 using SnakeGame.Shared.Common;
+using SnakeGame.Shared.GameLogic.Snake;
+using SnakeGame.Shared.Logging;
 
 namespace snake.GameEntities.Snake
 {
@@ -26,7 +28,7 @@ namespace snake.GameEntities.Snake
         private int _updateOrder;
 
         private SnakeState _state;
-        private TimeSpan _transitionTime = TimeSpan.FromMilliseconds(50);
+        private TimeSpan _transitionTime = TimeSpan.FromMilliseconds(1000);
         private TimeSpan _elapsedTransitionTime = TimeSpan.Zero;
 
         private Direction _nextDirection;
@@ -45,7 +47,7 @@ namespace snake.GameEntities.Snake
 
             _nextDirection = direction;
 
-            AddPart(4);
+            //AddPart(4);
 
             _state = SnakeState.None;
         }
@@ -131,7 +133,14 @@ namespace snake.GameEntities.Snake
                 _nextDirection = Direction.Left;
             }
 
+            Move(gameTime, head);
+        }
+
+        private void Move(GameTime gameTime, SnakePart head)
+        {
             _elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+            _elapsedTransitionTime += gameTime.ElapsedGameTime;
+
             if (_elapsedTime >= _stepTime)
             {
                 _elapsedTime -= _stepTime;
@@ -159,13 +168,9 @@ namespace snake.GameEntities.Snake
                             }
                         case SnakeState.Moving:
                             {
-                                _elapsedTransitionTime += gameTime.ElapsedGameTime;
+                                var movingCalculator = new MovingCalculator(_logger);
 
-                                var step = TileMetrics.Size;
-
-                                var offset = Vector2.Divide(step, (float)_elapsedTransitionTime.TotalMilliseconds / (float)_transitionTime.TotalMilliseconds);
-
-                                var newPosition = FindNeighbourPoint(head.Direction, head.Position, step);
+                                var newPosition = movingCalculator.Calculate(head.Direction, head.Position, TileMetrics.Size, _transitionTime, _elapsedTransitionTime);
 
                                 head.Position = newPosition;
 

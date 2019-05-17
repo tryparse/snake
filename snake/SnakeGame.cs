@@ -17,6 +17,7 @@ using snake.GameEntities.Fruit;
 using snake.UIComponents;
 using snake.Interfaces;
 using SnakeGame.Shared.Settings;
+using SnakeGame.Shared.Logging;
 
 namespace snake
 {
@@ -74,7 +75,7 @@ namespace snake
             _snakeKeys = new SnakeKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
             _gameKeys = new GameKeys(Keys.P, Keys.D, Keys.R, Keys.Escape);
 
-            _snake = new SnakeComponent(_logger, _field, _field.Cells[5,5].Bounds.Center.ToVector2(), _snakeKeys)
+            _snake = new SnakeComponent(_logger, _field, _field.Cells[0,0].Bounds.Center.ToVector2(), _snakeKeys)
             {
                 Enabled = true
             };

@@ -57,7 +57,6 @@
     <Compile Include="GameEntities\ISprite.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="Interfaces\IRenderSettings.cs" />
-    <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\NLogFileLogger.cs" />
     <Compile Include="Renderers\FieldRendererComponent.cs" />
     <Compile Include="Renderers\FruitRendererComponent.cs" />

@@ -13,6 +13,7 @@ using snake.GameEntities.Snake;
 using snake.Interfaces;
 using snake.Logging;
 using SnakeGame.Shared.Common;
+using SnakeGame.Shared.Logging;
 
 namespace snake.Renderers
 {

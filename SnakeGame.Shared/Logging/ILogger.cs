@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace snake.Logging
+namespace SnakeGame.Shared.Logging
 {
     public interface ILogger
     {
