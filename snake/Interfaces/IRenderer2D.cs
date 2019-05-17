@@ -11,6 +11,6 @@ namespace snake
 {
     public interface IRenderer2D : IGameComponent, IDrawable
     {
-        IRenderSettings Settings { get; }
+        IRenderSettings RenderSettings { get; }
     }
 }

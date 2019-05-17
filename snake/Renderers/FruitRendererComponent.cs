@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
 using snake.Common;
 using snake.GameEntities.Fruit;
 using snake.Interfaces;
+using SnakeGame.Shared.Common;
 
 namespace snake.Renderers
 {
@@ -27,12 +29,12 @@ namespace snake.Renderers
             this._fruit = fruit;
             this._spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
             this._textureRegion = textureRegion ?? throw new ArgumentNullException(nameof(textureRegion));
-            this.Settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            this.RenderSettings = settings ?? throw new ArgumentNullException(nameof(settings));
 
             Initialize();
         }
 
-        public IRenderSettings Settings { get; }
+        public IRenderSettings RenderSettings { get; }
 
         public int DrawOrder => _drawOrder;
 
@@ -50,12 +52,12 @@ namespace snake.Renderers
 
         public void Draw(GameTime gameTime)
         {
-            if (Settings.IsRenderingEnabled)
+            if (RenderSettings.IsRenderingEnabled)
             {
                 Render();
             }
 
-            if (Settings.IsDebugRenderingEnabled)
+            if (RenderSettings.IsDebugRenderingEnabled)
             {
                 DebugRender();
             }
@@ -63,13 +65,13 @@ namespace snake.Renderers
 
         private void DebugRender()
         {
-
+            _spriteBatch.DrawRectangle(_fruit.Position, _fruit.Size, Color.Orange, 1);
         }
 
         private void Render()
         {
             var origin = new Vector2(_textureRegion.Width / 2, _textureRegion.Height / 2);
-            var scale = new Vector2(_fruit.Size.X / _textureRegion.Bounds.Width, _fruit.Size.Y / _textureRegion.Bounds.Height);
+            var scale = new Vector2(_fruit.Size.Width / _textureRegion.Bounds.Width, _fruit.Size.Height / _textureRegion.Bounds.Height);
 
             _spriteBatch.Draw(
                     texture: _textureRegion.Texture,
@@ -80,7 +82,7 @@ namespace snake.Renderers
                     scale: scale,
                     origin: origin,
                     effects: SpriteEffects.None,
-                    layerDepth: BackToFrontLayers.Fruit
+                    layerDepth: LayerDepths.Fruit
                 );
         }
     }

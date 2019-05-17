@@ -12,6 +12,7 @@ using snake.GameEntities;
 using snake.GameEntities.Snake;
 using snake.Interfaces;
 using snake.Logging;
+using SnakeGame.Shared.Common;
 
 namespace snake.Renderers
 {
@@ -34,7 +35,7 @@ namespace snake.Renderers
         {
             this._spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
             this._spriteFont = spriteFont ?? throw new ArgumentNullException(nameof(spriteFont));
-            this.Settings = settings;
+            this.RenderSettings = settings;
             this._logger = logger;
             this._snake = snake ?? throw new ArgumentNullException(nameof(snake));
             this._textureRegions = textureRegions ?? throw new ArgumentNullException(nameof(textureRegions));
@@ -46,7 +47,7 @@ namespace snake.Renderers
             Initialize();
         }
 
-        public IRenderSettings Settings { get; }
+        public IRenderSettings RenderSettings { get; }
 
         public int DrawOrder
         {
@@ -78,12 +79,12 @@ namespace snake.Renderers
 
         public void Draw(GameTime gameTime)
         {
-            if (Settings.IsRenderingEnabled)
+            if (RenderSettings.IsRenderingEnabled)
             {
                 Rendering();
             }
 
-            if (Settings.IsDebugRenderingEnabled)
+            if (RenderSettings.IsDebugRenderingEnabled)
             {
                 DebugRendering();
             }
@@ -95,37 +96,12 @@ namespace snake.Renderers
             {
                 var part = _snake.Parts[i];
 
-                TextureRegion2D selectedTexture;
-
-                if (i == HEAD_INDEX)
-                {
-                    selectedTexture = _textureHead;
-                }
-                else if (i == _snake.Parts.Count - 1)
-                {
-                    // TODO: Add more variations
-                    selectedTexture = _textureTail;
-                }
-                else
-                {
-                    selectedTexture = _texturePart;
-                }
+                TextureRegion2D selectedTexture = SelectTexture(i);
 
                 var rotation = DirectionHelper.GetRotation(part.Direction);
                 var origin = new Vector2(selectedTexture.Bounds.Width / 2f, selectedTexture.Bounds.Height / 2f);
 
-                Vector2 scale;
-
-                // Hack of scaling, for cases when TileWidth != TileHeight
-                if (part.Direction == Direction.Right
-                    || part.Direction == Direction.Left)
-                {
-                    scale = new Vector2(part.Size.X / selectedTexture.Bounds.Width, part.Size.Y / selectedTexture.Bounds.Height);
-                }
-                else
-                {
-                    scale = new Vector2(part.Size.Y / selectedTexture.Bounds.Height, part.Size.X / selectedTexture.Bounds.Width);
-                }
+                Vector2 scale = CalculateScale(part, selectedTexture);
 
                 _spriteBatch.Draw(
                     texture: selectedTexture.Texture,
@@ -136,9 +112,47 @@ namespace snake.Renderers
                     scale: scale,
                     origin: origin,
                     effects: SpriteEffects.None,
-                    layerDepth: BackToFrontLayers.Snake
+                    layerDepth: LayerDepths.Snake
                 );
             }
+        }
+
+        private Vector2 CalculateScale(SnakePart part, TextureRegion2D selectedTexture)
+        {
+            Vector2 scale;
+            // Hack of scaling, for cases when TileWidth != TileHeight
+            if (part.Direction == Direction.Right
+                || part.Direction == Direction.Left)
+            {
+                scale = new Vector2(part.Size.Width / selectedTexture.Bounds.Width, part.Size.Height / selectedTexture.Bounds.Height);
+            }
+            else
+            {
+                scale = new Vector2(part.Size.Height / selectedTexture.Bounds.Height, part.Size.Width / selectedTexture.Bounds.Width);
+            }
+
+            return scale;
+        }
+
+        private TextureRegion2D SelectTexture(int partIndex)
+        {
+            TextureRegion2D selectedTexture;
+
+            if (partIndex == HEAD_INDEX)
+            {
+                selectedTexture = _textureHead;
+            }
+            else if (partIndex == _snake.Parts.Count - 1)
+            {
+                // TODO: Add more variations
+                selectedTexture = _textureTail;
+            }
+            else
+            {
+                selectedTexture = _texturePart;
+            }
+
+            return selectedTexture;
         }
 
         private void DebugRendering()

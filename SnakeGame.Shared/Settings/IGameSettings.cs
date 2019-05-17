@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace snake.Configuration
+namespace SnakeGame.Shared.Settings
 {
-    interface IGameSettings
+    public interface IGameSettings
     {
         bool IsLoggingEnabled { get; set; }
 
@@ -15,5 +15,9 @@ namespace snake.Configuration
         int ScreenWidth { get; set; }
 
         int ScreenHeight { get; set; }
+
+        int TileWidth { get; set; }
+
+        int TileHeight { get; set; }
     }
 }

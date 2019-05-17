@@ -1,4 +1,4 @@
-﻿namespace snake.Common
+﻿namespace SnakeGame.Shared.Common
 {
     public enum Direction
     {

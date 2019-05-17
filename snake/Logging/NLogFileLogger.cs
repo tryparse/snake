@@ -1,4 +1,4 @@
-﻿using snake.Configuration;
+﻿using SnakeGame.Shared.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;

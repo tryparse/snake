@@ -1,13 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace snake.Common
+namespace SnakeGame.Shared.Common
 {
-    static class DirectionHelper
+    public static class DirectionHelper
     {
         private static Dictionary<Direction, Direction> _opposites = new Dictionary<Direction, Direction>
         {

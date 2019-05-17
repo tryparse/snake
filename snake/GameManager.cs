@@ -16,5 +16,23 @@ namespace snake
         {
             Snake.Reset();
         }
+
+        public static bool CheckSnakeCollision(SnakeComponent snake)
+        {
+            var head = snake.Parts.First();
+
+            var tail = snake.Parts.Skip(1);
+
+            foreach (var part in tail)
+            {
+                if (head.Bounds.Intersects(part.Bounds))
+                {
+                    snake.Enabled = false;
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

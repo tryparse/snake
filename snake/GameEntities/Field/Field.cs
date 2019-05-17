@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using snake.Common;
+using SnakeGame.Shared.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,10 @@ namespace snake.GameEntities
         private readonly Cell[,] _cells;
         private readonly Rectangle _bounds;
 
-        public Field(int width, int height, Cell[,] cells)
+        public Field(IGameSettings settings, int width, int height, Cell[,] cells)
 		{
             this._cells = cells;
-            this._bounds = new Rectangle(0, 0, LengthX * TileMetrics.Width, LengthY * TileMetrics.Height);
+            this._bounds = new Rectangle(0, 0, LengthX * settings.TileWidth, LengthY * settings.TileHeight);
         }
 
         public Cell[,] Cells => _cells;

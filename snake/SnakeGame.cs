@@ -10,13 +10,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using snake.GameEntities;
 using snake.Common;
-using snake.Configuration;
 using System.Configuration;
 using snake.Logging;
 using snake.GameEntities.Snake;
 using snake.GameEntities.Fruit;
 using snake.UIComponents;
 using snake.Interfaces;
+using SnakeGame.Shared.Settings;
 
 namespace snake
 {
@@ -44,7 +44,7 @@ namespace snake
 
         public SnakeGame()
         {
-            ReadConfiguration();
+            ReadSettings();
 
             _graphics = new GraphicsDeviceManager(this)
             {
@@ -68,7 +68,7 @@ namespace snake
         {
             _logger = new NLogFileLogger(_gameSettings);
 
-            IFieldFactory fieldFactory = new FieldFactory();
+            IFieldFactory fieldFactory = new FieldFactory(_gameSettings);
 
             _field = fieldFactory.GetRandomField(10, 10);
             _snakeKeys = new SnakeKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
@@ -91,25 +91,35 @@ namespace snake
             base.Initialize();
         }
 
-        private void ReadConfiguration()
+        private void ReadSettings()
         {
+            var appSettings = ConfigurationManager.AppSettings;
+
             _gameSettings = new GameSettings();
 
-            bool.TryParse(ConfigurationManager.AppSettings["IsLoggingEnabled"], out var isLoggingEnabled);
+            bool.TryParse(appSettings["IsLoggingEnabled"], out var isLoggingEnabled);
 
             _gameSettings.IsLoggingEnabled = isLoggingEnabled;
 
-            bool.TryParse(ConfigurationManager.AppSettings["IsDebugRenderingEnabled"], out var isDebugRenderingEnabled);
+            bool.TryParse(appSettings["IsDebugRenderingEnabled"], out var isDebugRenderingEnabled);
 
             _gameSettings.IsDebugRenderingEnabled = isDebugRenderingEnabled;
 
-            int.TryParse(ConfigurationManager.AppSettings["ScreenWidth"], out var screenWidth);
+            int.TryParse(appSettings["ScreenWidth"], out var screenWidth);
 
             _gameSettings.ScreenWidth = screenWidth;
 
-            int.TryParse(ConfigurationManager.AppSettings["ScreenHeight"], out var screenHeight);
+            int.TryParse(appSettings["ScreenHeight"], out var screenHeight);
 
             _gameSettings.ScreenHeight = screenHeight;
+
+            int.TryParse(appSettings["TileWidth"], out var tileWidth);
+
+            _gameSettings.TileWidth = tileWidth;
+
+            int.TryParse(appSettings["TileHeight"], out var tileHeight);
+
+            _gameSettings.TileHeight = tileHeight;
         }
 
         /// <summary>
@@ -145,7 +155,7 @@ namespace snake
                 IsRenderingEnabled = true
             };
 
-            IRenderer2D _fieldRenderer = new FieldRendererComponent(_spriteBatch, _spriteFont, _renderSettings, _field, atlas);
+            IRenderer2D _fieldRenderer = new FieldRendererComponent(_gameSettings, _spriteBatch, _spriteFont, _renderSettings, _field, atlas);
             IRenderer2D _snakeRenderer = new SnakeRendererComponent(_spriteBatch, _spriteFont, _renderSettings, _logger, _snake, atlas);
             IRenderer2D _fruitRenderer = new FruitRendererComponent(_fruit, _spriteBatch, atlas.GetRegion("Fruit"), _renderSettings);
 

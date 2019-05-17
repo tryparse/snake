@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace snake.Common
+namespace SnakeGame.Shared.Common
 {
-    public static class BackToFrontLayers
+    public static class LayerDepths
     {
         public const float Grass = 1f;
 

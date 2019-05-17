@@ -6,6 +6,8 @@ using MonoGame.Extended.TextureAtlases;
 using snake.Common;
 using snake.GameEntities;
 using snake.Interfaces;
+using SnakeGame.Shared.Common;
+using SnakeGame.Shared.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +21,7 @@ namespace snake.Renderers
         private readonly Field _field;
         private readonly TextureAtlas _textureAtlas;
         private readonly SpriteFont _spriteFont;
+        private readonly IGameSettings _gameSettings;
         private readonly SpriteBatch _spriteBatch;
 
         private int _drawOrder;
@@ -27,11 +30,12 @@ namespace snake.Renderers
         private TextureRegion2D _treeTexture;
         private TextureRegion2D _grassTexture;
 
-        public FieldRendererComponent(SpriteBatch spriteBatch, SpriteFont spriteFont, IRenderSettings settings, Field field, TextureAtlas textureAtlas, int drawOrder = 0)
+        public FieldRendererComponent(IGameSettings gameSettings, SpriteBatch spriteBatch, SpriteFont spriteFont, IRenderSettings renderSettings, Field field, TextureAtlas textureAtlas, int drawOrder = 0)
         {
+            this._gameSettings = gameSettings;
             this._spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
             this._spriteFont = spriteFont ?? throw new ArgumentNullException(nameof(spriteFont));
-            this.Settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            this.RenderSettings = renderSettings ?? throw new ArgumentNullException(nameof(renderSettings));
             this._field = field ?? throw new ArgumentNullException(nameof(field));
             this._textureAtlas = textureAtlas ?? throw new ArgumentNullException(nameof(textureAtlas));
             this._drawOrder = drawOrder;
@@ -39,7 +43,7 @@ namespace snake.Renderers
             Initialize();
         }
 
-        public IRenderSettings Settings { get; }
+        public IRenderSettings RenderSettings { get; }
 
         public int DrawOrder
         {
@@ -112,17 +116,17 @@ namespace snake.Renderers
                 origin: Vector2.Zero,
                 scale: 1f,
                 effects: SpriteEffects.None,
-                layerDepth: BackToFrontLayers.Debug);
+                layerDepth: LayerDepths.Debug);
         }
 
         private void RenderTileBorders()
         {
-            for (int x = 0; x <= _field.Bounds.Width; x += TileMetrics.Width)
+            for (int x = 0; x <= _field.Bounds.Width; x += _gameSettings.TileWidth)
             {
                 _spriteBatch.DrawLine(new Vector2(x, 0), new Vector2(x, _field.Bounds.Height), Color.Black);
             }
 
-            for (int y = 0; y <= _field.Bounds.Height; y += TileMetrics.Height)
+            for (int y = 0; y <= _field.Bounds.Height; y += _gameSettings.TileHeight)
             {
                 _spriteBatch.DrawLine(new Vector2(0, y), new Vector2(_field.Bounds.Width, y), Color.Black);
             }
@@ -130,12 +134,12 @@ namespace snake.Renderers
 
         public void Draw(GameTime gameTime)
         {
-            if (Settings.IsRenderingEnabled)
+            if (RenderSettings.IsRenderingEnabled)
             {
                 Rendering();
             }
 
-            if (Settings.IsDebugRenderingEnabled)
+            if (RenderSettings.IsDebugRenderingEnabled)
             {
                 DebugRendering();
             }
@@ -174,7 +178,7 @@ namespace snake.Renderers
                 rotation: 0,
                 origin: Vector2.Zero,
                 effects: SpriteEffects.None,
-                layerDepth: BackToFrontLayers.Grass);
+                layerDepth: LayerDepths.Grass);
         }
 
         private void DrawTree(Cell cell)
@@ -187,7 +191,7 @@ namespace snake.Renderers
                 rotation: 0,
                 origin: Vector2.Zero,
                 effects: SpriteEffects.None,
-                layerDepth: BackToFrontLayers.Tree);
+                layerDepth: LayerDepths.Tree);
         }
 
         private void DrawGrassWithTree(Cell cell)

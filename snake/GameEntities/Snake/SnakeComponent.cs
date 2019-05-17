@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using snake.Common;
-using snake.Configuration;
 using snake.GameComponents;
 using snake.Logging;
 using System;
@@ -9,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MonoGame.Extended;
+using SnakeGame.Shared.Common;
 
 namespace snake.GameEntities.Snake
 {
@@ -20,13 +20,14 @@ namespace snake.GameEntities.Snake
         private readonly List<SnakePart> _parts;
 
         private readonly int _stepTime;
-        private int elapsedTime;
+        private int _elapsedTime;
 
         private bool _enabled;
         private int _updateOrder;
 
         private SnakeState _state;
         private TimeSpan _transitionTime = TimeSpan.FromMilliseconds(50);
+        private TimeSpan _elapsedTransitionTime = TimeSpan.Zero;
 
         private Direction _nextDirection;
 
@@ -130,10 +131,10 @@ namespace snake.GameEntities.Snake
                 _nextDirection = Direction.Left;
             }
 
-            elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
-            if (elapsedTime >= _stepTime)
+            _elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+            if (_elapsedTime >= _stepTime)
             {
-                elapsedTime -= _stepTime;
+                _elapsedTime -= _stepTime;
 
                 if (Enabled)
                 {
@@ -143,12 +144,34 @@ namespace snake.GameEntities.Snake
                             {
                                 head.Direction = _nextDirection;
 
-                                MoveTail();
-                                MoveHead();
+                                //MoveTail();
+                                //MoveHead();
+                                StartMoving();
 
-                                if (CheckHeadCollision())
+                                if (GameManager.CheckSnakeCollision(this))
                                 {
                                     GameManager.NewGame();
+                                }
+
+                                _state = SnakeState.Moving;
+
+                                break;
+                            }
+                        case SnakeState.Moving:
+                            {
+                                _elapsedTransitionTime += gameTime.ElapsedGameTime;
+
+                                var step = TileMetrics.Size;
+
+                                var offset = Vector2.Divide(step, (float)_elapsedTransitionTime.TotalMilliseconds / (float)_transitionTime.TotalMilliseconds);
+
+                                var newPosition = FindNeighbourPoint(head.Direction, head.Position, step);
+
+                                head.Position = newPosition;
+
+                                if (_elapsedTransitionTime >= _transitionTime)
+                                {
+                                    _elapsedTransitionTime -= _transitionTime;
                                 }
 
                                 break;
@@ -156,6 +179,11 @@ namespace snake.GameEntities.Snake
                     }
                 }
             }
+        }
+
+        private void StartMoving()
+        {
+            _state = SnakeState.Moving;
         }
 
         private void MoveHead()

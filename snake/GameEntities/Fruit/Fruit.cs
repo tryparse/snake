@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,6 @@ namespace snake.GameEntities.Fruit
         }
 
         public Vector2 Position { get; }
-        public Vector2 Size { get; }
+        public Size2 Size { get; }
     }
 }
