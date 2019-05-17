@@ -6,6 +6,8 @@ namespace SnakeGame.Shared.Common
 {
     public static class DirectionHelper
     {
+        private static Random _random = new Random();
+
         private static Dictionary<Direction, Direction> _opposites = new Dictionary<Direction, Direction>
         {
             { Direction.Down, Direction.Up },
@@ -29,9 +31,7 @@ namespace SnakeGame.Shared.Common
 
         public static Direction GetRandom()
         {
-            var random = new Random();
-
-            var dice = random.Next(0, 4);
+            var dice = _random.Next(0, 4);
 
             var values = (Direction[])Enum.GetValues(typeof(Direction));
 
