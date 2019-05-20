@@ -6,59 +6,40 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SnakeGame.Shared.Logging;
+using SnakeGame.Shared.GameLogic.GameField;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
     public class MovingCalculator
     {
         private readonly ILogger _logger;
+        private readonly Field _field;
 
-        public MovingCalculator(ILogger logger)
+        public MovingCalculator(ILogger logger, Field field)
         {
             _logger = logger;
+            _field = field;
         }
 
-        public Vector2 Calculate(Direction direction, Vector2 currentPosition, Vector2 movingStep, TimeSpan transitionTime, TimeSpan elapsedTransitionTime)
+        public Vector2 Calculate(Vector2 currentPosition, Vector2 targetPosition, TimeSpan transitionTime, TimeSpan elapsedTransitionTime)
         {
-            _logger.Debug("MovingCalculator.Calculate");
+            var amount = (float)elapsedTransitionTime.TotalMilliseconds / (float)transitionTime.TotalMilliseconds;
 
-            var offset = Vector2.Divide(movingStep, (float)transitionTime.TotalMilliseconds / (float)elapsedTransitionTime.TotalMilliseconds);
+            amount = Math.Min(amount, 1);
 
+            var resultPosition = Vector2.Lerp(currentPosition, targetPosition, amount);
+
+            _logger.Debug("Calculate");
+            _logger.Debug($"amount={amount}");
             _logger.Debug($"currentPosition={currentPosition}");
-            _logger.Debug($"movingStep={movingStep}");
-            _logger.Debug($"transitionTime={transitionTime}");
-            _logger.Debug($"elapsedTransitionTime={ elapsedTransitionTime}");
-            _logger.Debug($"offset={offset}");
+            _logger.Debug($"targetPosition={targetPosition}");
+            _logger.Debug($"result={resultPosition}");
+            _logger.Debug($"******");
 
-            var movingOffset = Vector2.Zero;
-
-            var isHorizontalMoving = direction == Direction.Left || direction == Direction.Right;
-
-            if (isHorizontalMoving)
-            {
-                movingOffset.X = offset.X;
-
-                if (direction == Direction.Left)
-                {
-                    movingOffset.X *= -1;
-                }
-            }
-            else
-            {
-                movingOffset.Y = offset.Y;
-
-                if (direction == Direction.Up)
-                {
-                    movingOffset.Y *= -1;
-                }
-            }
-
-            _logger.Debug($"movingOffset={movingOffset}");
-
-            return Vector2.Add(currentPosition, movingOffset);
+            return resultPosition;
         }
 
-        private Vector2 FindNeighbourPoint(Direction direction, Vector2 point, Vector2 step)
+        public Vector2 FindNeighbourPoint(Direction direction, Vector2 point, Vector2 step)
         {
             var offset = Vector2.Zero;
 
@@ -88,8 +69,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
             var result = Vector2.Add(point, offset);
 
-            //result.X = result.X > _field.Bounds.Width ? step.X / 2 : result.X < 0 ? _field.Bounds.Width - step.X / 2 : result.X;
-            //result.Y = result.Y > _field.Bounds.Height ? step.Y / 2 : result.Y < 0 ? _field.Bounds.Height - step.Y / 2 : result.Y;
+            result.X = result.X > _field.Bounds.Width ? step.X / 2 : result.X < 0 ? _field.Bounds.Width - step.X / 2 : result.X;
+            result.Y = result.Y > _field.Bounds.Height ? step.Y / 2 : result.Y < 0 ? _field.Bounds.Height - step.Y / 2 : result.Y;
 
             return result;
         }

@@ -7,6 +7,7 @@ using snake.Common;
 using snake.GameEntities;
 using snake.Interfaces;
 using SnakeGame.Shared.Common;
+using SnakeGame.Shared.GameLogic.GameField;
 using SnakeGame.Shared.Settings;
 using System;
 using System.Collections.Generic;

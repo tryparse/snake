@@ -1,7 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace snake.GameEntities
+namespace SnakeGame.Shared.GameLogic.GameField
 {
     public class Cell
     {

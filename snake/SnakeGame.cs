@@ -18,6 +18,7 @@ using snake.UIComponents;
 using snake.Interfaces;
 using SnakeGame.Shared.Settings;
 using SnakeGame.Shared.Logging;
+using SnakeGame.Shared.GameLogic.GameField;
 
 namespace snake
 {

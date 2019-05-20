@@ -1,4 +1,5 @@
 ﻿using snake.GameEntities;
+using SnakeGame.Shared.GameLogic.GameField;
 
 namespace snake
 {

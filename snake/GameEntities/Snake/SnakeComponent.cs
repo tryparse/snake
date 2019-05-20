@@ -11,6 +11,7 @@ using MonoGame.Extended;
 using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic.Snake;
 using SnakeGame.Shared.Logging;
+using SnakeGame.Shared.GameLogic.GameField;
 
 namespace snake.GameEntities.Snake
 {
@@ -20,6 +21,7 @@ namespace snake.GameEntities.Snake
         private readonly Field _field;
         private readonly SnakeKeys _controls;
         private readonly List<SnakePart> _parts;
+        private readonly MovingCalculator _movingCalculator;
 
         private readonly TimeSpan _stepTime;
         private TimeSpan _elapsedTime;
@@ -29,7 +31,7 @@ namespace snake.GameEntities.Snake
 
         private SnakeState _state;
         private TimeSpan _transitionTime = TimeSpan.FromMilliseconds(1000);
-        private TimeSpan _elapsedTransitionTime = TimeSpan.Zero;
+        private Vector2 targetPosition;
 
         private Direction _nextDirection;
 
@@ -50,6 +52,7 @@ namespace snake.GameEntities.Snake
             //AddPart(4);
 
             _state = SnakeState.None;
+            _movingCalculator = new MovingCalculator(_logger, _field);
         }
 
         public List<SnakePart> Parts => _parts;
@@ -104,7 +107,7 @@ namespace snake.GameEntities.Snake
                 }
                 else
                 {
-                    newPartPosition = FindNeighbourPoint(DirectionHelper.GetOppositeDirection(tail.Direction), tail.Position, TileMetrics.Size);
+                    newPartPosition = _movingCalculator.FindNeighbourPoint(DirectionHelper.GetOppositeDirection(tail.Direction), tail.Position, TileMetrics.Size);
                     newPartDirection = tail.Direction;
                 }
 
@@ -139,7 +142,6 @@ namespace snake.GameEntities.Snake
         private void Move(GameTime gameTime, SnakePart head)
         {
             _elapsedTime += gameTime.ElapsedGameTime;
-            _elapsedTransitionTime += gameTime.ElapsedGameTime;
 
             switch (_state)
             {
@@ -150,9 +152,9 @@ namespace snake.GameEntities.Snake
                             _elapsedTime -= _stepTime;
                             head.Direction = _nextDirection;
 
-                            //MoveTail();
-                            //MoveHead();
                             StartMoving();
+
+                            targetPosition = _movingCalculator.FindNeighbourPoint(head.Direction, head.Position, TileMetrics.Size);
 
                             if (GameManager.CheckSnakeCollision(this))
                             {
@@ -166,15 +168,13 @@ namespace snake.GameEntities.Snake
                     }
                 case SnakeState.Moving:
                     {
-                        var movingCalculator = new MovingCalculator(_logger);
-
-                        var newPosition = movingCalculator.Calculate(head.Direction, head.Position, TileMetrics.Size, _transitionTime, _elapsedTransitionTime);
+                        var newPosition = _movingCalculator.Calculate(head.Position, targetPosition, _transitionTime, _elapsedTime);
 
                         head.Position = newPosition;
 
-                        if (_elapsedTransitionTime >= _transitionTime)
+                        if (head.Position == targetPosition)
                         {
-                            _elapsedTransitionTime -= _transitionTime;
+                            _state = SnakeState.None;
                         }
 
                         break;
@@ -192,45 +192,9 @@ namespace snake.GameEntities.Snake
             var head = _parts.First();
 
             var step = TileMetrics.Size;
-            var nextPosition = FindNeighbourPoint(head.Direction, head.Position, step);
+            var nextPosition = _movingCalculator.FindNeighbourPoint(head.Direction, head.Position, step);
 
             head.Position = new Vector2(nextPosition.X, nextPosition.Y);
-        }
-
-        private Vector2 FindNeighbourPoint(Direction direction, Vector2 point, Vector2 step)
-        {
-            var offset = Vector2.Zero;
-
-            switch (direction)
-            {
-                case Direction.Up:
-                    {
-                        offset.Y -= step.Y;
-                        break;
-                    }
-                case Direction.Down:
-                    {
-                        offset.Y += step.Y;
-                        break;
-                    }
-                case Direction.Right:
-                    {
-                        offset.X += step.X;
-                        break;
-                    }
-                case Direction.Left:
-                    {
-                        offset.X -= step.X;
-                        break;
-                    }
-            }
-
-            var result = Vector2.Add(point, offset);
-
-            result.X = result.X > _field.Bounds.Width ? step.X / 2 : result.X < 0 ? _field.Bounds.Width - step.X / 2 : result.X;
-            result.Y = result.Y > _field.Bounds.Height ? step.Y / 2 : result.Y < 0 ? _field.Bounds.Height - step.Y / 2 : result.Y;
-
-            return result;
         }
 
         private void MoveTail()

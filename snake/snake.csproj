@@ -43,10 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CommonComponents\InputHandler.cs" />
-    <Compile Include="GameEntities\Field\Cell.cs" />
-    <Compile Include="GameEntities\Field\CellType.cs" />
     <Compile Include="Common\TileMetrics.cs" />
-    <Compile Include="GameEntities\Field\Field.cs" />
     <Compile Include="GameEntities\Field\FieldFactory.cs" />
     <Compile Include="UIComponents\FPSCounter.cs" />
     <Compile Include="GameEntities\Fruit\Fruit.cs" />
