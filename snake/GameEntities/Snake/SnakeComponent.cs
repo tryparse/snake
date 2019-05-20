@@ -21,8 +21,8 @@ namespace snake.GameEntities.Snake
         private readonly SnakeKeys _controls;
         private readonly List<SnakePart> _parts;
 
-        private readonly int _stepTime;
-        private int _elapsedTime;
+        private readonly TimeSpan _stepTime;
+        private TimeSpan _elapsedTime;
 
         private bool _enabled;
         private int _updateOrder;
@@ -41,7 +41,7 @@ namespace snake.GameEntities.Snake
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._field = field ?? throw new ArgumentNullException(nameof(field));
             this._controls = controls;
-            this._stepTime = 1000;
+            this._stepTime = TimeSpan.FromSeconds(1);
             this._parts = new List<SnakePart>();
             _parts.Add(new SnakePart(position, TileMetrics.Size, direction));
 
@@ -138,51 +138,47 @@ namespace snake.GameEntities.Snake
 
         private void Move(GameTime gameTime, SnakePart head)
         {
-            _elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+            _elapsedTime += gameTime.ElapsedGameTime;
             _elapsedTransitionTime += gameTime.ElapsedGameTime;
 
-            if (_elapsedTime >= _stepTime)
+            switch (_state)
             {
-                _elapsedTime -= _stepTime;
-
-                if (Enabled)
-                {
-                    switch (_state)
+                case SnakeState.None:
                     {
-                        case SnakeState.None:
+                        if (_elapsedTime >= _stepTime)
+                        {
+                            _elapsedTime -= _stepTime;
+                            head.Direction = _nextDirection;
+
+                            //MoveTail();
+                            //MoveHead();
+                            StartMoving();
+
+                            if (GameManager.CheckSnakeCollision(this))
                             {
-                                head.Direction = _nextDirection;
-
-                                //MoveTail();
-                                //MoveHead();
-                                StartMoving();
-
-                                if (GameManager.CheckSnakeCollision(this))
-                                {
-                                    GameManager.NewGame();
-                                }
-
-                                _state = SnakeState.Moving;
-
-                                break;
+                                GameManager.NewGame();
                             }
-                        case SnakeState.Moving:
-                            {
-                                var movingCalculator = new MovingCalculator(_logger);
 
-                                var newPosition = movingCalculator.Calculate(head.Direction, head.Position, TileMetrics.Size, _transitionTime, _elapsedTransitionTime);
+                            _state = SnakeState.Moving;
+                        }
 
-                                head.Position = newPosition;
-
-                                if (_elapsedTransitionTime >= _transitionTime)
-                                {
-                                    _elapsedTransitionTime -= _transitionTime;
-                                }
-
-                                break;
-                            }
+                        break;
                     }
-                }
+                case SnakeState.Moving:
+                    {
+                        var movingCalculator = new MovingCalculator(_logger);
+
+                        var newPosition = movingCalculator.Calculate(head.Direction, head.Position, TileMetrics.Size, _transitionTime, _elapsedTransitionTime);
+
+                        head.Position = newPosition;
+
+                        if (_elapsedTransitionTime >= _transitionTime)
+                        {
+                            _elapsedTransitionTime -= _transitionTime;
+                        }
+
+                        break;
+                    }
             }
         }
 

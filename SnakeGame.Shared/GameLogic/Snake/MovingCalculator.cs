@@ -22,7 +22,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         {
             _logger.Debug("MovingCalculator.Calculate");
 
-            var offset = Vector2.Divide(movingStep, (float)elapsedTransitionTime.TotalMilliseconds / (float)transitionTime.TotalMilliseconds);
+            var offset = Vector2.Divide(movingStep, (float)transitionTime.TotalMilliseconds / (float)elapsedTransitionTime.TotalMilliseconds);
 
             _logger.Debug($"currentPosition={currentPosition}");
             _logger.Debug($"movingStep={movingStep}");
