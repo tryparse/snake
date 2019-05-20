@@ -21,7 +21,7 @@ namespace snake.GameEntities.Snake
         private readonly Field _field;
         private readonly SnakeKeys _controls;
         private readonly List<SnakePart> _parts;
-        private readonly MovingCalculator _movingCalculator;
+        private MovingCalculator _movingCalculator;
 
         private readonly TimeSpan _stepTime;
         private TimeSpan _elapsedTime;
@@ -30,7 +30,7 @@ namespace snake.GameEntities.Snake
         private int _updateOrder;
 
         private SnakeState _state;
-        private TimeSpan _transitionTime = TimeSpan.FromMilliseconds(1000);
+        private TimeSpan _movingTime = TimeSpan.FromMilliseconds(1000);
         private Vector2 targetPosition;
 
         private Direction _nextDirection;
@@ -49,10 +49,7 @@ namespace snake.GameEntities.Snake
 
             _nextDirection = direction;
 
-            //AddPart(4);
-
-            _state = SnakeState.None;
-            _movingCalculator = new MovingCalculator(_logger, _field);
+            Initialize();
         }
 
         public List<SnakePart> Parts => _parts;
@@ -79,7 +76,8 @@ namespace snake.GameEntities.Snake
 
         public void Initialize()
         {
-            // Nothing to initialize
+            _state = SnakeState.None;
+            _movingCalculator = new MovingCalculator(_logger, _field);
         }
 
         public void Reset()
@@ -143,6 +141,8 @@ namespace snake.GameEntities.Snake
         {
             _elapsedTime += gameTime.ElapsedGameTime;
 
+            // TODO: moving of all snake parts
+
             switch (_state)
             {
                 case SnakeState.None:
@@ -168,7 +168,7 @@ namespace snake.GameEntities.Snake
                     }
                 case SnakeState.Moving:
                     {
-                        var newPosition = _movingCalculator.Calculate(head.Position, targetPosition, _transitionTime, _elapsedTime);
+                        var newPosition = _movingCalculator.Calculate(head.Position, targetPosition, _movingTime, _elapsedTime);
 
                         head.Position = newPosition;
 
