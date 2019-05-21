@@ -10,7 +10,7 @@ using SnakeGame.Shared.GameLogic.GameField;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
-    public class MovingCalculator
+    public class MovingCalculator : IMovingCalculator
     {
         private readonly ILogger _logger;
         private readonly Field _field;
@@ -28,13 +28,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
             amount = Math.Min(amount, 1);
 
             var resultPosition = Vector2.Lerp(currentPosition, targetPosition, amount);
-
-            _logger.Debug("Calculate");
-            _logger.Debug($"amount={amount}");
-            _logger.Debug($"currentPosition={currentPosition}");
-            _logger.Debug($"targetPosition={targetPosition}");
-            _logger.Debug($"result={resultPosition}");
-            _logger.Debug($"******");
 
             return resultPosition;
         }

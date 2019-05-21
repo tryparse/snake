@@ -44,12 +44,11 @@
   <ItemGroup>
     <Compile Include="CommonComponents\InputHandler.cs" />
     <Compile Include="GameEntities\Field\FieldFactory.cs" />
-    <Compile Include="UIComponents\FPSCounter.cs" />
+    <Compile Include="UIComponents\FpsCounter.cs" />
     <Compile Include="GameEntities\Fruit\Fruit.cs" />
     <Compile Include="GameEntities\GameKeys.cs" />
     <Compile Include="GameEntities\Snake\SnakeKeys.cs" />
     <Compile Include="GameEntities\Snake\SnakePart.cs" />
-    <Compile Include="GameEntities\Snake\SnakeState.cs" />
     <Compile Include="GameEntities\ISprite.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="Logging\NLogFileLogger.cs" />
@@ -61,7 +60,6 @@
     <Compile Include="Renderers\RenderSettings.cs" />
     <Compile Include="Renderers\SnakeRendererComponent.cs" />
     <Compile Include="GameEntities\Snake\SnakeComponent.cs" />
-    <Compile Include="UIComponents\KeyboardKeysComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />

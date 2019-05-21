@@ -13,7 +13,6 @@ using System.Configuration;
 using snake.Logging;
 using snake.GameEntities.Snake;
 using snake.GameEntities.Fruit;
-using snake.UIComponents;
 using SnakeGame.Shared.Settings;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.GameLogic.GameField;
@@ -76,7 +75,7 @@ namespace snake
             _snakeKeys = new SnakeKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
             _gameKeys = new GameKeys(Keys.P, Keys.D, Keys.R, Keys.Escape);
 
-            _snake = new SnakeComponent(_logger, _gameSettings, _field, _field.Cells[0,0].Bounds.Center.ToVector2(), _snakeKeys)
+            _snake = new SnakeComponent(_logger, _gameSettings, _field, _field.GetRandomCell().Bounds.Center.ToVector2(), _snakeKeys)
             {
                 Enabled = true
             };
@@ -140,12 +139,9 @@ namespace snake
             IRenderer2D _snakeRenderer = new SnakeRendererComponent(_spriteBatch, _spriteFont, _renderSettings, _logger, _snake, atlas);
             IRenderer2D _fruitRenderer = new FruitRendererComponent(_fruit, _spriteBatch, atlas.GetRegion("Fruit"), _renderSettings);
 
-            var fps = new FPSCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), _spriteBatch, _spriteFont, Color.Red);
-
-            var keysVisualization = new KeyboardKeysComponent(this, _spriteBatch, _spriteFont, new Vector2(500, 0), new Queue<Keys>());
+            var fps = new FpsCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), _spriteBatch, _spriteFont, Color.Red);
 
             Components.Add(fps);
-            Components.Add(keysVisualization);
             Components.Add(_snakeRenderer);
             Components.Add(_fieldRenderer);
             Components.Add(_fruitRenderer);

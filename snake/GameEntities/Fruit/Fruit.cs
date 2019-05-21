@@ -18,5 +18,20 @@ namespace snake.GameEntities.Fruit
 
         public Vector2 Position { get; }
         public Size2 Size { get; }
+
+        public Rectangle Bounds
+        {
+            get
+            {
+                var rectangle = new Rectangle(
+                    (int)(Position.X - Size.Width / 2),
+                    (int)(Position.Y - Size.Height / 2),
+                    (int)Size.Width,
+                    (int)Size.Height
+                );
+
+                return rectangle;
+            }
+        }
     }
 }

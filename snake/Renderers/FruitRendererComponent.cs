@@ -21,7 +21,7 @@ namespace snake.Renderers
 
         public FruitRendererComponent(Fruit fruit, SpriteBatch spriteBatch, TextureRegion2D textureRegion, IRenderSettings settings)
         {
-            this._fruit = fruit;
+            this._fruit = fruit ?? throw new ArgumentNullException(nameof(fruit));
             this._spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
             this._textureRegion = textureRegion ?? throw new ArgumentNullException(nameof(textureRegion));
             this.RenderSettings = settings ?? throw new ArgumentNullException(nameof(settings));
@@ -60,7 +60,7 @@ namespace snake.Renderers
 
         private void DebugRender()
         {
-            _spriteBatch.DrawRectangle(_fruit.Position, _fruit.Size, Color.Orange, 1);
+            _spriteBatch.DrawRectangle(_fruit.Bounds, Color.Orange, 1);
         }
 
         private void Render()

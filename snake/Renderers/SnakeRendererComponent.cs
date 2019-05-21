@@ -87,11 +87,9 @@ namespace snake.Renderers
 
         private void Rendering()
         {
-            for (int i = 0; i < _snake.Parts.Count; i++)
+            foreach (var part in _snake.Parts)
             {
-                var part = _snake.Parts[i];
-
-                TextureRegion2D selectedTexture = SelectTexture(i);
+                TextureRegion2D selectedTexture = SelectTexture(part);
 
                 var rotation = DirectionHelper.GetRotation(part.Direction);
                 var origin = new Vector2(selectedTexture.Bounds.Width / 2f, selectedTexture.Bounds.Height / 2f);
@@ -129,15 +127,15 @@ namespace snake.Renderers
             return scale;
         }
 
-        private TextureRegion2D SelectTexture(int partIndex)
+        private TextureRegion2D SelectTexture(SnakePart part)
         {
             TextureRegion2D selectedTexture;
 
-            if (partIndex == HEAD_INDEX)
+            if (part == _snake.Parts.First.Value)
             {
                 selectedTexture = _textureHead;
             }
-            else if (partIndex == _snake.Parts.Count - 1)
+            else if (part == _snake.Parts.Last.Value)
             {
                 // TODO: Add more variations
                 selectedTexture = _textureTail;
@@ -152,10 +150,8 @@ namespace snake.Renderers
 
         private void DebugRendering()
         {
-            for (int i = 0; i < _snake.Parts.Count; i++)
+            foreach (var part in _snake.Parts)
             {
-                var part = _snake.Parts[i];
-
                 var rotation = DirectionHelper.GetRotation(part.Direction);
 
                 _spriteBatch.DrawRectangle(part.Bounds, Color.Red);

@@ -26,5 +26,15 @@ namespace SnakeGame.Shared.GameLogic.GameField
         public int LengthY => _cells.GetLength(1);
 
         public Rectangle Bounds => _bounds;
+
+        public Cell GetRandomCell()
+        {
+            var r = new Random();
+
+            var x = r.Next(0, LengthX);
+            var y = r.Next(0, LengthY);
+
+            return _cells[x, y];
+        }
     }
 }

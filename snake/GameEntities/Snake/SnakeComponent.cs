@@ -22,10 +22,10 @@ namespace snake.GameEntities.Snake
 
         private readonly Field _field;
         private readonly SnakeKeys _controls;
-        private readonly List<SnakePart> _parts;
-        private MovingCalculator _movingCalculator;
+        private readonly LinkedList<SnakePart> _parts;
+        private IMovingCalculator _movingCalculator;
 
-        private readonly Vector2 _tileSize;
+        private Vector2 _tileSize;
 
         private readonly TimeSpan _stepTime;
         private TimeSpan _elapsedTime;
@@ -45,21 +45,22 @@ namespace snake.GameEntities.Snake
         public SnakeComponent(ILogger logger, IGameSettings gameSettings, Field field, Vector2 position, SnakeKeys controls, Direction direction = Direction.Right)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _gameSettings = gameSettings;
+            _gameSettings = gameSettings ?? throw new ArgumentNullException(nameof(gameSettings));
             _field = field ?? throw new ArgumentNullException(nameof(field));
-            _controls = controls;
+            _controls = controls ?? throw new ArgumentNullException(nameof(controls));
             _stepTime = TimeSpan.FromSeconds(1);
-            _parts = new List<SnakePart>();
-
-            _tileSize = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
-            _parts.Add(new SnakePart(position, _tileSize, direction));
 
             _nextDirection = direction;
 
+            // TODO: Rework initialization
+            // Should be invoke before adding part
             Initialize();
+
+            _parts = new LinkedList<SnakePart>();
+            _parts.AddFirst(new SnakePart(position, _tileSize, direction));
         }
 
-        public List<SnakePart> Parts => _parts;
+        public LinkedList<SnakePart> Parts => _parts;
 
         public bool Enabled
         {
@@ -85,18 +86,19 @@ namespace snake.GameEntities.Snake
         {
             _state = SnakeState.None;
             _movingCalculator = new MovingCalculator(_logger, _field);
+            _tileSize = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
         }
 
         public void Reset()
         {
             _parts.Clear();
 
-            AddPart();
+            AddTail();
 
             Enabled = true;
         }
 
-        public void AddPart(int count = 1)
+        public void AddTail(int count = 1)
         {
             for (int i = 0; i < count; i++)
             {
@@ -116,7 +118,7 @@ namespace snake.GameEntities.Snake
                     newPartDirection = tail.Direction;
                 }
 
-                _parts.Add(new SnakePart(new Vector2(newPartPosition.X, newPartPosition.Y), _tileSize, newPartDirection));
+                _parts.AddLast(new SnakePart(new Vector2(newPartPosition.X, newPartPosition.Y), _tileSize, newPartDirection));
             }
         }
 
@@ -192,43 +194,6 @@ namespace snake.GameEntities.Snake
         private void StartMoving()
         {
             _state = SnakeState.Moving;
-        }
-
-        private void MoveHead()
-        {
-            var head = _parts.First();
-
-            var step = _tileSize;
-            var nextPosition = _movingCalculator.FindNeighbourPoint(head.Direction, head.Position, step);
-
-            head.Position = new Vector2(nextPosition.X, nextPosition.Y);
-        }
-
-        private void MoveTail()
-        {
-            for (int i = _parts.Count - 1; i >= 1; i--)
-            {
-                _parts[i].Position = _parts[i - 1].Position;
-                _parts[i].Direction = _parts[i - 1].Direction;
-            }
-        }
-
-        private bool CheckHeadCollision()
-        {
-            var head = _parts.First();
-
-            var tail = _parts.Skip(1);
-
-            foreach (var part in tail)
-            {
-                if (head.Bounds.Intersects(part.Bounds))
-                {
-                    _enabled = false;
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

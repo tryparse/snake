@@ -55,7 +55,9 @@
     <Compile Include="GameLogic\GameField\CellType.cs" />
     <Compile Include="GameLogic\GameField\Field.cs" />
     <Compile Include="GameLogic\Interfaces\IFieldFactory.cs" />
+    <Compile Include="GameLogic\Snake\IMovingCalculator.cs" />
     <Compile Include="GameLogic\Snake\MovingCalculator.cs" />
+    <Compile Include="GameLogic\Snake\SnakeState.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderers\IRenderer2D.cs" />

@@ -1,4 +1,4 @@
-﻿namespace snake.GameEntities.Snake
+﻿namespace SnakeGame.Shared.GameLogic.Snake
 {
     public enum SnakeState
     {

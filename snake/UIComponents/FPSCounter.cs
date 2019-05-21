@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace snake.GameComponents
 {
-    class FPSCounter : DrawableGameComponent
+    class FpsCounter : DrawableGameComponent
     {
         private readonly Vector2 position;
         private readonly Color color;
@@ -17,7 +17,7 @@ namespace snake.GameComponents
         private readonly SpriteFont font;
         private readonly FramesPerSecondCounter fps;
 
-        public FPSCounter(Game game, Vector2 position, SpriteBatch spriteBatch, SpriteFont font, Color color) : base(game)
+        public FpsCounter(Game game, Vector2 position, SpriteBatch spriteBatch, SpriteFont font, Color color) : base(game)
         {
             this.position = position;
             this.color = color;
