@@ -1,4 +1,4 @@
-﻿using snake.Interfaces;
+﻿using SnakeGame.Shared.Renderers;
 
 namespace snake.Renderers
 {

@@ -52,12 +52,10 @@
     <Compile Include="GameEntities\Snake\SnakeState.cs" />
     <Compile Include="GameEntities\ISprite.cs" />
     <Compile Include="GameManager.cs" />
-    <Compile Include="Interfaces\IRenderSettings.cs" />
     <Compile Include="Logging\NLogFileLogger.cs" />
     <Compile Include="Renderers\FieldRendererComponent.cs" />
     <Compile Include="Renderers\FruitRendererComponent.cs" />
     <Compile Include="SnakeGame.cs" />
-    <Compile Include="Interfaces\IRenderer2D.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderers\RenderSettings.cs" />

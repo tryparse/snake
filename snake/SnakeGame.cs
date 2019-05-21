@@ -14,11 +14,11 @@ using snake.Logging;
 using snake.GameEntities.Snake;
 using snake.GameEntities.Fruit;
 using snake.UIComponents;
-using snake.Interfaces;
 using SnakeGame.Shared.Settings;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.GameLogic.GameField;
 using SnakeGame.Shared.GameLogic.Interfaces;
+using SnakeGame.Shared.Renderers;
 
 namespace snake
 {

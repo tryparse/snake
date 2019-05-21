@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace snake.Interfaces
+namespace SnakeGame.Shared.Renderers
 {
     public interface IRenderSettings
     {

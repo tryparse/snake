@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
 using snake.GameEntities.Fruit;
-using snake.Interfaces;
 using SnakeGame.Shared.Common;
+using SnakeGame.Shared.Renderers;
+using System;
 
 namespace snake.Renderers
 {

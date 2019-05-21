@@ -58,6 +58,8 @@
     <Compile Include="GameLogic\Snake\MovingCalculator.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renderers\IRenderer2D.cs" />
+    <Compile Include="Renderers\IRenderSettings.cs" />
     <Compile Include="Settings\GameSettings.cs" />
     <Compile Include="Settings\IGameSettings.cs" />
   </ItemGroup>
