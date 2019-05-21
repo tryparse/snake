@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
-using snake.Common;
 using snake.GameEntities;
 using snake.GameEntities.Snake;
 using snake.Interfaces;

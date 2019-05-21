@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using snake.Common;
 using snake.GameComponents;
 using snake.Logging;
 using System;
@@ -12,16 +11,21 @@ using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic.Snake;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.GameLogic.GameField;
+using SnakeGame.Shared.Settings;
 
 namespace snake.GameEntities.Snake
 {
     public class SnakeComponent : IGameComponent, IUpdateable
     {
         private readonly ILogger _logger;
+        private readonly IGameSettings _gameSettings;
+
         private readonly Field _field;
         private readonly SnakeKeys _controls;
         private readonly List<SnakePart> _parts;
         private MovingCalculator _movingCalculator;
+
+        private readonly Vector2 _tileSize;
 
         private readonly TimeSpan _stepTime;
         private TimeSpan _elapsedTime;
@@ -38,14 +42,17 @@ namespace snake.GameEntities.Snake
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
 
-        public SnakeComponent(ILogger logger, Field field, Vector2 position, SnakeKeys controls, Direction direction = Direction.Right)
+        public SnakeComponent(ILogger logger, IGameSettings gameSettings, Field field, Vector2 position, SnakeKeys controls, Direction direction = Direction.Right)
         {
-            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this._field = field ?? throw new ArgumentNullException(nameof(field));
-            this._controls = controls;
-            this._stepTime = TimeSpan.FromSeconds(1);
-            this._parts = new List<SnakePart>();
-            _parts.Add(new SnakePart(position, TileMetrics.Size, direction));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _gameSettings = gameSettings;
+            _field = field ?? throw new ArgumentNullException(nameof(field));
+            _controls = controls;
+            _stepTime = TimeSpan.FromSeconds(1);
+            _parts = new List<SnakePart>();
+
+            _tileSize = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
+            _parts.Add(new SnakePart(position, _tileSize, direction));
 
             _nextDirection = direction;
 
@@ -105,11 +112,11 @@ namespace snake.GameEntities.Snake
                 }
                 else
                 {
-                    newPartPosition = _movingCalculator.FindNeighbourPoint(DirectionHelper.GetOppositeDirection(tail.Direction), tail.Position, TileMetrics.Size);
+                    newPartPosition = _movingCalculator.FindNeighbourPoint(DirectionHelper.GetOppositeDirection(tail.Direction), tail.Position, _tileSize);
                     newPartDirection = tail.Direction;
                 }
 
-                _parts.Add(new SnakePart(new Vector2(newPartPosition.X, newPartPosition.Y), TileMetrics.Size, newPartDirection));
+                _parts.Add(new SnakePart(new Vector2(newPartPosition.X, newPartPosition.Y), _tileSize, newPartDirection));
             }
         }
 
@@ -154,7 +161,7 @@ namespace snake.GameEntities.Snake
 
                             StartMoving();
 
-                            targetPosition = _movingCalculator.FindNeighbourPoint(head.Direction, head.Position, TileMetrics.Size);
+                            targetPosition = _movingCalculator.FindNeighbourPoint(head.Direction, head.Position, _tileSize);
 
                             if (GameManager.CheckSnakeCollision(this))
                             {
@@ -191,7 +198,7 @@ namespace snake.GameEntities.Snake
         {
             var head = _parts.First();
 
-            var step = TileMetrics.Size;
+            var step = _tileSize;
             var nextPosition = _movingCalculator.FindNeighbourPoint(head.Direction, head.Position, step);
 
             head.Position = new Vector2(nextPosition.X, nextPosition.Y);

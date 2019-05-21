@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using snake.GameEntities;
-using snake.Common;
 using System.Configuration;
 using snake.Logging;
 using snake.GameEntities.Snake;
@@ -19,6 +18,7 @@ using snake.Interfaces;
 using SnakeGame.Shared.Settings;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.GameLogic.GameField;
+using SnakeGame.Shared.GameLogic.Interfaces;
 
 namespace snake
 {
@@ -72,18 +72,20 @@ namespace snake
 
             IFieldFactory fieldFactory = new FieldFactory(_gameSettings);
 
-            _field = fieldFactory.GetRandomField(10, 10);
+            _field = fieldFactory.GetRandomField(_gameSettings.MapWidth, _gameSettings.MapHeight);
             _snakeKeys = new SnakeKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
             _gameKeys = new GameKeys(Keys.P, Keys.D, Keys.R, Keys.Escape);
 
-            _snake = new SnakeComponent(_logger, _field, _field.Cells[0,0].Bounds.Center.ToVector2(), _snakeKeys)
+            _snake = new SnakeComponent(_logger, _gameSettings, _field, _field.Cells[0,0].Bounds.Center.ToVector2(), _snakeKeys)
             {
                 Enabled = true
             };
 
             GameManager.Snake = _snake;
 
-            _fruit = new Fruit(_field.Cells[1,1].Bounds.Center.ToVector2(), TileMetrics.Size);
+            var tileSize = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
+
+            _fruit = new Fruit(_field.Cells[1,1].Bounds.Center.ToVector2(), tileSize);
 
             _inputHandler = new InputHandler(this);
 
@@ -98,30 +100,7 @@ namespace snake
             var appSettings = ConfigurationManager.AppSettings;
 
             _gameSettings = new GameSettings();
-
-            bool.TryParse(appSettings["IsLoggingEnabled"], out var isLoggingEnabled);
-
-            _gameSettings.IsLoggingEnabled = isLoggingEnabled;
-
-            bool.TryParse(appSettings["IsDebugRenderingEnabled"], out var isDebugRenderingEnabled);
-
-            _gameSettings.IsDebugRenderingEnabled = isDebugRenderingEnabled;
-
-            int.TryParse(appSettings["ScreenWidth"], out var screenWidth);
-
-            _gameSettings.ScreenWidth = screenWidth;
-
-            int.TryParse(appSettings["ScreenHeight"], out var screenHeight);
-
-            _gameSettings.ScreenHeight = screenHeight;
-
-            int.TryParse(appSettings["TileWidth"], out var tileWidth);
-
-            _gameSettings.TileWidth = tileWidth;
-
-            int.TryParse(appSettings["TileHeight"], out var tileHeight);
-
-            _gameSettings.TileHeight = tileHeight;
+            _gameSettings.ReadFromApplicationSettings(appSettings);
         }
 
         /// <summary>
@@ -133,7 +112,7 @@ namespace snake
             // Create a new SpriteBatch, which can be used to draw textures.
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _spriteFont = Content.Load<SpriteFont>("Fonts/joystix");
+            _spriteFont = Content.Load<SpriteFont>("Fonts/debug-font");
             var texture = Content.Load<Texture2D>("Textures/Textures_sp");
 
             var atlas = new TextureAtlas("Textures", texture);

@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Graphics;
 using MonoGame.Extended.TextureAtlases;
-using snake.Common;
 using snake.GameEntities;
 using snake.Interfaces;
 using SnakeGame.Shared.Common;

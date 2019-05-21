@@ -13,6 +13,13 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Fonts/debug-font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/debug-font.spritefont
+
 #begin Fonts/joystix.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

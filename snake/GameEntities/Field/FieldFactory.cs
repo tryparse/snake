@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using snake.Common;
 using SnakeGame.Shared.GameLogic.GameField;
+using SnakeGame.Shared.GameLogic.Interfaces;
 using SnakeGame.Shared.Settings;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,5 +20,11 @@ namespace SnakeGame.Shared.Settings
         int TileWidth { get; set; }
 
         int TileHeight { get; set; }
+
+        int MapWidth { get; set; }
+
+        int MapHeight { get; set; }
+
+        void ReadFromApplicationSettings(NameValueCollection appSettings);
     }
 }
