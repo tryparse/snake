@@ -2,14 +2,17 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
-using snake.GameEntities.Fruit;
 using SnakeGame.Shared.Common;
-using SnakeGame.Shared.Renderers;
+using SnakeGame.Shared.GameLogic.Fruit;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace snake.Renderers
+namespace SnakeGame.Shared.Renderers
 {
-    class FruitRendererComponent : IRenderer2D
+    public class FruitRendererComponent : IRenderer2D
     {
         private readonly Fruit _fruit;
         private readonly SpriteBatch _spriteBatch;

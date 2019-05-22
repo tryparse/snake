@@ -62,6 +62,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
             var result = Vector2.Add(point, offset);
 
+            // TODO: rewrite this
             result.X = result.X > _field.Bounds.Width ? step.X / 2 : result.X < 0 ? _field.Bounds.Width - step.X / 2 : result.X;
             result.Y = result.Y > _field.Bounds.Height ? step.Y / 2 : result.Y < 0 ? _field.Bounds.Height - step.Y / 2 : result.Y;
 

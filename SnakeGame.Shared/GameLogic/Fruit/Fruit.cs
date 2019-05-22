@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace snake.GameEntities.Fruit
+namespace SnakeGame.Shared.GameLogic.Fruit
 {
-    class Fruit
+    public class Fruit
     {
         public Fruit(Vector2 position, Vector2 size)
         {

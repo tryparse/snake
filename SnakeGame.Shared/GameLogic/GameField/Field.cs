@@ -16,14 +16,14 @@ namespace SnakeGame.Shared.GameLogic.GameField
         public Field(IGameSettings settings, int width, int height, Cell[,] cells)
         {
             this._cells = cells;
-            this._bounds = new Rectangle(0, 0, LengthX * settings.TileWidth, LengthY * settings.TileHeight);
+            this._bounds = new Rectangle(0, 0, ColumnsCount * settings.TileWidth, RowsCount * settings.TileHeight);
         }
 
         public Cell[,] Cells => _cells;
 
-        public int LengthX => _cells.GetLength(0);
+        public int ColumnsCount => _cells.GetLength(0);
 
-        public int LengthY => _cells.GetLength(1);
+        public int RowsCount => _cells.GetLength(1);
 
         public Rectangle Bounds => _bounds;
 
@@ -31,8 +31,8 @@ namespace SnakeGame.Shared.GameLogic.GameField
         {
             var r = new Random();
 
-            var x = r.Next(0, LengthX);
-            var y = r.Next(0, LengthY);
+            var x = r.Next(0, ColumnsCount);
+            var y = r.Next(0, RowsCount);
 
             return _cells[x, y];
         }

@@ -12,10 +12,10 @@ using snake.GameEntities;
 using System.Configuration;
 using snake.Logging;
 using snake.GameEntities.Snake;
-using snake.GameEntities.Fruit;
 using SnakeGame.Shared.Settings;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.GameLogic.GameField;
+using SnakeGame.Shared.GameLogic.Fruit;
 using SnakeGame.Shared.GameLogic.Interfaces;
 using SnakeGame.Shared.Renderers;
 
@@ -34,13 +34,14 @@ namespace snake
 
         private Field _field;
         private SnakeComponent _snake;
-        private Fruit _fruit;
+        private IFruitManager _fruitManager;
 
         private GameKeys _gameKeys;
         private SnakeKeys _snakeKeys;
 
         private IGameSettings _gameSettings;
         private IRenderSettings _renderSettings;
+        private IFruitRendererFactory _fruitRendererFactory;
         private ILogger _logger;
 
         public SnakeGame()
@@ -81,10 +82,6 @@ namespace snake
             };
 
             GameManager.Snake = _snake;
-
-            var tileSize = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
-
-            _fruit = new Fruit(_field.Cells[1,1].Bounds.Center.ToVector2(), tileSize);
 
             _inputHandler = new InputHandler(this);
 
@@ -135,16 +132,19 @@ namespace snake
                 IsRenderingEnabled = true
             };
 
+            _fruitRendererFactory = new FruitRendererFactory(_spriteBatch, atlas["Fruit"], _renderSettings);
+            _fruitManager = new FruitManager(_logger, _gameSettings, Components, _field, _fruitRendererFactory);
+
             IRenderer2D _fieldRenderer = new FieldRendererComponent(_gameSettings, _spriteBatch, _spriteFont, _renderSettings, _field, atlas);
             IRenderer2D _snakeRenderer = new SnakeRendererComponent(_spriteBatch, _spriteFont, _renderSettings, _logger, _snake, atlas);
-            IRenderer2D _fruitRenderer = new FruitRendererComponent(_fruit, _spriteBatch, atlas.GetRegion("Fruit"), _renderSettings);
 
             var fps = new FpsCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), _spriteBatch, _spriteFont, Color.Red);
 
             Components.Add(fps);
             Components.Add(_snakeRenderer);
             Components.Add(_fieldRenderer);
-            Components.Add(_fruitRenderer);
+
+            _fruitManager.CreateFruit();
         }
 
         /// <summary>

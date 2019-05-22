@@ -45,7 +45,6 @@
     <Compile Include="CommonComponents\InputHandler.cs" />
     <Compile Include="GameEntities\Field\FieldFactory.cs" />
     <Compile Include="UIComponents\FpsCounter.cs" />
-    <Compile Include="GameEntities\Fruit\Fruit.cs" />
     <Compile Include="GameEntities\GameKeys.cs" />
     <Compile Include="GameEntities\Snake\SnakeKeys.cs" />
     <Compile Include="GameEntities\Snake\SnakePart.cs" />
@@ -53,7 +52,6 @@
     <Compile Include="GameManager.cs" />
     <Compile Include="Logging\NLogFileLogger.cs" />
     <Compile Include="Renderers\FieldRendererComponent.cs" />
-    <Compile Include="Renderers\FruitRendererComponent.cs" />
     <Compile Include="SnakeGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
