@@ -11,5 +11,7 @@ namespace SnakeGame.Shared.GameLogic.Fruit
         void CreateFruit();
 
         void RemoveFruit(Fruit fruit);
+
+        IEnumerable<Fruit> Fruits { get; }
     }
 }

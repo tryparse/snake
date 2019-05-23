@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
 using SnakeGame.Shared.Common;
+using SnakeGame.Shared.Common.ResourceManagers;
 using SnakeGame.Shared.GameLogic.Fruit;
 using System;
 using System.Collections.Generic;
@@ -16,18 +17,19 @@ namespace SnakeGame.Shared.Renderers
     {
         private readonly Fruit _fruit;
         private readonly SpriteBatch _spriteBatch;
-        private readonly TextureRegion2D _textureRegion;
+        private readonly ITextureManager _textureManager;
+        
 
         private int _drawOrder;
         private bool _visible;
         private float _rotation;
 
-        public FruitRendererComponent(Fruit fruit, SpriteBatch spriteBatch, TextureRegion2D textureRegion, IRenderSettings settings)
+        public FruitRendererComponent(Fruit fruit, SpriteBatch spriteBatch, ITextureManager textureManager, IRenderSettings settings)
         {
-            this._fruit = fruit ?? throw new ArgumentNullException(nameof(fruit));
-            this._spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
-            this._textureRegion = textureRegion ?? throw new ArgumentNullException(nameof(textureRegion));
-            this.RenderSettings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _fruit = fruit ?? throw new ArgumentNullException(nameof(fruit));
+            _spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
+            _textureManager = textureManager ?? throw new ArgumentNullException(nameof(textureManager));
+            RenderSettings = settings ?? throw new ArgumentNullException(nameof(settings));
 
             Initialize();
         }
@@ -68,13 +70,15 @@ namespace SnakeGame.Shared.Renderers
 
         private void Render()
         {
-            var origin = new Vector2(_textureRegion.Width / 2, _textureRegion.Height / 2);
-            var scale = new Vector2(_fruit.Size.Width / _textureRegion.Bounds.Width, _fruit.Size.Height / _textureRegion.Bounds.Height);
+            var t = _textureManager.TextureRegions["Fruit"];
+
+            var origin = new Vector2(t.Width / 2, t.Height / 2);
+            var scale = new Vector2(_fruit.Size.Width / t.Bounds.Width, _fruit.Size.Height / t.Bounds.Height);
 
             _spriteBatch.Draw(
-                    texture: _textureRegion.Texture,
+                    texture: t.Texture,
                     position: _fruit.Position,
-                    sourceRectangle: _textureRegion.Bounds,
+                    sourceRectangle: t.Bounds,
                     color: Color.White,
                     rotation: _rotation,
                     scale: scale,

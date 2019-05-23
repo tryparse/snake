@@ -27,9 +27,6 @@ namespace snake.Renderers
         private int _drawOrder;
         private bool _isVisible;
 
-        private TextureRegion2D _treeTexture;
-        private TextureRegion2D _grassTexture;
-
         public FieldRendererComponent(IGameSettings gameSettings, SpriteBatch spriteBatch, SpriteFont spriteFont, IRenderSettings renderSettings, Field field, TextureAtlas textureAtlas, int drawOrder = 0)
         {
             this._gameSettings = gameSettings;
@@ -77,14 +74,6 @@ namespace snake.Renderers
         public void Initialize()
         {
             this._isVisible = true;
-
-            ReadTextureRegions();
-        }
-
-        private void ReadTextureRegions()
-        {
-            this._treeTexture = _textureAtlas.GetRegion("Tree");
-            this._grassTexture = _textureAtlas.GetRegion("Grass");
         }
 
         private void DebugRendering()
@@ -171,9 +160,9 @@ namespace snake.Renderers
         private void DrawGrass(Cell cell)
         {
             _spriteBatch.Draw(
-                texture: _grassTexture.Texture,
+                texture: _textureAtlas["Grass"].Texture,
                 destinationRectangle: cell.BoundsF.ToRectangle(),
-                sourceRectangle: _grassTexture.Bounds,
+                sourceRectangle: _textureAtlas["Grass"].Bounds,
                 color: Color.White,
                 rotation: 0,
                 origin: Vector2.Zero,
@@ -184,9 +173,9 @@ namespace snake.Renderers
         private void DrawTree(Cell cell)
         {
             _spriteBatch.Draw(
-                texture: _treeTexture.Texture,
+                texture: _textureAtlas["Tree"].Texture,
                 destinationRectangle: cell.BoundsF.ToRectangle(),
-                sourceRectangle: _treeTexture.Bounds,
+                sourceRectangle: _textureAtlas["Tree"].Bounds,
                 color: Color.White,
                 rotation: 0,
                 origin: Vector2.Zero,

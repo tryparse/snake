@@ -50,16 +50,25 @@
   <ItemGroup>
     <Compile Include="Common\Direction.cs" />
     <Compile Include="Common\DirectionHelper.cs" />
+    <Compile Include="Common\InputHandler.cs" />
+    <Compile Include="Common\ResourceManagers\IFontManager.cs" />
+    <Compile Include="Common\ResourceManagers\ITextureManager.cs" />
     <Compile Include="Common\LayerDepth.cs" />
+    <Compile Include="Common\ResourceManagers\TextureManager.cs" />
     <Compile Include="GameLogic\Fruit\Fruit.cs" />
     <Compile Include="GameLogic\Fruit\FruitManager.cs" />
     <Compile Include="GameLogic\Fruit\IFruitManager.cs" />
     <Compile Include="GameLogic\GameField\Cell.cs" />
     <Compile Include="GameLogic\GameField\CellType.cs" />
     <Compile Include="GameLogic\GameField\Field.cs" />
+    <Compile Include="GameLogic\GameManager.cs" />
+    <Compile Include="GameLogic\IGameManager.cs" />
     <Compile Include="GameLogic\Interfaces\IFieldFactory.cs" />
     <Compile Include="GameLogic\Snake\IMovingCalculator.cs" />
     <Compile Include="GameLogic\Snake\MovingCalculator.cs" />
+    <Compile Include="GameLogic\Snake\SnakeComponent.cs" />
+    <Compile Include="GameLogic\Snake\SnakeControls.cs" />
+    <Compile Include="GameLogic\Snake\SnakePart.cs" />
     <Compile Include="GameLogic\Snake\SnakeState.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

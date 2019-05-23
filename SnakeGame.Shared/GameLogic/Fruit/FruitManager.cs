@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using SnakeGame.Shared.GameLogic.GameField;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.Renderers;
@@ -26,10 +27,11 @@ namespace SnakeGame.Shared.GameLogic.Fruit
 
         public FruitManager(ILogger logger, IGameSettings gameSettings, GameComponentCollection gameComponents, Field gameField, IFruitRendererFactory fruitRendererFactory)
         {
-            _gameComponents = gameComponents;
-            _logger = logger;
-            this._gameSettings = gameSettings;
-            _gameField = gameField;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _gameSettings = gameSettings ?? throw new ArgumentNullException(nameof(gameSettings));
+            _gameComponents = gameComponents ?? throw new ArgumentNullException(nameof(gameComponents));
+            _gameField = gameField ?? throw new ArgumentNullException(nameof(gameField));
+
             _fruitRendererFactory = fruitRendererFactory;
 
             _random = new Random();
@@ -42,10 +44,10 @@ namespace SnakeGame.Shared.GameLogic.Fruit
         public void CreateFruit()
         {
             var position = _gameField.Cells[_random.Next(0, _gameField.ColumnsCount), _random.Next(0, _gameField.RowsCount)].Bounds.Center.ToVector2();
-
-            var size = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
+            var size = new Size2(_gameSettings.TileWidth, _gameSettings.TileHeight);
 
             var fruit = new Fruit(position, size);
+
             var renderer = _fruitRendererFactory.GetFruitRenderer(fruit);
 
             _fruits.Add(fruit);

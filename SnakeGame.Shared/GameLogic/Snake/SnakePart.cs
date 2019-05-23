@@ -1,13 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended;
+using SnakeGame.Shared.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SnakeGame.Shared.Common;
 
-namespace snake.GameEntities
+namespace SnakeGame.Shared.GameLogic.Snake
 {
     public class SnakePart
     {

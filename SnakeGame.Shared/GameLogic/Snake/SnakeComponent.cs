@@ -1,6 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using snake.GameComponents;
-using snake.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +11,16 @@ using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.GameLogic.GameField;
 using SnakeGame.Shared.Settings;
 
-namespace snake.GameEntities.Snake
+namespace SnakeGame.Shared.GameLogic.Snake
 {
     public class SnakeComponent : IGameComponent, IUpdateable
     {
         private readonly ILogger _logger;
         private readonly IGameSettings _gameSettings;
+        private readonly IGameManager _gameManager;
 
         private readonly Field _field;
-        private readonly SnakeKeys _controls;
+        private readonly SnakeControls _controls;
         private readonly LinkedList<SnakePart> _parts;
         private IMovingCalculator _movingCalculator;
 
@@ -42,13 +41,15 @@ namespace snake.GameEntities.Snake
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
 
-        public SnakeComponent(ILogger logger, IGameSettings gameSettings, Field field, Vector2 position, SnakeKeys controls, Direction direction = Direction.Right)
+        public SnakeComponent(ILogger logger, IGameSettings gameSettings, IGameManager gameManager, Field field, Vector2 position, SnakeControls controls, Direction direction = Direction.Right)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _gameSettings = gameSettings ?? throw new ArgumentNullException(nameof(gameSettings));
+            _gameManager = gameManager ?? throw new ArgumentNullException(nameof(gameManager));
             _field = field ?? throw new ArgumentNullException(nameof(field));
             _controls = controls ?? throw new ArgumentNullException(nameof(controls));
-            _stepTime = TimeSpan.FromSeconds(1);
+
+            _stepTime = TimeSpan.FromMilliseconds(500);
 
             _nextDirection = direction;
 
@@ -165,10 +166,12 @@ namespace snake.GameEntities.Snake
 
                             targetPosition = _movingCalculator.FindNeighbourPoint(head.Direction, head.Position, _tileSize);
 
-                            if (GameManager.CheckSnakeCollision(this))
+                            if (_gameManager.CheckSnakeCollision(this))
                             {
-                                GameManager.NewGame();
+                                _gameManager.NewGame(this);
                             }
+
+                            _gameManager.CheckFruitEating(this);
 
                             _state = SnakeState.Moving;
                         }

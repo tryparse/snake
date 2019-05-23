@@ -10,7 +10,7 @@ namespace SnakeGame.Shared.GameLogic.Fruit
 {
     public class Fruit
     {
-        public Fruit(Vector2 position, Vector2 size)
+        public Fruit(Vector2 position, Size2 size)
         {
             Position = position;
             Size = size;

@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace snake.GameEntities
+namespace SnakeGame.Shared.GameLogic.Snake
 {
-    public class SnakeKeys
+    public class SnakeControls
     {
-        public SnakeKeys(Keys up, Keys down, Keys left, Keys right)
+        public SnakeControls(Keys up, Keys down, Keys left, Keys right)
         {
             this.Up = up;
             this.Down = down;
@@ -26,3 +26,4 @@ namespace snake.GameEntities
         public Keys Right { get; }
     }
 }
+

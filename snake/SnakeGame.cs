@@ -11,13 +11,16 @@ using System.Linq.Expressions;
 using snake.GameEntities;
 using System.Configuration;
 using snake.Logging;
-using snake.GameEntities.Snake;
 using SnakeGame.Shared.Settings;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.GameLogic.GameField;
 using SnakeGame.Shared.GameLogic.Fruit;
 using SnakeGame.Shared.GameLogic.Interfaces;
 using SnakeGame.Shared.Renderers;
+using SnakeGame.Shared.GameLogic.Snake;
+using SnakeGame.Shared.Common;
+using SnakeGame.Shared.GameLogic;
+using SnakeGame.Shared.Common.ResourceManagers;
 
 namespace snake
 {
@@ -29,6 +32,7 @@ namespace snake
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private SpriteFont _spriteFont;
+        private TextureAtlas _textureRegions;
 
         private InputHandler _inputHandler;
 
@@ -37,16 +41,21 @@ namespace snake
         private IFruitManager _fruitManager;
 
         private GameKeys _gameKeys;
-        private SnakeKeys _snakeKeys;
+        private SnakeControls _snakeKeys;
+
+        private IGameManager _gameManager;
 
         private IGameSettings _gameSettings;
         private IRenderSettings _renderSettings;
+        private ITextureManager _textureManager;
         private IFruitRendererFactory _fruitRendererFactory;
         private ILogger _logger;
 
         public SnakeGame()
         {
             ReadSettings();
+
+            _logger = new NLogFileLogger(_gameSettings);
 
             _graphics = new GraphicsDeviceManager(this)
             {
@@ -68,25 +77,19 @@ namespace snake
         /// </summary>
         protected override void Initialize()
         {
-            _logger = new NLogFileLogger(_gameSettings);
+            _logger.Debug("Game.Initialize()");
 
-            IFieldFactory fieldFactory = new FieldFactory(_gameSettings);
-
-            _field = fieldFactory.GetRandomField(_gameSettings.MapWidth, _gameSettings.MapHeight);
-            _snakeKeys = new SnakeKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
-            _gameKeys = new GameKeys(Keys.P, Keys.D, Keys.R, Keys.Escape);
-
-            _snake = new SnakeComponent(_logger, _gameSettings, _field, _field.GetRandomCell().Bounds.Center.ToVector2(), _snakeKeys)
+            _renderSettings = new RenderSettings
             {
-                Enabled = true
+                IsDebugRenderingEnabled = _gameSettings.IsDebugRenderingEnabled,
+                IsRenderingEnabled = true
             };
 
-            GameManager.Snake = _snake;
-
+            _snakeKeys = new SnakeControls(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
+            _gameKeys = new GameKeys(Keys.P, Keys.D, Keys.R, Keys.Escape);
+            
             _inputHandler = new InputHandler(this);
-
             Components.Add(_inputHandler);
-            Components.Add(_snake);
 
             base.Initialize();
         }
@@ -105,46 +108,77 @@ namespace snake
         /// </summary>
         protected override void LoadContent()
         {
+            _logger.Debug("Game.LoadContent()");
+
             // Create a new SpriteBatch, which can be used to draw textures.
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _spriteFont = Content.Load<SpriteFont>("Fonts/debug-font");
             var texture = Content.Load<Texture2D>("Textures/Textures_sp");
 
-            var atlas = new TextureAtlas("Textures", texture);
+            _textureRegions = new TextureAtlas("Textures", texture);
 
             var n = 384;
 
-            atlas.CreateRegion("Tail", 0, 0, n, n);
-            atlas.CreateRegion("Part", n, 0, n, n);
-            atlas.CreateRegion("Head", n * 2, 0, n, n);
-            atlas.CreateRegion("Fruit", n * 3, 0, n, n);
-            atlas.CreateRegion("Grass", n * 4, 0, n, n);
-            atlas.CreateRegion("TopLeft", 0, n * 1, n, n);
-            atlas.CreateRegion("TopRight", n * 1, n * 1, n, n);
-            atlas.CreateRegion("BottomLeft", n * 2, n * 1, n, n);
-            atlas.CreateRegion("BottomRight", n * 3, n * 1, n, n);
-            atlas.CreateRegion("Tree", n * 4, n * 1, n, n);
-
-            _renderSettings = new RenderSettings
-            {
-                IsDebugRenderingEnabled = _gameSettings.IsDebugRenderingEnabled,
-                IsRenderingEnabled = true
-            };
-
-            _fruitRendererFactory = new FruitRendererFactory(_spriteBatch, atlas["Fruit"], _renderSettings);
-            _fruitManager = new FruitManager(_logger, _gameSettings, Components, _field, _fruitRendererFactory);
-
-            IRenderer2D _fieldRenderer = new FieldRendererComponent(_gameSettings, _spriteBatch, _spriteFont, _renderSettings, _field, atlas);
-            IRenderer2D _snakeRenderer = new SnakeRendererComponent(_spriteBatch, _spriteFont, _renderSettings, _logger, _snake, atlas);
+            _textureRegions.CreateRegion("Tail", 0, 0, n, n);
+            _textureRegions.CreateRegion("Part", n, 0, n, n);
+            _textureRegions.CreateRegion("Head", n * 2, 0, n, n);
+            _textureRegions.CreateRegion("Fruit", n * 3, 0, n, n);
+            _textureRegions.CreateRegion("Grass", n * 4, 0, n, n);
+            _textureRegions.CreateRegion("TopLeft", 0, n * 1, n, n);
+            _textureRegions.CreateRegion("TopRight", n * 1, n * 1, n, n);
+            _textureRegions.CreateRegion("BottomLeft", n * 2, n * 1, n, n);
+            _textureRegions.CreateRegion("BottomRight", n * 3, n * 1, n, n);
+            _textureRegions.CreateRegion("Tree", n * 4, n * 1, n, n);
 
             var fps = new FpsCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), _spriteBatch, _spriteFont, Color.Red);
 
             Components.Add(fps);
+
+            CreateGameEntities();
+        }
+
+        private void CreateGameEntities()
+        {
+            #region Field
+
+            IFieldFactory fieldFactory = new FieldFactory(_gameSettings);
+            _field = fieldFactory.GetRandomField(_gameSettings.MapWidth, _gameSettings.MapHeight);
+
+            #endregion Field
+
+            _textureManager = new TextureManager(_textureRegions);
+            _fruitRendererFactory = new FruitRendererFactory(_spriteBatch, _textureManager, _renderSettings);
+
+            #region Fruits
+
+            _fruitManager = new FruitManager(_logger, _gameSettings, Components, _field, _fruitRendererFactory);
+            _fruitManager.CreateFruit();
+
+            #endregion Fruits
+
+            _gameManager = new GameManager(_logger, _fruitManager);
+
+            #region Snake
+
+            _snake = new SnakeComponent(_logger, _gameSettings, _gameManager, _field, _field.GetRandomCell().Bounds.Center.ToVector2(), _snakeKeys)
+            {
+                Enabled = true
+            };
+
+            Components.Add(_snake);
+
+            #endregion Snake
+
+            #region Renderers
+
+            IRenderer2D _fieldRenderer = new FieldRendererComponent(_gameSettings, _spriteBatch, _spriteFont, _renderSettings, _field, _textureRegions);
+            IRenderer2D _snakeRenderer = new SnakeRendererComponent(_spriteBatch, _spriteFont, _renderSettings, _logger, _snake, _textureRegions);
+
             Components.Add(_snakeRenderer);
             Components.Add(_fieldRenderer);
 
-            _fruitManager.CreateFruit();
+            #endregion
         }
 
         /// <summary>
@@ -162,6 +196,13 @@ namespace snake
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
+        {
+            HandleInput();
+
+            base.Update(gameTime);
+        }
+
+        private void HandleInput()
         {
             if (InputHandler.IsKeyPressed(_gameKeys.Exit))
             {
@@ -182,8 +223,6 @@ namespace snake
             {
                 _renderSettings.IsRenderingEnabled = !_renderSettings.IsRenderingEnabled;
             }
-
-            base.Update(gameTime);
         }
 
         /// <summary>

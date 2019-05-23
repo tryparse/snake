@@ -3,8 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
 using snake.GameEntities;
-using snake.GameEntities.Snake;
 using SnakeGame.Shared.Common;
+using SnakeGame.Shared.GameLogic.Snake;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.Renderers;
 using System;
@@ -22,10 +22,6 @@ namespace snake.Renderers
         private int _drawOrder;
         private bool _isVisible;
 
-        private readonly TextureRegion2D _textureHead;
-        private readonly TextureRegion2D _texturePart;
-        private readonly TextureRegion2D _textureTail;
-        
         public SnakeRendererComponent(SpriteBatch spriteBatch, SpriteFont spriteFont, IRenderSettings settings, ILogger logger, SnakeComponent snake, TextureAtlas textureRegions, int drawOrder = 0)
         {
             this._spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
@@ -34,9 +30,6 @@ namespace snake.Renderers
             this._logger = logger;
             this._snake = snake ?? throw new ArgumentNullException(nameof(snake));
             this._textureRegions = textureRegions ?? throw new ArgumentNullException(nameof(textureRegions));
-            this._textureHead = _textureRegions.GetRegion("Head");
-            this._texturePart = _textureRegions.GetRegion("Part");
-            this._textureTail = _textureRegions.GetRegion("Tail");
             this._drawOrder = drawOrder;
 
             Initialize();
@@ -133,16 +126,16 @@ namespace snake.Renderers
 
             if (part == _snake.Parts.First.Value)
             {
-                selectedTexture = _textureHead;
+                selectedTexture = _textureRegions["Head"];
             }
             else if (part == _snake.Parts.Last.Value)
             {
                 // TODO: Add more variations
-                selectedTexture = _textureTail;
+                selectedTexture = _textureRegions["Tail"];
             }
             else
             {
-                selectedTexture = _texturePart;
+                selectedTexture = _textureRegions["Part"];
             }
 
             return selectedTexture;

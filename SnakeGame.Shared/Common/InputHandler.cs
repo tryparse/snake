@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace snake.GameComponents
+namespace SnakeGame.Shared.Common
 {
     public class InputHandler : GameComponent
     {
@@ -15,7 +15,7 @@ namespace snake.GameComponents
 
         public InputHandler(Game game) : base(game)
         {
-            
+
         }
 
         public KeyboardState CurrentState => _keyboardState;
