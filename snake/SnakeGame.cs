@@ -166,6 +166,8 @@ namespace snake
                 Enabled = true
             };
 
+            _snake.AddTail();
+
             Components.Add(_snake);
 
             #endregion Snake

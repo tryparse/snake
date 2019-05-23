@@ -168,10 +168,13 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
                             if (_gameManager.CheckSnakeCollision(this))
                             {
-                                _gameManager.NewGame(this);
+                                //_gameManager.NewGame(this);
                             }
 
-                            _gameManager.CheckFruitEating(this);
+                            //if (_gameManager.CheckFruitEating(this))
+                            //{
+
+                            //}
 
                             _state = SnakeState.Moving;
                         }
@@ -180,18 +183,24 @@ namespace SnakeGame.Shared.GameLogic.Snake
                     }
                 case SnakeState.Moving:
                     {
-                        var newPosition = _movingCalculator.Calculate(head.Position, targetPosition, _movingTime, _elapsedTime);
-
-                        head.Position = newPosition;
+                        foreach (var p in _parts)
+                        {
+                            p.Position = _movingCalculator.Calculate(p.Position, targetPosition, _movingTime, _elapsedTime);
+                        }
 
                         if (head.Position == targetPosition)
                         {
-                            _state = SnakeState.None;
+                            EndMoving();
                         }
 
                         break;
                     }
             }
+        }
+
+        private void EndMoving()
+        {
+            _state = SnakeState.None;
         }
 
         private void StartMoving()
