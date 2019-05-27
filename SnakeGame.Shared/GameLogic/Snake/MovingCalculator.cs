@@ -35,6 +35,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         public Vector2 FindNeighbourPoint(Direction direction, Vector2 point, Vector2 step)
         {
             var offset = Vector2.Zero;
+            var rotation = DirectionHelper.GetRotation(direction);
 
             switch (direction)
             {
