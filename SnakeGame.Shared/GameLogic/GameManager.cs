@@ -25,7 +25,6 @@ namespace SnakeGame.Shared.GameLogic
             snakeComponent.Reset();
         }
 
-#warning SPR violation
         public bool CheckSnakeCollision(SnakeComponent snakeComponent)
         {
             var head = snakeComponent.Parts.First();
@@ -36,7 +35,6 @@ namespace SnakeGame.Shared.GameLogic
             {
                 if (head.Bounds.Intersects(part.Bounds))
                 {
-                    snakeComponent.Enabled = false;
                     return true;
                 }
             }

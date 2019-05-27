@@ -33,7 +33,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private int _updateOrder;
 
         private SnakeState _state;
-        private TimeSpan _movingTime = TimeSpan.FromMilliseconds(1000);
+        private TimeSpan _movingTime = TimeSpan.FromMilliseconds(500);
+        private Dictionary<SnakePart, Vector2> _targetPositions;
         private Vector2 targetPosition;
 
         private Direction _nextDirection;
@@ -49,7 +50,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _field = field ?? throw new ArgumentNullException(nameof(field));
             _controls = controls ?? throw new ArgumentNullException(nameof(controls));
 
-            _stepTime = TimeSpan.FromMilliseconds(500);
+            _stepTime = TimeSpan.FromMilliseconds(2000);
 
             _nextDirection = direction;
 
@@ -88,6 +89,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _state = SnakeState.None;
             _movingCalculator = new MovingCalculator(_logger, _field);
             _tileSize = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
+            _targetPositions = new Dictionary<SnakePart, Vector2>();
         }
 
         public void Reset()
@@ -162,21 +164,18 @@ namespace SnakeGame.Shared.GameLogic.Snake
                             _elapsedTime -= _stepTime;
                             head.Direction = _nextDirection;
 
-                            StartMoving();
-
-                            targetPosition = _movingCalculator.FindNeighbourPoint(head.Direction, head.Position, _tileSize);
-
                             if (_gameManager.CheckSnakeCollision(this))
                             {
-                                //_gameManager.NewGame(this);
+                                Enabled = false;
+                                _gameManager.NewGame(this);
                             }
 
-                            //if (_gameManager.CheckFruitEating(this))
-                            //{
+                            if (_gameManager.CheckFruitEating(this))
+                            {
 
-                            //}
+                            }
 
-                            _state = SnakeState.Moving;
+                            StartMoving();
                         }
 
                         break;
@@ -185,10 +184,10 @@ namespace SnakeGame.Shared.GameLogic.Snake
                     {
                         foreach (var p in _parts)
                         {
-                            p.Position = _movingCalculator.Calculate(p.Position, targetPosition, _movingTime, _elapsedTime);
+                            p.Position = _movingCalculator.Calculate(p.Position, _targetPositions[p], _movingTime, _elapsedTime);
                         }
 
-                        if (head.Position == targetPosition)
+                        if (head.Position == _targetPositions[head])
                         {
                             EndMoving();
                         }
@@ -198,14 +197,31 @@ namespace SnakeGame.Shared.GameLogic.Snake
             }
         }
 
-        private void EndMoving()
-        {
-            _state = SnakeState.None;
-        }
-
         private void StartMoving()
         {
             _state = SnakeState.Moving;
+
+            foreach (var p in _parts)
+            {
+                _targetPositions[p] = _movingCalculator.FindNeighbourPoint(p.Direction, p.Position, _tileSize);
+            }
+        }
+
+        private void EndMoving()
+        {
+            _state = SnakeState.None;
+
+            var reversed = _parts.Reverse();
+
+            _targetPositions.Clear();
+
+            for (LinkedListNode<SnakePart> p = _parts.First; p != null; p = p.Next)
+            {
+                if (p.Previous != null)
+                {
+                    p.Value.Direction = p.Previous.Value.Direction;
+                }
+            }
         }
     }
 }
