@@ -21,6 +21,7 @@ using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic;
 using SnakeGame.Shared.Common.ResourceManagers;
 using SnakeGame.Shared.GameLogic.Food;
+using SnakeGame.Shared.GameLogic.Food.Interfaces;
 
 namespace snake
 {

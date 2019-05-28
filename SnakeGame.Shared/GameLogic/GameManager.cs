@@ -1,4 +1,5 @@
 ﻿using SnakeGame.Shared.GameLogic.Food;
+using SnakeGame.Shared.GameLogic.Food.Interfaces;
 using SnakeGame.Shared.GameLogic.Snake;
 using SnakeGame.Shared.Logging;
 using System;
