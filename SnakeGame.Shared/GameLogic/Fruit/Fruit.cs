@@ -8,6 +8,12 @@ using System.Threading.Tasks;
 
 namespace SnakeGame.Shared.GameLogic.Fruit
 {
+    public class FruitComponent : DrawableGameComponent
+    {
+
+    }
+
+
     public class Fruit
     {
         public Fruit(Vector2 position, Size2 size)
