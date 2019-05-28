@@ -1,4 +1,4 @@
-﻿using SnakeGame.Shared.GameLogic.Fruit;
+﻿using SnakeGame.Shared.GameLogic.Food;
 using SnakeGame.Shared.GameLogic.Snake;
 using SnakeGame.Shared.Logging;
 using System;
@@ -12,16 +12,17 @@ namespace SnakeGame.Shared.GameLogic
     public class GameManager : IGameManager
     {
         private readonly ILogger _logger;
-        private readonly IFruitManager _fruitManager;
+        private readonly IFoodManager _foodManager;
 
-        public GameManager(ILogger logger, IFruitManager fruitManager)
+        public GameManager(ILogger logger, IFoodManager foodManager)
         {
             _logger = logger;
-            _fruitManager = fruitManager;
+            _foodManager = foodManager;
         }
 
         public void NewGame(SnakeComponent snakeComponent)
         {
+            _logger.Debug("GameManager.NewGame()");
             snakeComponent.Reset();
         }
 
@@ -43,17 +44,17 @@ namespace SnakeGame.Shared.GameLogic
         }
 
 #warning SPR violation
-        public bool CheckFruitEating(SnakeComponent snake)
+        public bool CheckFoodEating(SnakeComponent snake)
         {
             var head = snake.Parts.First.Value;
 
-            foreach (var fruit in _fruitManager.Fruits)
+            foreach (var foodComponent in _foodManager.FoodComponents)
             {
-                if (head.Bounds.Intersects(fruit.Bounds))
+                if (head.Bounds.Intersects(foodComponent.Food.Bounds))
                 {
-                    _fruitManager.RemoveFruit(fruit);
+                    _foodManager.Remove(foodComponent);
                     snake.AddTail();
-                    _fruitManager.CreateFruit();
+                    // TODO: adding food;
 
                     return true;
                 }

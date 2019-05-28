@@ -55,15 +55,21 @@
     <Compile Include="Common\ResourceManagers\ITextureManager.cs" />
     <Compile Include="Common\LayerDepth.cs" />
     <Compile Include="Common\ResourceManagers\TextureManager.cs" />
-    <Compile Include="GameLogic\Fruit\Fruit.cs" />
-    <Compile Include="GameLogic\Fruit\FruitManager.cs" />
-    <Compile Include="GameLogic\Fruit\IFruitManager.cs" />
+    <Compile Include="GameLogic\Food\Food.cs" />
+    <Compile Include="GameLogic\Food\FoodManager.cs" />
+    <Compile Include="GameLogic\Food\Interfaces\IFood.cs" />
+    <Compile Include="GameLogic\Food\Interfaces\IFoodManager.cs" />
+    <Compile Include="GameLogic\Food\FoodGraphicsComponent.cs" />
+    <Compile Include="GameLogic\Food\FoodComponent.cs" />
+    <Compile Include="GameLogic\Food\Interfaces\IFoodGameComponent.cs" />
+    <Compile Include="Renderers\IGraphics2DComponent.cs" />
     <Compile Include="GameLogic\GameField\Cell.cs" />
     <Compile Include="GameLogic\GameField\CellType.cs" />
     <Compile Include="GameLogic\GameField\Field.cs" />
     <Compile Include="GameLogic\GameManager.cs" />
     <Compile Include="GameLogic\IGameManager.cs" />
     <Compile Include="GameLogic\Interfaces\IFieldFactory.cs" />
+    <Compile Include="Renderers\IRenderingCore.cs" />
     <Compile Include="GameLogic\Snake\IMovingCalculator.cs" />
     <Compile Include="GameLogic\Snake\MovingCalculator.cs" />
     <Compile Include="GameLogic\Snake\SnakeComponent.cs" />
@@ -72,11 +78,9 @@
     <Compile Include="GameLogic\Snake\SnakeState.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Renderers\FruitRendererComponent.cs" />
-    <Compile Include="Renderers\FruitRendererFactory.cs" />
-    <Compile Include="Renderers\IFruitRendererFactory.cs" />
     <Compile Include="Renderers\IRenderer2D.cs" />
     <Compile Include="Renderers\IRenderSettings.cs" />
+    <Compile Include="Renderers\RenderingCore.cs" />
     <Compile Include="Settings\GameSettings.cs" />
     <Compile Include="Settings\IGameSettings.cs" />
   </ItemGroup>

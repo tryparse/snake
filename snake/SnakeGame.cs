@@ -14,13 +14,13 @@ using snake.Logging;
 using SnakeGame.Shared.Settings;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.GameLogic.GameField;
-using SnakeGame.Shared.GameLogic.Fruit;
 using SnakeGame.Shared.GameLogic.Interfaces;
 using SnakeGame.Shared.Renderers;
 using SnakeGame.Shared.GameLogic.Snake;
 using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic;
 using SnakeGame.Shared.Common.ResourceManagers;
+using SnakeGame.Shared.GameLogic.Food;
 
 namespace snake
 {
@@ -34,21 +34,22 @@ namespace snake
         private SpriteFont _spriteFont;
         private TextureAtlas _textureRegions;
 
+        private IRenderingCore _renderingCore;
+
         private InputHandler _inputHandler;
 
         private Field _field;
         private SnakeComponent _snake;
-        private IFruitManager _fruitManager;
 
         private GameKeys _gameKeys;
         private SnakeControls _snakeKeys;
 
         private IGameManager _gameManager;
+        private IFoodManager _foodManager;
 
         private IGameSettings _gameSettings;
         private IRenderSettings _renderSettings;
         private ITextureManager _textureManager;
-        private IFruitRendererFactory _fruitRendererFactory;
         private ILogger _logger;
 
         public SnakeGame()
@@ -135,6 +136,9 @@ namespace snake
 
             Components.Add(fps);
 
+            _textureManager = new TextureManager(_textureRegions);
+            _renderingCore = new RenderingCore(_renderSettings, _spriteBatch, _spriteFont, _textureManager);
+
             CreateGameEntities();
         }
 
@@ -147,26 +151,18 @@ namespace snake
 
             #endregion Field
 
-            _textureManager = new TextureManager(_textureRegions);
-            _fruitRendererFactory = new FruitRendererFactory(_spriteBatch, _textureManager, _renderSettings);
+            _foodManager = new FoodManager(this, _field, _gameSettings, _renderingCore);
 
-            #region Fruits
-
-            _fruitManager = new FruitManager(_logger, _gameSettings, Components, _field, _fruitRendererFactory);
-            _fruitManager.CreateFruit();
-
-            #endregion Fruits
-
-            _gameManager = new GameManager(_logger, _fruitManager);
+            _gameManager = new GameManager(_logger, _foodManager);
 
             #region Snake
 
-            _snake = new SnakeComponent(_logger, _gameSettings, _gameManager, _field, _field.GetRandomCell().Bounds.Center.ToVector2(), _snakeKeys)
+            var snakeStartPosition = _field.GetRandomCell().Bounds.Center.ToVector2();
+
+            _snake = new SnakeComponent(_logger, _gameSettings, _gameManager, _field, snakeStartPosition, _snakeKeys)
             {
                 Enabled = true
             };
-
-            _snake.AddTail();
 
             Components.Add(_snake);
 
@@ -181,6 +177,9 @@ namespace snake
             Components.Add(_fieldRenderer);
 
             #endregion
+
+            var food = _foodManager.GenerateFood(new Vector2(25f));
+            _foodManager.Add(food);
         }
 
         /// <summary>

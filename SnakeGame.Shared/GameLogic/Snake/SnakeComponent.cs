@@ -170,7 +170,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
                                 _gameManager.NewGame(this);
                             }
 
-                            if (_gameManager.CheckFruitEating(this))
+                            if (_gameManager.CheckFoodEating(this))
                             {
 
                             }

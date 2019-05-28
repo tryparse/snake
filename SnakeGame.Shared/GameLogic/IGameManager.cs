@@ -8,6 +8,6 @@ namespace SnakeGame.Shared.GameLogic
 
         bool CheckSnakeCollision(SnakeComponent snakeComponent);
 
-        bool CheckFruitEating(SnakeComponent snake);
+        bool CheckFoodEating(SnakeComponent snake);
     }
 }
