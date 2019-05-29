@@ -3,7 +3,7 @@ using SnakeGame.Shared.Common.ResourceManagers;
 
 namespace SnakeGame.Shared.Renderers
 {
-    public interface IRenderingCore
+    public interface IRenderingSystem
     {
         IRenderSettings RenderSettings { get; }
 

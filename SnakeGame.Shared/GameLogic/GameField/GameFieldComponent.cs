@@ -1,21 +1,24 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using SnakeGame.Shared.GameLogic.Food.Interfaces;
+﻿using Microsoft.Xna.Framework;
+using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.Graphics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SnakeGame.Shared.GameLogic.Food
+namespace SnakeGame.Shared.GameLogic.GameField
 {
-    public class FoodComponent : IFoodGameComponent
+    public class GameFieldComponent : IGameFieldComponent
     {
+        private readonly IGameField _gameField;
         private readonly IGraphics2DComponent _graphicsComponent;
 
-        public FoodComponent(IFood food, IGraphics2DComponent graphicsComponent)
+        public GameFieldComponent(IGameField gameField, IGraphics2DComponent graphicsComponent)
         {
-            Food = food;
+            _gameField = gameField;
             _graphicsComponent = graphicsComponent;
         }
-
-        public IFood Food { get; }
 
         public bool Enabled { get; set; }
 
@@ -25,6 +28,8 @@ namespace SnakeGame.Shared.GameLogic.Food
 
         public bool Visible { get; set; }
 
+        public IGameField GameField => _gameField;
+
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
         public event EventHandler<EventArgs> DrawOrderChanged;
@@ -32,7 +37,7 @@ namespace SnakeGame.Shared.GameLogic.Food
 
         public void Initialize()
         {
-            throw new NotSupportedException();
+            
         }
 
         public void Update(GameTime gameTime)

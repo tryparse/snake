@@ -6,10 +6,6 @@ namespace SnakeGame.Shared.Graphics
 {
     public interface IGraphics2DComponent
     {
-        IRenderSettings RenderSettings { get; }
-
-        ITextureManager TextureManager { get; }
-
         void Draw(GameTime gameTime);
     }
 }

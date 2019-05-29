@@ -10,6 +10,7 @@ using SnakeGame.Shared.GameLogic.Snake;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.GameLogic.GameField;
 using SnakeGame.Shared.Settings;
+using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
@@ -19,7 +20,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly IGameSettings _gameSettings;
         private readonly IGameManager _gameManager;
 
-        private readonly Field _field;
+        private readonly IGameField _gameField;
         private readonly SnakeControls _controls;
         private readonly LinkedList<SnakePart> _parts;
         private IMovingCalculator _movingCalculator;
@@ -42,12 +43,12 @@ namespace SnakeGame.Shared.GameLogic.Snake
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
 
-        public SnakeComponent(ILogger logger, IGameSettings gameSettings, IGameManager gameManager, Field field, Vector2 position, SnakeControls controls, Direction direction = Direction.Right)
+        public SnakeComponent(ILogger logger, IGameSettings gameSettings, IGameManager gameManager, IGameField gameField, Vector2 position, SnakeControls controls, Direction direction = Direction.Right)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _gameSettings = gameSettings ?? throw new ArgumentNullException(nameof(gameSettings));
             _gameManager = gameManager ?? throw new ArgumentNullException(nameof(gameManager));
-            _field = field ?? throw new ArgumentNullException(nameof(field));
+            _gameField = gameField ?? throw new ArgumentNullException(nameof(gameField));
             _controls = controls ?? throw new ArgumentNullException(nameof(controls));
 
             _stepTime = TimeSpan.FromMilliseconds(2000);
@@ -87,7 +88,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         public void Initialize()
         {
             _state = SnakeState.None;
-            _movingCalculator = new MovingCalculator(_logger, _field);
+            _movingCalculator = new MovingCalculator(_logger, _gameField);
             _tileSize = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
             _targetPositions = new Dictionary<SnakePart, Vector2>();
         }
@@ -112,7 +113,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
                 if (tail == null)
                 {
-                    newPartPosition = _field.Cells[0, 0].Bounds.Center.ToVector2();
+                    newPartPosition = _gameField.Cells[0, 0].Bounds.Center.ToVector2();
                     newPartDirection = DirectionHelper.GetRandom();
                 }
                 else

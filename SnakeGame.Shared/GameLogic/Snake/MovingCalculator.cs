@@ -7,18 +7,19 @@ using System.Text;
 using System.Threading.Tasks;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.GameLogic.GameField;
+using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
     public class MovingCalculator : IMovingCalculator
     {
         private readonly ILogger _logger;
-        private readonly Field _field;
+        private readonly IGameField _gameField;
 
-        public MovingCalculator(ILogger logger, Field field)
+        public MovingCalculator(ILogger logger, IGameField gameField)
         {
             _logger = logger;
-            _field = field;
+            _gameField = gameField;
         }
 
         public Vector2 Calculate(Vector2 currentPosition, Vector2 targetPosition, TimeSpan transitionTime, TimeSpan elapsedTransitionTime)
@@ -64,8 +65,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
             var result = Vector2.Add(point, offset);
 
             // TODO: rewrite this
-            result.X = result.X > _field.Bounds.Width ? step.X / 2 : result.X < 0 ? _field.Bounds.Width - step.X / 2 : result.X;
-            result.Y = result.Y > _field.Bounds.Height ? step.Y / 2 : result.Y < 0 ? _field.Bounds.Height - step.Y / 2 : result.Y;
+            result.X = result.X > _gameField.Bounds.Width ? step.X / 2 : result.X < 0 ? _gameField.Bounds.Width - step.X / 2 : result.X;
+            result.Y = result.Y > _gameField.Bounds.Height ? step.Y / 2 : result.Y < 0 ? _gameField.Bounds.Height - step.Y / 2 : result.Y;
 
             return result;
         }

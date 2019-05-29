@@ -2,6 +2,7 @@
 using MonoGame.Extended;
 using SnakeGame.Shared.GameLogic.Food.Interfaces;
 using SnakeGame.Shared.GameLogic.GameField;
+using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.Renderers;
 using SnakeGame.Shared.Settings;
 using System;
@@ -13,12 +14,12 @@ namespace SnakeGame.Shared.GameLogic.Food
     {
         private readonly List<IFoodGameComponent> _foods;
         private readonly Game _game;
-        private readonly Field _gameField;
+        private readonly IGameField _gameField;
         private readonly IGameSettings _gameSettings;
-        private readonly IRenderingCore _renderingCore;
+        private readonly IRenderingSystem _renderingCore;
         private readonly Random _random;
 
-        public FoodManager(Game game, Field field, IGameSettings gameSettings, IRenderingCore renderingCore)
+        public FoodManager(Game game, IGameField field, IGameSettings gameSettings, IRenderingSystem renderingCore)
         {
             _foods = new List<IFoodGameComponent>();
             _game = game;
@@ -44,7 +45,7 @@ namespace SnakeGame.Shared.GameLogic.Food
 
         public IFoodGameComponent GenerateRandomFood()
         {
-            var randomPosition = _gameField.Cells[_random.Next(0, _gameField.ColumnsCount), _random.Next(0, _gameField.RowsCount)].Bounds.Center.ToVector2();
+            var randomPosition = _gameField.Cells[_random.Next(0, _gameField.Columns), _random.Next(0, _gameField.Rows)].Bounds.Center.ToVector2();
 
             return GenerateFood(randomPosition);
         }
@@ -54,7 +55,7 @@ namespace SnakeGame.Shared.GameLogic.Food
             var size = new Size2(_gameSettings.TileWidth, _gameSettings.TileHeight);
 
             var food = new Food(position, size);
-            var graphicsComponent = new FoodGraphicsComponent(_renderingCore.SpriteBatch, _renderingCore.SpriteFont, food, _renderingCore.RenderSettings, _renderingCore.TextureManager);
+            var graphicsComponent = new FoodGraphicsComponent(food, _renderingCore);
 
             var component = new FoodComponent(food, graphicsComponent)
             {

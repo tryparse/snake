@@ -42,12 +42,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="GameEntities\Field\FieldFactory.cs" />
     <Compile Include="UIComponents\FpsCounter.cs" />
     <Compile Include="GameEntities\GameKeys.cs" />
-    <Compile Include="GameEntities\ISprite.cs" />
     <Compile Include="Logging\NLogFileLogger.cs" />
-    <Compile Include="Renderers\FieldRendererComponent.cs" />
     <Compile Include="SnakeGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

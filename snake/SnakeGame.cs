@@ -14,7 +14,6 @@ using snake.Logging;
 using SnakeGame.Shared.Settings;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.GameLogic.GameField;
-using SnakeGame.Shared.GameLogic.Interfaces;
 using SnakeGame.Shared.Renderers;
 using SnakeGame.Shared.GameLogic.Snake;
 using SnakeGame.Shared.Common;
@@ -22,6 +21,8 @@ using SnakeGame.Shared.GameLogic;
 using SnakeGame.Shared.Common.ResourceManagers;
 using SnakeGame.Shared.GameLogic.Food;
 using SnakeGame.Shared.GameLogic.Food.Interfaces;
+using SnakeGame.Shared.GameLogic.GameField.Interfaces;
+using SnakeGame.Shared.Graphics;
 
 namespace snake
 {
@@ -35,11 +36,11 @@ namespace snake
         private SpriteFont _spriteFont;
         private TextureAtlas _textureRegions;
 
-        private IRenderingCore _renderingCore;
+        private IRenderingSystem _renderingCore;
 
         private InputHandler _inputHandler;
 
-        private Field _field;
+        private IGameFieldComponent _gameFieldComponent;
         private SnakeComponent _snake;
 
         private GameKeys _gameKeys;
@@ -138,7 +139,7 @@ namespace snake
             Components.Add(fps);
 
             _textureManager = new TextureManager(_textureRegions);
-            _renderingCore = new RenderingCore(_renderSettings, _spriteBatch, _spriteFont, _textureManager);
+            _renderingCore = new RenderingSystem(_renderSettings, _spriteBatch, _spriteFont, _textureManager);
 
             CreateGameEntities();
         }
@@ -147,20 +148,34 @@ namespace snake
         {
             #region Field
 
-            IFieldFactory fieldFactory = new FieldFactory(_gameSettings);
-            _field = fieldFactory.GetRandomField(_gameSettings.MapWidth, _gameSettings.MapHeight);
+            IGameFieldFactory gameFieldFactory = new GameFieldFactory(_gameSettings);
+            IGameField gameField = gameFieldFactory.GetRandomField(_gameSettings.MapWidth, _gameSettings.MapHeight, .8d);
+            IGraphics2DComponent graphicsComponent = new GameFieldGraphicsComponent(gameField, _renderSettings, _renderingCore, _gameSettings);
+
+            _gameFieldComponent = new GameFieldComponent(gameField, graphicsComponent)
+            {
+                Visible = true,
+                Enabled = true
+            };
+            Components.Add(_gameFieldComponent);
 
             #endregion Field
 
-            _foodManager = new FoodManager(this, _field, _gameSettings, _renderingCore);
+            #region Food
+
+            _foodManager = new FoodManager(this, gameField, _gameSettings, _renderingCore);
+            var food = _foodManager.GenerateFood(new Vector2(25f));
+            _foodManager.Add(food);
+
+            #endregion Food
 
             _gameManager = new GameManager(_logger, _foodManager);
 
             #region Snake
 
-            var snakeStartPosition = _field.GetRandomCell().Bounds.Center.ToVector2();
+            var snakeStartPosition = gameField.GetRandomCell().Bounds.Center.ToVector2();
 
-            _snake = new SnakeComponent(_logger, _gameSettings, _gameManager, _field, snakeStartPosition, _snakeKeys)
+            _snake = new SnakeComponent(_logger, _gameSettings, _gameManager, gameField, snakeStartPosition, _snakeKeys)
             {
                 Enabled = true
             };
@@ -171,16 +186,11 @@ namespace snake
 
             #region Renderers
 
-            IRenderer2D _fieldRenderer = new FieldRendererComponent(_gameSettings, _spriteBatch, _spriteFont, _renderSettings, _field, _textureRegions);
             IRenderer2D _snakeRenderer = new SnakeRendererComponent(_spriteBatch, _spriteFont, _renderSettings, _logger, _snake, _textureRegions);
 
             Components.Add(_snakeRenderer);
-            Components.Add(_fieldRenderer);
 
             #endregion
-
-            var food = _foodManager.GenerateFood(new Vector2(25f));
-            _foodManager.Add(food);
         }
 
         /// <summary>

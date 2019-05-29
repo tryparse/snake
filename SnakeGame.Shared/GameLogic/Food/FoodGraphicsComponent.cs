@@ -12,31 +12,23 @@ namespace SnakeGame.Shared.GameLogic.Food
 {
     public class FoodGraphicsComponent : IGraphics2DComponent
     {
-        private readonly SpriteBatch _spriteBatch;
-        private readonly SpriteFont _spriteFont;
         private readonly IFood _food;
+        private readonly IRenderingSystem _renderingCore;
 
-        public FoodGraphicsComponent(SpriteBatch spriteBatch, SpriteFont spriteFont, IFood food, IRenderSettings renderSettings, ITextureManager textureManager)
+        public FoodGraphicsComponent(IFood food, IRenderingSystem renderingCore)
         {
-            _spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
-            _spriteFont = spriteFont ?? throw new ArgumentNullException(nameof(spriteFont));
             _food = food ?? throw new ArgumentNullException(nameof(food));
-            RenderSettings = renderSettings ?? throw new ArgumentNullException(nameof(renderSettings));
-            TextureManager = textureManager ?? throw new ArgumentNullException(nameof(textureManager));
+            _renderingCore = renderingCore ?? throw new ArgumentNullException(nameof(renderingCore));
         }
-
-        public IRenderSettings RenderSettings { get; }
-
-        public ITextureManager TextureManager { get; }
 
         public void Draw(GameTime gameTime)
         {
-            if (RenderSettings.IsRenderingEnabled)
+            if (_renderingCore.RenderSettings.IsRenderingEnabled)
             {
                 Rendering();
             }
 
-            if (RenderSettings.IsDebugRenderingEnabled)
+            if (_renderingCore.RenderSettings.IsDebugRenderingEnabled)
             {
                 DebugRendering();
             }
@@ -44,18 +36,18 @@ namespace SnakeGame.Shared.GameLogic.Food
 
         private void DebugRendering()
         {
-            _spriteBatch.DrawRectangle(_food.Bounds, Color.Orange, 1);
-            _spriteBatch.DrawString(_spriteFont, _food.Position.ToString(), _food.Position, Color.Black);
+            _renderingCore.SpriteBatch.DrawRectangle(_food.Bounds, Color.Orange, 1);
+            _renderingCore.SpriteBatch.DrawString(_renderingCore.SpriteFont, _food.Position.ToString(), _food.Position, Color.Black);
         }
 
         private void Rendering()
         {
-            var t = TextureManager.TextureRegions["Fruit"];
+            var t = _renderingCore.TextureManager.TextureRegions["Fruit"];
 
             var origin = new Vector2(t.Width / 2, t.Height / 2);
             var scale = new Vector2(_food.Size.Width / t.Bounds.Width, _food.Size.Height / t.Bounds.Height);
 
-            _spriteBatch.Draw(
+            _renderingCore.SpriteBatch.Draw(
                     texture: t.Texture,
                     position: _food.Position,
                     sourceRectangle: t.Bounds,

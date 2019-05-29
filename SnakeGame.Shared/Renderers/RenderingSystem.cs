@@ -3,9 +3,9 @@ using SnakeGame.Shared.Common.ResourceManagers;
 
 namespace SnakeGame.Shared.Renderers
 {
-    public class RenderingCore : IRenderingCore
+    public class RenderingSystem : IRenderingSystem
     {
-        public RenderingCore(IRenderSettings renderSettings, SpriteBatch spriteBatch, SpriteFont spriteFont, ITextureManager textureManager)
+        public RenderingSystem(IRenderSettings renderSettings, SpriteBatch spriteBatch, SpriteFont spriteFont, ITextureManager textureManager)
         {
             RenderSettings = renderSettings;
             SpriteBatch = spriteBatch;

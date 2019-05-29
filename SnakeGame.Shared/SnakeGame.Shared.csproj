@@ -62,14 +62,20 @@
     <Compile Include="GameLogic\Food\FoodGraphicsComponent.cs" />
     <Compile Include="GameLogic\Food\FoodComponent.cs" />
     <Compile Include="GameLogic\Food\Interfaces\IFoodGameComponent.cs" />
+    <Compile Include="GameLogic\GameField\Cells\Cell.cs" />
+    <Compile Include="GameLogic\GameField\Cells\Interfaces\ICell.cs" />
+    <Compile Include="GameLogic\GameField\GameField.cs" />
+    <Compile Include="GameLogic\GameField\GameFieldComponent.cs" />
+    <Compile Include="GameLogic\GameField\GameFieldFactory.cs" />
+    <Compile Include="GameLogic\GameField\GameFieldGraphicsComponent.cs" />
+    <Compile Include="GameLogic\GameField\Interfaces\IGameField.cs" />
+    <Compile Include="GameLogic\GameField\Interfaces\IGameFieldComponent.cs" />
+    <Compile Include="GameLogic\GameField\Interfaces\IGameFieldFactory.cs" />
     <Compile Include="Renderers\IGraphics2DComponent.cs" />
-    <Compile Include="GameLogic\GameField\Cell.cs" />
     <Compile Include="GameLogic\GameField\CellType.cs" />
-    <Compile Include="GameLogic\GameField\Field.cs" />
     <Compile Include="GameLogic\GameManager.cs" />
     <Compile Include="GameLogic\IGameManager.cs" />
-    <Compile Include="GameLogic\Interfaces\IFieldFactory.cs" />
-    <Compile Include="Renderers\IRenderingCore.cs" />
+    <Compile Include="Renderers\IRenderingSystem.cs" />
     <Compile Include="GameLogic\Snake\IMovingCalculator.cs" />
     <Compile Include="GameLogic\Snake\MovingCalculator.cs" />
     <Compile Include="GameLogic\Snake\SnakeComponent.cs" />
@@ -80,12 +86,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderers\IRenderer2D.cs" />
     <Compile Include="Renderers\IRenderSettings.cs" />
-    <Compile Include="Renderers\RenderingCore.cs" />
+    <Compile Include="Renderers\RenderingSystem.cs" />
     <Compile Include="Settings\GameSettings.cs" />
     <Compile Include="Settings\IGameSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Graphics\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
