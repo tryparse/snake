@@ -13,12 +13,14 @@ namespace SnakeGame.Shared.GameLogic.GameField
     public class GameField : IGameField
     {
         private readonly Random _random;
+        private readonly IGameSettings _gameSettings;
 
-        public GameField(ICell[,] cells, int width, int height)
+        public GameField(ICell[,] cells, IGameSettings gameSettings)
         {
             Cells = cells;
+            _gameSettings = gameSettings;
 
-            Bounds = new Rectangle(0, 0, Columns * width, Rows * height);
+            Bounds = new Rectangle(0, 0, Columns * _gameSettings.TileWidth, Rows * _gameSettings.TileHeight);
 
             _random = new Random();
         }

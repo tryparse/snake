@@ -43,7 +43,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
                 }
             }
 
-            var field = new GameField(cells, width, height);
+            var field = new GameField(cells, _gameSettings);
 
             return field;
         }

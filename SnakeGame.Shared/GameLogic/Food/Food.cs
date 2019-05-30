@@ -31,11 +31,11 @@ namespace SnakeGame.Shared.GameLogic.Food
         private void RecalcBoundsRectangle()
         {
             _bounds = new Rectangle(
-                                (int)(Position.X - Size.Width / 2),
-                                (int)(Position.Y - Size.Height / 2),
-                                (int)Size.Width,
-                                (int)Size.Height
-                            );
+                (int)(Position.X - Size.Width / 2),
+                (int)(Position.Y - Size.Height / 2),
+                (int)Size.Width,
+                (int)Size.Height
+            );
         }
     }
 }
