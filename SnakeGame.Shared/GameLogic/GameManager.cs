@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace SnakeGame.Shared.GameLogic
 {
+    // TODO: Make this manager as IUpdatable component
     public class GameManager : IGameManager
     {
         private readonly ILogger _logger;
@@ -37,6 +38,7 @@ namespace SnakeGame.Shared.GameLogic
             {
                 if (head.Bounds.Intersects(part.Bounds))
                 {
+                    _logger.Debug($"Collision: r1={head.Bounds} r2={part.Bounds}");
                     return true;
                 }
             }

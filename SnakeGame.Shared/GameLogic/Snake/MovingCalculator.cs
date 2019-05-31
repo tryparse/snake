@@ -36,7 +36,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
         public Vector2 FindNeighbourPoint(Direction direction, Vector2 point, Vector2 step)
         {
             var offset = Vector2.Zero;
-            var rotation = DirectionHelper.GetRotation(direction);
 
             switch (direction)
             {
@@ -64,9 +63,36 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
             var result = Vector2.Add(point, offset);
 
-            // TODO: rewrite this
-            result.X = result.X > _gameField.Bounds.Width - ( step.X / 2 ) ? step.X / 2 : result.X < 0 ? _gameField.Bounds.Width - step.X / 2 : result.X;
-            result.Y = result.Y > _gameField.Bounds.Height - ( step.Y / 2 ) ? step.Y / 2 : result.Y < 0 ? _gameField.Bounds.Height - step.Y / 2 : result.Y;
+            //result = CheckBoundaries(step, result);
+
+            return result;
+        }
+
+        public Vector2 CheckBoundaries(Vector2 step, Vector2 result)
+        {
+            _logger.Debug($"MovingCalculator.CheckBoundaries(): input={result}");
+
+            // If on the X axis we are left the field on the right side
+            if (result.X > _gameField.Bounds.Width - (step.X / 2))
+            {
+                result.X = step.X / 2;
+            }
+            // or on the left side
+            else if (result.X < step.X / 2)
+            {
+                result.X = _gameField.Bounds.Width - step.X / 2;
+            }
+
+            if (result.Y > _gameField.Bounds.Height - (step.Y / 2))
+            {
+                result.Y = step.Y / 2;
+            }
+            else if (result.Y < step.Y / 2)
+            {
+                result.Y = _gameField.Bounds.Height - step.Y / 2;
+            }
+
+            _logger.Debug($"MovingCalculator.CheckBoundaries(): output={result}");
 
             return result;
         }

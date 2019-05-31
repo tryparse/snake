@@ -98,7 +98,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
                     var cell = _gameField.Cells[x, y];
 
                     _renderingCore.SpriteBatch.DrawString(
-                        spriteFont: _renderingCore.SpriteFont,
+                        spriteFont: _renderingCore.DebugSpriteFont,
                         text: $"{cell.Column};{cell.Row}",
                         position: cell.Position,
                         color: Color.White,

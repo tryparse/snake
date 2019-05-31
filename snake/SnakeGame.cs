@@ -34,6 +34,7 @@ namespace snake
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private SpriteFont _spriteFont;
+        private SpriteFont _debugSpriteFont;
         private TextureAtlas _textureRegions;
 
         private IRenderingSystem _renderingCore;
@@ -116,7 +117,8 @@ namespace snake
             // Create a new SpriteBatch, which can be used to draw textures.
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _spriteFont = Content.Load<SpriteFont>("Fonts/debug-font");
+            _debugSpriteFont = Content.Load<SpriteFont>("Fonts/debug-font");
+            _spriteFont = Content.Load<SpriteFont>("Fonts/joystix");
             var texture = Content.Load<Texture2D>("Textures/Textures_sp");
 
             _textureRegions = new TextureAtlas("Textures", texture);
@@ -134,12 +136,12 @@ namespace snake
             _textureRegions.CreateRegion("BottomRight", n * 3, n * 1, n, n);
             _textureRegions.CreateRegion("Tree", n * 4, n * 1, n, n);
 
-            var fps = new FpsCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), _spriteBatch, _spriteFont, Color.Red);
+            var fps = new FpsCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), _spriteBatch, _spriteFont, Color.Black);
 
             Components.Add(fps);
 
             _textureManager = new TextureManager(_textureRegions);
-            _renderingCore = new RenderingSystem(_renderSettings, _spriteBatch, _spriteFont, _textureManager);
+            _renderingCore = new RenderingSystem(_renderSettings, _spriteBatch, _spriteFont, _debugSpriteFont, _textureManager);
 
             CreateGameEntities();
         }
@@ -179,6 +181,7 @@ namespace snake
             {
                 Enabled = true
             };
+            _snake.AddTail(2);
 
             Components.Add(_snake);
 
@@ -186,7 +189,7 @@ namespace snake
 
             #region Renderers
 
-            IRenderer2D _snakeRenderer = new SnakeRendererComponent(_spriteBatch, _spriteFont, _renderSettings, _logger, _snake, _textureRegions);
+            IRenderer2D _snakeRenderer = new SnakeRendererComponent(_spriteBatch, _debugSpriteFont, _renderSettings, _logger, _snake, _textureRegions);
 
             Components.Add(_snakeRenderer);
 

@@ -36,7 +36,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private SnakeState _state;
         private TimeSpan _movingTime = TimeSpan.FromMilliseconds(500);
         private Dictionary<SnakePart, Vector2> _targetPositions;
-        private Vector2 targetPosition;
+        private TimeSpan _updateRate = TimeSpan.FromMilliseconds(1000d / 3d);
+        private TimeSpan _elapsedUpdateTime = TimeSpan.Zero;
 
         private Direction _nextDirection;
 
@@ -51,7 +52,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _gameField = gameField ?? throw new ArgumentNullException(nameof(gameField));
             _controls = controls ?? throw new ArgumentNullException(nameof(controls));
 
-            _stepTime = TimeSpan.FromMilliseconds(2000);
+            _stepTime = TimeSpan.FromMilliseconds(500);
 
             _nextDirection = direction;
 
@@ -153,6 +154,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private void Move(GameTime gameTime, SnakePart head)
         {
             _elapsedTime += gameTime.ElapsedGameTime;
+            _elapsedUpdateTime += gameTime.ElapsedGameTime;
 
             // TODO: moving of all snake parts
 
@@ -167,14 +169,14 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
                             if (_gameManager.CheckSnakeCollision(this))
                             {
-                                Enabled = false;
-                                _gameManager.NewGame(this);
+                                //Enabled = false;
+                                //_gameManager.NewGame(this);
                             }
 
-                            if (_gameManager.CheckFoodEating(this))
-                            {
+                            //if (_gameManager.CheckFoodEating(this))
+                            //{
 
-                            }
+                            //}
 
                             StartMoving();
                         }
@@ -204,7 +206,9 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
             foreach (var p in _parts)
             {
-                _targetPositions[p] = _movingCalculator.FindNeighbourPoint(p.Direction, p.Position, _tileSize);
+                var target = _movingCalculator.FindNeighbourPoint(p.Direction, p.Position, _tileSize);
+
+                _targetPositions[p] = target;
             }
         }
 
@@ -212,11 +216,9 @@ namespace SnakeGame.Shared.GameLogic.Snake
         {
             _state = SnakeState.None;
 
-            var reversed = _parts.Reverse();
-
             _targetPositions.Clear();
 
-            for (LinkedListNode<SnakePart> p = _parts.First; p != null; p = p.Next)
+            for (LinkedListNode<SnakePart> p = _parts.Last; p != null; p = p.Previous)
             {
                 if (p.Previous != null)
                 {

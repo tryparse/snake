@@ -9,6 +9,8 @@ namespace SnakeGame.Shared.Renderers
 
         SpriteBatch SpriteBatch { get; }
 
+        SpriteFont DebugSpriteFont { get; }
+
         SpriteFont SpriteFont { get; }
 
         ITextureManager TextureManager { get;}

@@ -5,11 +5,12 @@ namespace SnakeGame.Shared.Renderers
 {
     public class RenderingSystem : IRenderingSystem
     {
-        public RenderingSystem(IRenderSettings renderSettings, SpriteBatch spriteBatch, SpriteFont spriteFont, ITextureManager textureManager)
+        public RenderingSystem(IRenderSettings renderSettings, SpriteBatch spriteBatch, SpriteFont spriteFont, SpriteFont debugSpriteFont, ITextureManager textureManager)
         {
             RenderSettings = renderSettings;
             SpriteBatch = spriteBatch;
             SpriteFont = spriteFont;
+            DebugSpriteFont = debugSpriteFont;
             TextureManager = textureManager;
         }
 
@@ -17,8 +18,10 @@ namespace SnakeGame.Shared.Renderers
 
         public SpriteBatch SpriteBatch { get; }
 
-        public SpriteFont SpriteFont { get; }
+        public SpriteFont DebugSpriteFont { get; }
 
         public ITextureManager TextureManager { get; }
+
+        public SpriteFont SpriteFont { get; }
     }
 }
