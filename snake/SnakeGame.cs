@@ -171,7 +171,7 @@ namespace snake
 
             _foodManager = new FoodManager(this, gameField, _gameSettings, _renderingCore);
 
-            var food = _foodManager.GenerateFood(_unitVector);
+            var food = _foodManager.GenerateFood(Vector2.Divide(_unitVector, 2));
             _foodManager.Add(food);
 
             #endregion Food
@@ -186,7 +186,7 @@ namespace snake
             {
                 Enabled = true
             };
-            _snake.AddTail(2);
+            _snake.AddTail(10);
 
             Components.Add(_snake);
 

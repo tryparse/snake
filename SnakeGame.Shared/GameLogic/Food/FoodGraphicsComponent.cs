@@ -44,8 +44,8 @@ namespace SnakeGame.Shared.GameLogic.Food
         {
             var t = _renderingCore.TextureManager.TextureRegions["Fruit"];
 
-            var origin = new Vector2(t.Width / 2, t.Height / 2);
-            var scale = new Vector2(_food.Size.Width / t.Bounds.Width, _food.Size.Height / t.Bounds.Height);
+            var origin = new Vector2(t.Width / 2f, t.Height / 2f);
+            var scale = new Vector2(_food.Size.Width / (float)t.Bounds.Width, _food.Size.Height / (float)t.Bounds.Height);
 
             _renderingCore.SpriteBatch.Draw(
                     texture: t.Texture,

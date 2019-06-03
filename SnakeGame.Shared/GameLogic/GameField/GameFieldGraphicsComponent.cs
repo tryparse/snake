@@ -101,7 +101,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
                         spriteFont: _renderingCore.DebugSpriteFont,
                         text: $"{cell.Column};{cell.Row}",
                         position: cell.Position,
-                        color: Color.White,
+                        color: Color.Black,
                         rotation: 0f,
                         origin: Vector2.Zero,
                         scale: 1f,
