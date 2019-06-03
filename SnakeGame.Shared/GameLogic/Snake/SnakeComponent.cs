@@ -25,7 +25,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly LinkedList<SnakePart> _parts;
         private IMovingCalculator _movingCalculator;
 
-        private Vector2 _tileSize;
+        private Vector2 _unitVector;
 
         private readonly TimeSpan _stepTime;
         private TimeSpan _elapsedTime;
@@ -34,7 +34,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private int _updateOrder;
 
         private SnakeState _state;
-        private TimeSpan _movingTime = TimeSpan.FromMilliseconds(500);
+        private TimeSpan _movingTime = TimeSpan.FromMilliseconds(500d);
         private Dictionary<SnakePart, Vector2> _targetPositions;
         private TimeSpan _updateRate = TimeSpan.FromMilliseconds(1000d / 3d);
         private TimeSpan _elapsedUpdateTime = TimeSpan.Zero;
@@ -61,7 +61,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
             Initialize();
 
             _parts = new LinkedList<SnakePart>();
-            _parts.AddFirst(new SnakePart(position, _tileSize, direction));
+            _parts.AddFirst(new SnakePart(position, _unitVector, direction));
         }
 
         public LinkedList<SnakePart> Parts => _parts;
@@ -90,7 +90,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         {
             _state = SnakeState.None;
             _movingCalculator = new MovingCalculator(_logger, _gameField);
-            _tileSize = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
+            _unitVector = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
             _targetPositions = new Dictionary<SnakePart, Vector2>();
         }
 
@@ -119,11 +119,11 @@ namespace SnakeGame.Shared.GameLogic.Snake
                 }
                 else
                 {
-                    newPartPosition = _movingCalculator.FindNeighbourPoint(DirectionHelper.GetOppositeDirection(tail.Direction), tail.Position, _tileSize);
+                    newPartPosition = _movingCalculator.FindNeighbourPoint(DirectionHelper.GetOppositeDirection(tail.Direction), tail.Position, _unitVector);
                     newPartDirection = tail.Direction;
                 }
 
-                _parts.AddLast(new SnakePart(new Vector2(newPartPosition.X, newPartPosition.Y), _tileSize, newPartDirection));
+                _parts.AddLast(new SnakePart(new Vector2(newPartPosition.X, newPartPosition.Y), _unitVector, newPartDirection));
             }
         }
 
@@ -154,7 +154,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private void Move(GameTime gameTime, SnakePart head)
         {
             _elapsedTime += gameTime.ElapsedGameTime;
-            _elapsedUpdateTime += gameTime.ElapsedGameTime;
+            //_elapsedUpdateTime += gameTime.ElapsedGameTime;
 
             // TODO: moving of all snake parts
 
@@ -178,21 +178,18 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
                             //}
 
-                            StartMoving();
+                            StartMoving(gameTime);
                         }
 
                         break;
                     }
                 case SnakeState.Moving:
                     {
-                        foreach (var p in _parts)
-                        {
-                            p.Position = _movingCalculator.Calculate(p.Position, _targetPositions[p], _movingTime, _elapsedTime);
-                        }
+                        UpdatePosition();
 
                         if (head.Position == _targetPositions[head])
                         {
-                            EndMoving();
+                            EndMoving(gameTime);
                         }
 
                         break;
@@ -200,24 +197,44 @@ namespace SnakeGame.Shared.GameLogic.Snake
             }
         }
 
-        private void StartMoving()
+        private void StartMoving(GameTime gameTime)
         {
+            _logger.Debug($"SnakeComponent.StartMoving({_elapsedTime.ToString()})");
+
             _state = SnakeState.Moving;
 
-            foreach (var p in _parts)
-            {
-                var target = _movingCalculator.FindNeighbourPoint(p.Direction, p.Position, _tileSize);
-
-                _targetPositions[p] = target;
-            }
+            UpdateTargetPosition();
         }
 
-        private void EndMoving()
+        private void EndMoving(GameTime gameTime)
         {
+            _logger.Debug($"SnakeComponent.EndMoving({_elapsedTime.ToString()})");
+
             _state = SnakeState.None;
 
             _targetPositions.Clear();
 
+            UpdateDirection();
+        }
+
+        private void UpdatePosition()
+        {
+            foreach (var p in _parts)
+            {
+                p.Position = _movingCalculator.Calculate(p.Position, _targetPositions[p], _movingTime, _elapsedTime);
+            }
+        }
+
+        private void UpdateTargetPosition()
+        {
+            foreach (var p in _parts)
+            {
+                _targetPositions[p] = _movingCalculator.FindNeighbourPoint(p.Direction, p.Position, _unitVector);
+            }
+        }
+
+        private void UpdateDirection()
+        {
             for (LinkedListNode<SnakePart> p = _parts.Last; p != null; p = p.Previous)
             {
                 if (p.Previous != null)

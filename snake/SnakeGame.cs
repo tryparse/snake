@@ -55,6 +55,8 @@ namespace snake
         private ITextureManager _textureManager;
         private ILogger _logger;
 
+        private Vector2 _unitVector;
+
         public SnakeGame()
         {
             ReadSettings();
@@ -148,6 +150,8 @@ namespace snake
 
         private void CreateGameEntities()
         {
+            _unitVector = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
+
             #region Field
 
             IGameFieldFactory gameFieldFactory = new GameFieldFactory(_gameSettings);
@@ -166,7 +170,8 @@ namespace snake
             #region Food
 
             _foodManager = new FoodManager(this, gameField, _gameSettings, _renderingCore);
-            var food = _foodManager.GenerateFood(new Vector2(25f));
+
+            var food = _foodManager.GenerateFood(_unitVector);
             _foodManager.Add(food);
 
             #endregion Food
