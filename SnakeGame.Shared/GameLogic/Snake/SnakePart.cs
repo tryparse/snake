@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
+    [Obsolete]
     public class SnakePart
     {
         public SnakePart(Vector2 position, Size2 size, Direction direction)

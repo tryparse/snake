@@ -71,6 +71,12 @@
     <Compile Include="GameLogic\GameField\Interfaces\IGameField.cs" />
     <Compile Include="GameLogic\GameField\Interfaces\IGameFieldComponent.cs" />
     <Compile Include="GameLogic\GameField\Interfaces\IGameFieldFactory.cs" />
+    <Compile Include="GameLogic\Snake\Interfaces\ISnake.cs" />
+    <Compile Include="GameLogic\Snake\Interfaces\ISnakeGameComponent.cs" />
+    <Compile Include="GameLogic\Snake\Interfaces\ISnakeSegment.cs" />
+    <Compile Include="GameLogic\Snake\SnakeGameComponent.cs" />
+    <Compile Include="GameLogic\Snake\SnakeGraphicsComponent.cs" />
+    <Compile Include="GameLogic\Snake\SnakeSegment.cs" />
     <Compile Include="Renderers\IGraphics2DComponent.cs" />
     <Compile Include="GameLogic\GameField\CellType.cs" />
     <Compile Include="GameLogic\GameManager.cs" />

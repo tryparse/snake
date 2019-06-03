@@ -14,6 +14,7 @@ using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
+    [Obsolete]
     public class SnakeComponent : IGameComponent, IUpdateable
     {
         private readonly ILogger _logger;

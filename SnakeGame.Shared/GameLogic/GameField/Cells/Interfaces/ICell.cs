@@ -10,17 +10,11 @@ namespace SnakeGame.Shared.GameLogic.GameField.Cells.Interfaces
     public interface ICell
     {
         Vector2 Position { get; }
-
         int Width { get; }
-
         int Height { get; }
-
-        CellType CellType { get; }
-
         int Column { get; }
-
         int Row { get; }
-
+        CellType CellType { get; }
         Rectangle Bounds { get; }
     }
 }
