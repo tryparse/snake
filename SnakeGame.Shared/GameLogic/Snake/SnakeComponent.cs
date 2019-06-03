@@ -34,7 +34,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private int _updateOrder;
 
         private SnakeState _state;
-        private TimeSpan _movingTime = TimeSpan.FromMilliseconds(1000d);
+        private TimeSpan _movingTime = TimeSpan.FromMilliseconds(500d);
         private TimeSpan _movingElapsedTime = TimeSpan.Zero;
         private Dictionary<SnakePart, Vector2> _sourcePositions;
         private Dictionary<SnakePart, Vector2> _destinationPositions;
@@ -100,7 +100,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         {
             _parts.Clear();
 
-            AddTail();
+            AddTail(2);
 
             Enabled = true;
         }
@@ -156,9 +156,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private void Move(GameTime gameTime, SnakePart head)
         {
             _elapsedTime += gameTime.ElapsedGameTime;
-            //_elapsedUpdateTime += gameTime.ElapsedGameTime;
-
-            // TODO: moving of all snake parts
 
             switch (_state)
             {
@@ -169,16 +166,19 @@ namespace SnakeGame.Shared.GameLogic.Snake
                             _elapsedTime -= _stepTime;
                             head.Direction = _nextDirection;
 
-                            //if (_gameManager.CheckSnakeCollision(this))
-                            //{
-                            //    //Enabled = false;
-                            //    //_gameManager.NewGame(this);
-                            //}
+                            if (_gameManager.CheckSnakeCollision(this))
+                            {
+                                Enabled = false;
+                                _gameManager.NewGame(this);
+                            }
 
-                            //if (_gameManager.CheckFoodEating(this))
-                            //{
-
-                            //}
+                            if (_gameManager.CheckFoodCollision(this))
+                            {
+                                var foods = _gameManager.GetEatenFoods(this);
+                                _gameManager.RemoveFood(foods);
+                                _gameManager.GenerateRandomFood();
+                                AddTail();
+                            }
 
                             StartMoving();
                         }

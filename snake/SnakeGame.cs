@@ -186,7 +186,7 @@ namespace snake
             {
                 Enabled = true
             };
-            _snake.AddTail(10);
+            _snake.AddTail(1);
 
             Components.Add(_snake);
 

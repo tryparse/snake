@@ -32,7 +32,7 @@ namespace SnakeGame.Shared.GameLogic.Food
 
         public void Initialize()
         {
-            throw new NotSupportedException();
+            
         }
 
         public void Update(GameTime gameTime)

@@ -46,8 +46,7 @@ namespace SnakeGame.Shared.GameLogic
             return false;
         }
 
-#warning SPR violation
-        public bool CheckFoodEating(SnakeComponent snake)
+        public bool CheckFoodCollision(SnakeComponent snake)
         {
             var head = snake.Parts.First.Value;
 
@@ -55,15 +54,52 @@ namespace SnakeGame.Shared.GameLogic
             {
                 if (head.Bounds.Intersects(foodComponent.Food.Bounds))
                 {
-                    _foodManager.Remove(foodComponent);
-                    snake.AddTail();
-                    // TODO: adding food;
-
                     return true;
                 }
             }
 
             return false;
+        }
+
+        public IEnumerable<IFoodGameComponent> GetEatenFoods(SnakeComponent snake)
+        {
+            if (snake == null)
+            {
+                throw new ArgumentNullException(nameof(snake));
+            }
+
+            var head = snake.Parts.First.Value;
+
+            if (head == null)
+            {
+                throw new InvalidOperationException("Snake has no parts");
+            }
+
+            var result = new List<IFoodGameComponent>();
+
+            foreach (var foodComponent in _foodManager.FoodComponents)
+            {
+                if (head.Bounds.Intersects(foodComponent.Food.Bounds))
+                {
+                    result.Add(foodComponent);
+                }
+            }
+
+            return result;
+        }
+
+        public void RemoveFood(IEnumerable<IFoodGameComponent> foods)
+        {
+            foreach (var food in foods)
+            {
+                _foodManager.Remove(food);
+            }
+        }
+
+        public void GenerateRandomFood()
+        {
+            var food = _foodManager.GenerateRandomFood();
+            _foodManager.Add(food);
         }
     }
 }
