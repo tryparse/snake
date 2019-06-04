@@ -23,6 +23,7 @@ using SnakeGame.Shared.GameLogic.Food;
 using SnakeGame.Shared.GameLogic.Food.Interfaces;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.Graphics;
+using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 
 namespace snake
 {
@@ -42,6 +43,7 @@ namespace snake
         private InputHandler _inputHandler;
 
         private IGameFieldComponent _gameFieldComponent;
+        private ISnakeGameComponent _snakeGameComponent;
         private SnakeComponent _snake;
 
         private GameKeys _gameKeys;

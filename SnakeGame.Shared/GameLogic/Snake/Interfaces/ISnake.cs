@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SnakeGame.Shared.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,18 @@ namespace SnakeGame.Shared.GameLogic.Snake.Interfaces
 {
     public interface ISnake
     {
-        IEnumerable<ISnakeSegment> Segments { get; }
+        LinkedList<ISnakeSegment> Segments { get; }
+
+        Direction Direction { get; }
+
+        SnakeState State { get; }
+
+        void Reset();
+
+        void AddSegments(int count);
+
+        void SetDirection(Direction direction);
+
+        void SetState(SnakeState state);
     }
 }
