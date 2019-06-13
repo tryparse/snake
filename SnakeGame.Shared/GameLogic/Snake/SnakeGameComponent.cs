@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
@@ -21,9 +22,10 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly IGameSettings _gameSettings;
         private readonly IGameManager _gameManager;
         private readonly ILogger _logger;
+        private readonly IGameField _gameField;
 
         private Vector2 _unitVector;
-        private TimeSpan _movingTime = TimeSpan.FromMilliseconds(500d);
+        private TimeSpan _movingTime = TimeSpan.FromMilliseconds(1000d);
         private TimeSpan _movingElapsedTime = TimeSpan.Zero;
         private Dictionary<ISnakeSegment, Vector2> _sourcePositions;
         private Dictionary<ISnakeSegment, Vector2> _destinationPositions;
@@ -31,7 +33,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private TimeSpan _stepIntervalTime;
         private Direction _nextDirection;
 
-        public SnakeGameComponent(ISnake snake, IGraphics2DComponent graphicsComponent, IMovingCalculator movingCalculator, SnakeControls controls, IGameSettings gameSettings, IGameManager gameManager, ILogger logger)
+        public SnakeGameComponent(ISnake snake, IGraphics2DComponent graphicsComponent, IMovingCalculator movingCalculator, SnakeControls controls, IGameSettings gameSettings, IGameManager gameManager, ILogger logger, IGameField gameField)
         {
             _snake = snake ?? throw new ArgumentNullException(nameof(snake));
             _graphicsComponent = graphicsComponent ?? throw new ArgumentNullException(nameof(graphicsComponent));
@@ -40,6 +42,9 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _gameSettings = gameSettings ?? throw new ArgumentNullException(nameof(gameSettings));
             _gameManager = gameManager ?? throw new ArgumentNullException(nameof(gameManager));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _gameField = gameField ?? throw new ArgumentNullException(nameof(gameField));
+
+            Initialize();
         }
 
         public bool Enabled { get; set; }
@@ -59,26 +64,31 @@ namespace SnakeGame.Shared.GameLogic.Snake
         {
             _unitVector = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
             _stepIntervalTime = TimeSpan.FromMilliseconds(500);
+            _sourcePositions = new Dictionary<ISnakeSegment, Vector2>();
+            _destinationPositions = new Dictionary<ISnakeSegment, Vector2>();
+            _nextDirection = _snake.Direction;
         }
 
         public void Update(GameTime gameTime)
         {
             if (InputHandler.IsKeyDown(_controls.Up) && _snake.Direction != Direction.Down)
             {
-                _snake.SetDirection(Direction.Up);
+                _nextDirection = Direction.Up;
             }
             else if (InputHandler.IsKeyDown(_controls.Down) && _snake.Direction != Direction.Up)
             {
-                _snake.SetDirection(Direction.Down);
+                _nextDirection = Direction.Down;
             }
             else if (InputHandler.IsKeyDown(_controls.Right) && _snake.Direction != Direction.Left)
             {
-                _snake.SetDirection(Direction.Right);
+                _nextDirection = Direction.Right;
             }
             else if (InputHandler.IsKeyDown(_controls.Left) && _snake.Direction != Direction.Right)
             {
-                _snake.SetDirection(Direction.Left);
+                _nextDirection = Direction.Left;
             }
+
+            Move(gameTime);
         }
 
         private void Move(GameTime gameTime)
@@ -113,17 +123,37 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private void Moving(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            UpdatePosition(gameTime);
+
+            if (_movingElapsedTime >= _movingTime)
+            {
+                _movingElapsedTime -= _movingTime;
+            }
+
+            var head = _snake.Segments.First.Value;
+
+            if (head.Position == _destinationPositions[head])
+            {
+                EndMoving();
+            }
         }
 
         private void StartMoving()
         {
             _snake.SetState(SnakeState.Moving);
+
+            UpdateSourcePositions();
+            UpdateDestinationPositions();
         }
 
         private void EndMoving()
         {
             _snake.SetState(SnakeState.None);
+
+            _sourcePositions.Clear();
+            _destinationPositions.Clear();
+
+            UpdateDirections();
         }
 
         public void Draw(GameTime gameTime)
@@ -139,7 +169,36 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
             foreach (var p in _snake.Segments)
             {
-                p.Position = _movingCalculator.Calculate(_sourcePositions[p], _destinationPositions[p], _movingTime, _movingElapsedTime);
+                p.MoveTo(_movingCalculator.Calculate(_sourcePositions[p], _destinationPositions[p], _movingTime, _movingElapsedTime));
+
+                var rightBorder = _gameField.Bounds.Width + _unitVector.X / 2;
+                var leftBorder = _gameField.Bounds.Left - _unitVector.X / 2;
+
+                if (p.Position.X > rightBorder)
+                {
+                    var newX = rightBorder - _gameField.Bounds.Width;
+                    var newPosition = new Vector2(newX, p.Position.Y);
+
+                    var newSourcePosition = new Vector2(_unitVector.X * .5f, p.Position.Y);
+                    var newDestinationPosition = new Vector2(_unitVector.X * 1.5f, p.Position.Y);
+
+                    _sourcePositions[p] = newSourcePosition;
+                    _destinationPositions[p] = newDestinationPosition;
+                    p.MoveTo(newPosition);
+                }
+
+                if (p.Position.X < leftBorder)
+                {
+                    var newX = _gameField.Bounds.Width - _unitVector.X / 2;
+                    var newPosition = new Vector2(newX, p.Position.Y);
+
+                    var newSourcePosition = new Vector2(_gameField.Bounds.Width - _unitVector.X / 2, p.Position.Y);
+                    var newDestinationPosition = new Vector2(_gameField.Bounds.Right - _unitVector.X / 2, p.Position.Y);
+
+                    _sourcePositions[p] = newSourcePosition;
+                    _destinationPositions[p] = newDestinationPosition;
+                    p.MoveTo((newPosition));
+                }
             }
         }
 
@@ -151,7 +210,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
             }
         }
 
-        private void UpdateDestinationPosition()
+        private void UpdateDestinationPositions()
         {
             foreach (var p in _snake.Segments)
             {
@@ -159,13 +218,13 @@ namespace SnakeGame.Shared.GameLogic.Snake
             }
         }
 
-        private void UpdateDirection()
+        private void UpdateDirections()
         {
-            for (LinkedListNode<ISnakeSegment> p = _snake.Segments.Last; p != null; p = p.Previous)
+            for (var p = _snake.Segments.Last; p != null; p = p.Previous)
             {
                 if (p.Previous != null)
                 {
-                    p.Value.Direction = p.Previous.Value.Direction;
+                    p.Value.SetDirection(p.Previous.Value.Direction);
                 }
             }
         }

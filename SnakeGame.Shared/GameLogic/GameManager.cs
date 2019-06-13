@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic
 {
@@ -22,17 +23,17 @@ namespace SnakeGame.Shared.GameLogic
             _foodManager = foodManager;
         }
 
-        public void NewGame(SnakeComponent snakeComponent)
+        public void NewGame(ISnake snake)
         {
             _logger.Debug("GameManager.NewGame()");
-            snakeComponent.Reset();
+            snake.Reset();
         }
 
-        public bool CheckSnakeCollision(SnakeComponent snakeComponent)
+        public bool CheckSnakeCollision(ISnake snake)
         {
-            var head = snakeComponent.Parts.First();
+            var head = snake.Segments.First();
 
-            var tail = snakeComponent.Parts.Skip(1);
+            var tail = snake.Segments.Skip(1);
 
             foreach (var part in tail)
             {
@@ -46,9 +47,9 @@ namespace SnakeGame.Shared.GameLogic
             return false;
         }
 
-        public bool CheckFoodCollision(SnakeComponent snake)
+        public bool CheckFoodCollision(ISnake snake)
         {
-            var head = snake.Parts.First.Value;
+            var head = snake.Segments.First.Value;
 
             foreach (var foodComponent in _foodManager.FoodComponents)
             {
@@ -61,14 +62,14 @@ namespace SnakeGame.Shared.GameLogic
             return false;
         }
 
-        public IEnumerable<IFoodGameComponent> GetEatenFoods(SnakeComponent snake)
+        public IEnumerable<IFoodGameComponent> GetEatenFoods(ISnake snake)
         {
             if (snake == null)
             {
                 throw new ArgumentNullException(nameof(snake));
             }
 
-            var head = snake.Parts.First.Value;
+            var head = snake.Segments.First.Value;
 
             if (head == null)
             {

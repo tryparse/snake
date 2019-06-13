@@ -49,7 +49,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderers\RenderSettings.cs" />
-    <Compile Include="Renderers\SnakeRendererComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />

@@ -17,7 +17,7 @@ namespace SnakeGame.Shared.GameLogic.Snake.Interfaces
 
         void Reset();
 
-        void AddSegments(int count);
+        void AddSegments(uint count);
 
         void SetDirection(Direction direction);
 

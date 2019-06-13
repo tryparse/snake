@@ -38,13 +38,12 @@ namespace snake
         private SpriteFont _debugSpriteFont;
         private TextureAtlas _textureRegions;
 
-        private IRenderingSystem _renderingCore;
+        private IRenderingSystem _renderingSystem;
 
         private InputHandler _inputHandler;
 
         private IGameFieldComponent _gameFieldComponent;
-        private ISnakeGameComponent _snakeGameComponent;
-        private SnakeComponent _snake;
+        private SnakeGameComponent _snakeGameComponent;
 
         private GameKeys _gameKeys;
         private SnakeControls _snakeKeys;
@@ -145,7 +144,7 @@ namespace snake
             Components.Add(fps);
 
             _textureManager = new TextureManager(_textureRegions);
-            _renderingCore = new RenderingSystem(_renderSettings, _spriteBatch, _spriteFont, _debugSpriteFont, _textureManager);
+            _renderingSystem = new RenderingSystem(_renderSettings, _spriteBatch, _spriteFont, _debugSpriteFont, _textureManager);
 
             CreateGameEntities();
         }
@@ -158,7 +157,7 @@ namespace snake
 
             IGameFieldFactory gameFieldFactory = new GameFieldFactory(_gameSettings);
             IGameField gameField = gameFieldFactory.GetRandomField(_gameSettings.MapWidth, _gameSettings.MapHeight, .8d);
-            IGraphics2DComponent graphicsComponent = new GameFieldGraphicsComponent(gameField, _renderSettings, _renderingCore, _gameSettings);
+            IGraphics2DComponent graphicsComponent = new GameFieldGraphicsComponent(gameField, _renderSettings, _renderingSystem, _gameSettings);
 
             _gameFieldComponent = new GameFieldComponent(gameField, graphicsComponent)
             {
@@ -171,7 +170,7 @@ namespace snake
 
             #region Food
 
-            _foodManager = new FoodManager(this, gameField, _gameSettings, _renderingCore);
+            _foodManager = new FoodManager(this, gameField, _gameSettings, _renderingSystem);
 
             var food = _foodManager.GenerateFood(Vector2.Divide(_unitVector, 2));
             _foodManager.Add(food);
@@ -183,24 +182,23 @@ namespace snake
             #region Snake
 
             var snakeStartPosition = gameField.GetRandomCell().Bounds.Center.ToVector2();
+            var movingCalculator = new MovingCalculator(_logger, gameField);
 
-            _snake = new SnakeComponent(_logger, _gameSettings, _gameManager, gameField, snakeStartPosition, _snakeKeys)
+            var snake = new Snake(gameField, movingCalculator, _gameSettings);
+            snake.AddSegments(1);
+            snake.SetDirection(Direction.Right);
+
+            var snakeGraphicsComponent = new SnakeGraphicsComponent(snake, _renderingSystem);
+            _snakeGameComponent = new SnakeGameComponent(snake, snakeGraphicsComponent, movingCalculator, _snakeKeys,
+                _gameSettings, _gameManager, _logger, gameField)
             {
-                Enabled = true
+                Enabled = true,
+                Visible = true
             };
-            _snake.AddTail(1);
 
-            Components.Add(_snake);
+            Components.Add(_snakeGameComponent);
 
             #endregion Snake
-
-            #region Renderers
-
-            IRenderer2D _snakeRenderer = new SnakeRendererComponent(_spriteBatch, _debugSpriteFont, _renderSettings, _logger, _snake, _textureRegions);
-
-            Components.Add(_snakeRenderer);
-
-            #endregion
         }
 
         /// <summary>
@@ -233,7 +231,7 @@ namespace snake
 
             if (InputHandler.IsKeyPressed(_gameKeys.SwitchPause))
             {
-                _snake.Enabled = !_snake.Enabled;
+                _snakeGameComponent.Enabled = !_snakeGameComponent.Enabled;
             }
 
             if (InputHandler.IsKeyPressed(_gameKeys.SwitchDebugRendering))

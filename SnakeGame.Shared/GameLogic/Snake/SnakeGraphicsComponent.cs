@@ -102,12 +102,13 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private void DebugRendering()
         {
-            foreach (var part in _snake.Segments)
+            foreach (var segment in _snake.Segments)
             {
-                var rotation = DirectionHelper.GetRotation(part.Direction);
+                var rotation = DirectionHelper.GetRotation(segment.Direction);
 
-                _renderingSystem.SpriteBatch.DrawRectangle(part.Bounds, Color.Red);
-                _renderingSystem.SpriteBatch.DrawLine(part.Bounds.Center.ToVector2(), part.Bounds.Width / 2f, rotation, Color.Red);
+                _renderingSystem.SpriteBatch.DrawRectangle(segment.Bounds, Color.Red);
+                _renderingSystem.SpriteBatch.DrawLine(segment.Bounds.Center.ToVector2(), segment.Bounds.Width / 2f, rotation, Color.Red);
+                _renderingSystem.SpriteBatch.DrawString(_renderingSystem.DebugSpriteFont, segment.Position.ToString(), segment.Position, Color.Red);
             }
         }
     }
