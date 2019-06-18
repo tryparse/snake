@@ -21,9 +21,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly IMovingCalculator _movingCalculator;
         private readonly SnakeControls _controls;
         private readonly IGameSettings _gameSettings;
-        private readonly IGameManager _gameManager;
         private readonly ILogger _logger;
-        private readonly IGameField _gameField;
 
         private Vector2 _unitVector;
         private TimeSpan _movingTime = TimeSpan.FromMilliseconds(1000d);
@@ -34,16 +32,14 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private TimeSpan _stepIntervalTime;
         private Direction _nextDirection;
 
-        public SnakeGameComponent(ISnake snake, IGraphics2DComponent graphicsComponent, IMovingCalculator movingCalculator, SnakeControls controls, IGameSettings gameSettings, IGameManager gameManager, ILogger logger, IGameField gameField)
+        public SnakeGameComponent(ISnake snake, IGraphics2DComponent graphicsComponent, IMovingCalculator movingCalculator, SnakeControls controls, IGameSettings gameSettings, ILogger logger)
         {
             _snake = snake ?? throw new ArgumentNullException(nameof(snake));
             _graphicsComponent = graphicsComponent ?? throw new ArgumentNullException(nameof(graphicsComponent));
             _movingCalculator = movingCalculator ?? throw new ArgumentNullException(nameof(movingCalculator));
             _controls = controls ?? throw new ArgumentNullException(nameof(controls));
             _gameSettings = gameSettings ?? throw new ArgumentNullException(nameof(gameSettings));
-            _gameManager = gameManager ?? throw new ArgumentNullException(nameof(gameManager));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _gameField = gameField ?? throw new ArgumentNullException(nameof(gameField));
 
             Initialize();
         }
@@ -105,8 +101,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
                             _elapsedTime -= _stepIntervalTime;
 
                             _snake.SetDirection(_nextDirection);
-
-                            // TODO: check collisions and food
 
                             StartMoving();
                         }
@@ -170,69 +164,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
             foreach (var p in _snake.Segments)
             {
-                p.MoveTo(_movingCalculator.Calculate(_sourcePositions[p], _destinationPositions[p], _movingTime, _movingElapsedTime));
-
-                var rightBorder = _gameField.Bounds.Right + _unitVector.X / 2;
-                var leftBorder = _gameField.Bounds.Left - _unitVector.X / 2;
-
-                if (p.Position.X > rightBorder
-                    || (p.Position.X == rightBorder && p.Direction != Direction.Right))
-                {
-                    var newX = leftBorder;
-                    var newPosition = new Vector2(newX, p.Position.Y);
-
-                    var newSourcePosition = new Vector2(_unitVector.X * .5f, p.Position.Y);
-                    var newDestinationPosition = _movingCalculator.FindNeighbourPoint(p.Direction, newSourcePosition, _unitVector);
-
-                    _sourcePositions[p] = newSourcePosition;
-                    _destinationPositions[p] = newDestinationPosition;
-                    p.MoveTo(newPosition);
-                }
-
-                if (p.Position.X < leftBorder
-                    || (p.Position.X == leftBorder && p.Direction != Direction.Left))
-                {
-                    var newX = rightBorder;
-                    var newPosition = new Vector2(newX, p.Position.Y);
-
-                    var newSourcePosition = new Vector2(_gameField.Bounds.Width - _unitVector.X / 2, p.Position.Y);
-                    var newDestinationPosition = _movingCalculator.FindNeighbourPoint(p.Direction, newSourcePosition, _unitVector);
-
-                    _sourcePositions[p] = newSourcePosition;
-                    _destinationPositions[p] = newDestinationPosition;
-                    p.MoveTo(newPosition);
-                }
-
-                var topBorder = _gameField.Bounds.Top - _unitVector.Y / 2;
-                var bottomBorder = _gameField.Bounds.Bottom + _unitVector.Y / 2;
-
-                if (p.Position.Y < topBorder
-                    || (p.Position.Y == topBorder && p.Direction != Direction.Up))
-                {
-                    var newY = bottomBorder;
-                    var newPosition = new Vector2(p.Position.X, newY);
-
-                    var newSourcePosition = newPosition;
-                    var newDestinationPosition = _movingCalculator.FindNeighbourPoint(p.Direction, newSourcePosition, _unitVector);
-
-                    _sourcePositions[p] = newSourcePosition;
-                    _destinationPositions[p] = newDestinationPosition;
-                    p.MoveTo(newPosition);
-                }
-
-                if (p.Position.Y > bottomBorder
-                    || (p.Position.Y == bottomBorder && p.Direction != Direction.Down))
-                {
-                    var newY = topBorder;
-                    var newPosition = new Vector2(p.Position.X, newY);
-
-                    var newSourcePosition = newPosition;
-                    var newDestinationPosition = _movingCalculator.FindNeighbourPoint(p.Direction, newSourcePosition, _unitVector);
-
-                    _sourcePositions[p] = newSourcePosition;
-                    _destinationPositions[p] = newDestinationPosition;
-                    p.MoveTo(newPosition);
-                }
+                p.MoveTo(_movingCalculator.CalculateMoving(_sourcePositions[p], _destinationPositions[p], _movingTime, _movingElapsedTime));
             }
         }
 
@@ -248,7 +180,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         {
             foreach (var p in _snake.Segments)
             {
-                _destinationPositions[p] = _movingCalculator.FindNeighbourPoint(p.Direction, p.Position, _unitVector);
+                _destinationPositions[p] = _movingCalculator.CalculateTargetPoint(p.Direction, p.Position, _unitVector);
             }
         }
 

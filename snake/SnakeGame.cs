@@ -177,12 +177,9 @@ namespace snake
 
             #endregion Food
 
-            _gameManager = new GameManager(_logger, _foodManager);
-
             #region Snake
 
-            var snakeStartPosition = gameField.GetRandomCell().Bounds.Center.ToVector2();
-            var movingCalculator = new MovingCalculator(_logger, gameField);
+            var movingCalculator = new MovingCalculator(_logger);
 
             var snake = new Snake(gameField, movingCalculator, _gameSettings);
             snake.AddSegments(3);
@@ -190,7 +187,7 @@ namespace snake
 
             var snakeGraphicsComponent = new SnakeGraphicsComponent(snake, _renderingSystem);
             _snakeGameComponent = new SnakeGameComponent(snake, snakeGraphicsComponent, movingCalculator, _snakeKeys,
-                _gameSettings, _gameManager, _logger, gameField)
+                _gameSettings, _logger)
             {
                 Enabled = true,
                 Visible = true
@@ -199,6 +196,10 @@ namespace snake
             Components.Add(_snakeGameComponent);
 
             #endregion Snake
+
+            _gameManager = new GameManager(_logger, _foodManager, snake, gameField);
+
+            Components.Add(_gameManager);
         }
 
         /// <summary>

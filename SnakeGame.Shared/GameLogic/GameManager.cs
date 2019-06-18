@@ -8,6 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
+using Microsoft.Xna.Framework;
+using MonoGame.Extended;
+using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic
 {
@@ -16,24 +19,37 @@ namespace SnakeGame.Shared.GameLogic
     {
         private readonly ILogger _logger;
         private readonly IFoodManager _foodManager;
+        private readonly ISnake _snake;
+        private readonly IGameField _gameField;
 
-        public GameManager(ILogger logger, IFoodManager foodManager)
+        public event EventHandler<EventArgs> EnabledChanged;
+        public event EventHandler<EventArgs> UpdateOrderChanged;
+
+        public bool Enabled { get; set; }
+
+        public int UpdateOrder { get; set; }
+
+        public GameManager(ILogger logger, IFoodManager foodManager, ISnake snake, IGameField gameField)
         {
-            _logger = logger;
-            _foodManager = foodManager;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _foodManager = foodManager ?? throw new ArgumentNullException(nameof(foodManager));
+            _snake = snake ?? throw new ArgumentNullException(nameof(snake));
+            _gameField = gameField ?? throw new ArgumentNullException(nameof(gameField));
+
+            Initialize();
         }
 
-        public void NewGame(ISnake snake)
+        public void NewGame()
         {
             _logger.Debug("GameManager.NewGame()");
-            snake.Reset();
+            _snake.Reset();
         }
 
-        public bool CheckSnakeCollision(ISnake snake)
+        public bool CheckSnakeCollision()
         {
-            var head = snake.Segments.First();
+            var head = _snake.Segments.First();
 
-            var tail = snake.Segments.Skip(1);
+            var tail = _snake.Segments.Skip(1);
 
             foreach (var part in tail)
             {
@@ -47,9 +63,9 @@ namespace SnakeGame.Shared.GameLogic
             return false;
         }
 
-        public bool CheckFoodCollision(ISnake snake)
+        public bool CheckFoodCollision()
         {
-            var head = snake.Segments.First.Value;
+            var head = _snake.Segments.First.Value;
 
             foreach (var foodComponent in _foodManager.FoodComponents)
             {
@@ -62,14 +78,9 @@ namespace SnakeGame.Shared.GameLogic
             return false;
         }
 
-        public IEnumerable<IFoodGameComponent> GetEatenFoods(ISnake snake)
+        public IEnumerable<IFoodGameComponent> GetEatenFoods()
         {
-            if (snake == null)
-            {
-                throw new ArgumentNullException(nameof(snake));
-            }
-
-            var head = snake.Segments.First.Value;
+            var head = _snake.Segments.First.Value;
 
             if (head == null)
             {
@@ -101,6 +112,45 @@ namespace SnakeGame.Shared.GameLogic
         {
             var food = _foodManager.GenerateRandomFood();
             _foodManager.Add(food);
+        }
+
+        public bool CheckWallsCollision()
+        {
+            var head = _snake.Segments
+                .FirstOrDefault();
+
+            if (head != null)
+            {
+                if (head.Bounds.Left < _gameField.Bounds.Left
+                    || head.Bounds.Right > _gameField.Bounds.Right
+                    || head.Bounds.Top < _gameField.Bounds.Top
+                    || head.Bounds.Bottom > _gameField.Bounds.Bottom)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void Initialize()
+        {
+            Enabled = true;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            if (CheckSnakeCollision() || CheckWallsCollision())
+            {
+                NewGame();
+            }
+
+            if (CheckFoodCollision())
+            {
+                RemoveFood(GetEatenFoods());
+
+                _snake.AddSegments(1);
+            }
         }
     }
 }

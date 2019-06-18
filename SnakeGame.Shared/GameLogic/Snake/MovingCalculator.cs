@@ -14,15 +14,13 @@ namespace SnakeGame.Shared.GameLogic.Snake
     public class MovingCalculator : IMovingCalculator
     {
         private readonly ILogger _logger;
-        private readonly IGameField _gameField;
 
-        public MovingCalculator(ILogger logger, IGameField gameField)
+        public MovingCalculator(ILogger logger)
         {
             _logger = logger;
-            _gameField = gameField;
         }
 
-        public Vector2 Calculate(Vector2 currentPosition, Vector2 targetPosition, TimeSpan transitionTime, TimeSpan elapsedTransitionTime)
+        public Vector2 CalculateMoving(Vector2 currentPosition, Vector2 targetPosition, TimeSpan transitionTime, TimeSpan elapsedTransitionTime)
         {
             var amount = (float)elapsedTransitionTime.TotalMilliseconds / (float)transitionTime.TotalMilliseconds;
 
@@ -33,7 +31,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
             return resultPosition;
         }
 
-        public Vector2 FindNeighbourPoint(Direction direction, Vector2 point, Vector2 step)
+        public Vector2 CalculateTargetPoint(Direction direction, Vector2 point, Vector2 step)
         {
             var offset = Vector2.Zero;
 
@@ -62,37 +60,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
             }
 
             var result = Vector2.Add(point, offset);
-
-            //result = CheckBoundaries(step, result);
-
-            return result;
-        }
-
-        public Vector2 CheckBoundaries(Vector2 step, Vector2 result)
-        {
-            _logger.Debug($"MovingCalculator.CheckBoundaries(): input={result}");
-
-            // If on the X axis we are left the field on the right side
-            if (result.X > _gameField.Bounds.Width - (step.X / 2))
-            {
-                result.X = step.X / 2;
-            }
-            // or on the left side
-            else if (result.X < step.X / 2)
-            {
-                result.X = _gameField.Bounds.Width - step.X / 2;
-            }
-
-            if (result.Y > _gameField.Bounds.Height - (step.Y / 2))
-            {
-                result.Y = step.Y / 2;
-            }
-            else if (result.Y < step.Y / 2)
-            {
-                result.Y = _gameField.Bounds.Height - step.Y / 2;
-            }
-
-            _logger.Debug($"MovingCalculator.CheckBoundaries(): output={result}");
 
             return result;
         }

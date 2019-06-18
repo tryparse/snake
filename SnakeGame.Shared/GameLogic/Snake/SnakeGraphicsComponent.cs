@@ -97,7 +97,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
                 scale = new Vector2(segment.Size.Height / selectedTexture.Bounds.Height, segment.Size.Width / selectedTexture.Bounds.Width);
             }
 
-            return scale * .85f;
+            return scale * .9f;
         }
 
         private void DebugRendering()

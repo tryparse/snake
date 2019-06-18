@@ -51,13 +51,13 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
                 if (tail == null)
                 {
-                    newSegmentPosition = _gameField.Cells[0, 0].Bounds.Center.ToVector2();
+                    newSegmentPosition = _gameField.Cells[3, 3].Bounds.Center.ToVector2();
                     newSegmentDirection = DirectionHelper.GetRandom();
                 }
                 else
                 {
                     newSegmentPosition =
-                        _movingCalculator.FindNeighbourPoint(DirectionHelper.GetOppositeDirection(tail.Direction),
+                        _movingCalculator.CalculateTargetPoint(DirectionHelper.GetOppositeDirection(tail.Direction),
                             tail.Position, _unitVector);
                     newSegmentDirection = tail.Direction;
                 }

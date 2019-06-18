@@ -10,10 +10,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
 {
     public interface IMovingCalculator
     {
-        Vector2 Calculate(Vector2 currentPosition, Vector2 targetPosition, TimeSpan transitionTime, TimeSpan elapsedTransitionTime);
+        Vector2 CalculateMoving(Vector2 currentPosition, Vector2 targetPosition, TimeSpan transitionTime, TimeSpan elapsedTransitionTime);
 
-        Vector2 FindNeighbourPoint(Direction direction, Vector2 point, Vector2 step);
-
-        Vector2 CheckBoundaries(Vector2 step, Vector2 result);
+        Vector2 CalculateTargetPoint(Direction direction, Vector2 point, Vector2 step);
     }
 }
