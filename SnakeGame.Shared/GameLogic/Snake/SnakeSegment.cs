@@ -47,6 +47,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
         public void MoveTo(Vector2 position)
         {
             _position = position;
+
+            RecalculateBounds();
         }
 
         public void SetDirection(Direction direction)

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
@@ -171,33 +172,66 @@ namespace SnakeGame.Shared.GameLogic.Snake
             {
                 p.MoveTo(_movingCalculator.Calculate(_sourcePositions[p], _destinationPositions[p], _movingTime, _movingElapsedTime));
 
-                var rightBorder = _gameField.Bounds.Width + _unitVector.X / 2;
+                var rightBorder = _gameField.Bounds.Right + _unitVector.X / 2;
                 var leftBorder = _gameField.Bounds.Left - _unitVector.X / 2;
 
-                if (p.Position.X > rightBorder)
+                if (p.Position.X > rightBorder
+                    || (p.Position.X == rightBorder && p.Direction != Direction.Right))
                 {
-                    var newX = rightBorder - _gameField.Bounds.Width;
+                    var newX = leftBorder;
                     var newPosition = new Vector2(newX, p.Position.Y);
 
                     var newSourcePosition = new Vector2(_unitVector.X * .5f, p.Position.Y);
-                    var newDestinationPosition = new Vector2(_unitVector.X * 1.5f, p.Position.Y);
+                    var newDestinationPosition = _movingCalculator.FindNeighbourPoint(p.Direction, newSourcePosition, _unitVector);
 
                     _sourcePositions[p] = newSourcePosition;
                     _destinationPositions[p] = newDestinationPosition;
                     p.MoveTo(newPosition);
                 }
 
-                if (p.Position.X < leftBorder)
+                if (p.Position.X < leftBorder
+                    || (p.Position.X == leftBorder && p.Direction != Direction.Left))
                 {
-                    var newX = _gameField.Bounds.Width - _unitVector.X / 2;
+                    var newX = rightBorder;
                     var newPosition = new Vector2(newX, p.Position.Y);
 
                     var newSourcePosition = new Vector2(_gameField.Bounds.Width - _unitVector.X / 2, p.Position.Y);
-                    var newDestinationPosition = new Vector2(_gameField.Bounds.Right - _unitVector.X / 2, p.Position.Y);
+                    var newDestinationPosition = _movingCalculator.FindNeighbourPoint(p.Direction, newSourcePosition, _unitVector);
 
                     _sourcePositions[p] = newSourcePosition;
                     _destinationPositions[p] = newDestinationPosition;
-                    p.MoveTo((newPosition));
+                    p.MoveTo(newPosition);
+                }
+
+                var topBorder = _gameField.Bounds.Top - _unitVector.Y / 2;
+                var bottomBorder = _gameField.Bounds.Bottom + _unitVector.Y / 2;
+
+                if (p.Position.Y < topBorder
+                    || (p.Position.Y == topBorder && p.Direction != Direction.Up))
+                {
+                    var newY = bottomBorder;
+                    var newPosition = new Vector2(p.Position.X, newY);
+
+                    var newSourcePosition = newPosition;
+                    var newDestinationPosition = _movingCalculator.FindNeighbourPoint(p.Direction, newSourcePosition, _unitVector);
+
+                    _sourcePositions[p] = newSourcePosition;
+                    _destinationPositions[p] = newDestinationPosition;
+                    p.MoveTo(newPosition);
+                }
+
+                if (p.Position.Y > bottomBorder
+                    || (p.Position.Y == bottomBorder && p.Direction != Direction.Down))
+                {
+                    var newY = topBorder;
+                    var newPosition = new Vector2(p.Position.X, newY);
+
+                    var newSourcePosition = newPosition;
+                    var newDestinationPosition = _movingCalculator.FindNeighbourPoint(p.Direction, newSourcePosition, _unitVector);
+
+                    _sourcePositions[p] = newSourcePosition;
+                    _destinationPositions[p] = newDestinationPosition;
+                    p.MoveTo(newPosition);
                 }
             }
         }
