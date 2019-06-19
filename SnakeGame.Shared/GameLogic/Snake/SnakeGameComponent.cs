@@ -118,6 +118,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private void Moving(GameTime gameTime)
         {
+            _logger.Debug($"SnakeComponent.Moving(): {nameof(_movingElapsedTime)}={_movingElapsedTime}");
+
             UpdatePosition(gameTime);
 
             if (_movingElapsedTime >= _movingTime)
@@ -135,6 +137,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private void StartMoving()
         {
+            _logger.Debug($"SnakeComponent.StartMoving(): {nameof(_movingElapsedTime)}={_movingElapsedTime}");
+
             _snake.SetState(SnakeState.Moving);
 
             UpdateSourcePositions();
@@ -143,6 +147,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private void EndMoving()
         {
+            _logger.Debug($"SnakeComponent.EndMoving(): {nameof(_movingElapsedTime)}={_movingElapsedTime}");
+
             _snake.SetState(SnakeState.None);
 
             _sourcePositions.Clear();
@@ -170,6 +176,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private void UpdateSourcePositions()
         {
+            _logger.Debug($"SnakeComponent.UpdateSourcePositions(): {nameof(_movingElapsedTime)}={_movingElapsedTime}");
+
             foreach (var p in _snake.Segments)
             {
                 _sourcePositions[p] = p.Position;
@@ -178,6 +186,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private void UpdateDestinationPositions()
         {
+            _logger.Debug($"SnakeComponent.UpdateDestinationPositions(): {nameof(_movingElapsedTime)}={_movingElapsedTime}");
+
             foreach (var p in _snake.Segments)
             {
                 _destinationPositions[p] = _movingCalculator.CalculateTargetPoint(p.Direction, p.Position, _unitVector);

@@ -7,19 +7,22 @@ using Microsoft.Xna.Framework;
 using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
+using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.Settings;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
     public class Snake : ISnake
     {
+        private readonly ILogger _logger;
         private readonly IGameField _gameField;
         private readonly IMovingCalculator _movingCalculator;
         private readonly IGameSettings _gameSettings;
         private readonly Vector2 _unitVector;
 
-        public Snake(IGameField gameField, IMovingCalculator movingCalculator, IGameSettings gameSettings)
+        public Snake(ILogger logger, IGameField gameField, IMovingCalculator movingCalculator, IGameSettings gameSettings)
         {
+            _logger = logger;
             _gameField = gameField;
             _movingCalculator = movingCalculator;
             _gameSettings = gameSettings;
@@ -64,6 +67,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
                 Segments.AddLast(new SnakeSegment(newSegmentPosition, _unitVector, newSegmentDirection));
             }
+
+            _logger.Debug($"Snake.AddSegments({count})");
         }
 
         public void SetDirection(Direction direction)

@@ -71,6 +71,7 @@ namespace SnakeGame.Shared.GameLogic
             {
                 if (head.Bounds.Intersects(foodComponent.Food.Bounds))
                 {
+                    _logger.Debug("GameManager: Detected food collision");
                     return true;
                 }
             }
@@ -106,12 +107,16 @@ namespace SnakeGame.Shared.GameLogic
             {
                 _foodManager.Remove(food);
             }
+
+            _logger.Debug("GameManager: Removed food");
         }
 
         public void GenerateRandomFood()
         {
             var food = _foodManager.GenerateRandomFood();
             _foodManager.Add(food);
+
+            _logger.Debug("GameManager: Random food generated");
         }
 
         public bool CheckWallsCollision()
@@ -119,15 +124,14 @@ namespace SnakeGame.Shared.GameLogic
             var head = _snake.Segments
                 .FirstOrDefault();
 
-            if (head != null)
-            {
-                if (head.Bounds.Left < _gameField.Bounds.Left
+            if (head != null
+                && (head.Bounds.Left < _gameField.Bounds.Left
                     || head.Bounds.Right > _gameField.Bounds.Right
                     || head.Bounds.Top < _gameField.Bounds.Top
-                    || head.Bounds.Bottom > _gameField.Bounds.Bottom)
-                {
-                    return true;
-                }
+                    || head.Bounds.Bottom > _gameField.Bounds.Bottom))
+            {
+                _logger.Debug("GameManager: Detected walls collision");
+                return true;
             }
 
             return false;
@@ -150,6 +154,7 @@ namespace SnakeGame.Shared.GameLogic
                 RemoveFood(GetEatenFoods());
 
                 _snake.AddSegments(1);
+                _logger.Debug($"GameManager.Update({gameTime}): AddedSegment");
             }
         }
     }
