@@ -47,16 +47,19 @@ namespace SnakeGame.Shared.GameLogic
 
         public bool CheckSnakeCollision()
         {
-            var head = _snake.Segments.First();
-
-            var tail = _snake.Segments.Skip(1);
-
-            foreach (var part in tail)
+            if (_snake.State != SnakeState.Moving)
             {
-                if (head.Bounds.Intersects(part.Bounds))
+                var head = _snake.Segments.First();
+
+                var tail = _snake.Segments.Skip(1);
+
+                foreach (var part in tail)
                 {
-                    _logger.Debug($"Collision: r1={head.Bounds} r2={part.Bounds}");
-                    return true;
+                    if (head.Bounds.Intersects(part.Bounds))
+                    {
+                        _logger.Debug($"Collision: r1={head.Bounds} r2={part.Bounds}");
+                        return true;
+                    }
                 }
             }
 
