@@ -54,7 +54,11 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
                 if (tail == null)
                 {
-                    newSegmentPosition = _gameField.Cells[3, 3].Bounds.Center.ToVector2();
+                    var random = new Random();
+                    var x = random.Next(1, _gameField.Columns - 1);
+                    var y = random.Next(1, _gameField.Rows - 1);
+
+                    newSegmentPosition = _gameField.Cells[x, y].Bounds.Center.ToVector2();
                     newSegmentDirection = DirectionHelper.GetRandom();
                 }
                 else
