@@ -182,8 +182,7 @@ namespace snake
             var movingCalculator = new MovingCalculator(_logger);
 
             var snake = new Snake(_logger, gameField, movingCalculator, _gameSettings);
-            snake.AddSegments(3);
-            snake.SetDirection(Direction.Right);
+            snake.AddSegments(2);
 
             var snakeGraphicsComponent = new SnakeGraphicsComponent(snake, _renderingSystem);
             _snakeGameComponent = new SnakeGameComponent(snake, snakeGraphicsComponent, movingCalculator, _snakeKeys,

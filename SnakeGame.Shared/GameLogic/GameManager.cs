@@ -147,6 +147,8 @@ namespace SnakeGame.Shared.GameLogic
 
         public void Update(GameTime gameTime)
         {
+            _logger.Debug($"GameManager.Update({gameTime.TotalGameTime})");
+
             if (CheckSnakeCollision() || CheckWallsCollision())
             {
                 NewGame();
@@ -155,9 +157,10 @@ namespace SnakeGame.Shared.GameLogic
             if (CheckFoodCollision())
             {
                 RemoveFood(GetEatenFoods());
-
+                _foodManager.Add(_foodManager.GenerateRandomFood());
                 _snake.AddSegments(1);
-                _logger.Debug($"GameManager.Update({gameTime}): AddedSegment");
+
+                _logger.Debug($"GameManager.Update({gameTime.TotalGameTime}): AddedSegment");
             }
         }
     }

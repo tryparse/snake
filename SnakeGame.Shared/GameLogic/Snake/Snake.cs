@@ -39,7 +39,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         {
             Segments.Clear();
 
-            AddSegments(1);
+            AddSegments(2);
         }
 
         public void AddSegments(uint count)

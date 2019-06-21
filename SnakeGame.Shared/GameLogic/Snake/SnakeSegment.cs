@@ -16,6 +16,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private Size2 _size;
         private Direction _direction;
         private Rectangle _bounds;
+        private Vector2? _targetPosition;
+        private Vector2? _sourcePosition;
 
         public SnakeSegment(Vector2 position, Size2 size, Direction direction)
         {
@@ -27,6 +29,10 @@ namespace SnakeGame.Shared.GameLogic.Snake
         }
 
         public Vector2 Position => _position;
+
+        public Vector2? TargetPosition => _targetPosition;
+
+        public Vector2? SourcePosition => _sourcePosition;
 
         public Size2 Size => _size;
 
@@ -49,6 +55,16 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _position = position;
 
             RecalculateBounds();
+        }
+
+        public void SetTargetPosition(Vector2 targetPosition)
+        {
+            _targetPosition = targetPosition;
+        }
+
+        public void SetSourcePosition(Vector2 sourcePosition)
+        {
+            _sourcePosition = sourcePosition;
         }
 
         public void SetDirection(Direction direction)

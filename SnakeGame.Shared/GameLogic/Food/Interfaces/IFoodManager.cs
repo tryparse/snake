@@ -7,6 +7,10 @@ namespace SnakeGame.Shared.GameLogic.Food.Interfaces
     {
         IEnumerable<IFoodGameComponent> FoodComponents { get; }
 
+        /// <summary>
+        /// Return a random generated food
+        /// </summary>
+        /// <returns></returns>
         IFoodGameComponent GenerateRandomFood();
 
         IFoodGameComponent GenerateFood(Vector2 position);
