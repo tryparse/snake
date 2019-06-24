@@ -25,7 +25,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly ILogger _logger;
 
         private Vector2 _unitVector;
-        private TimeSpan _movingTime = TimeSpan.FromMilliseconds(1000d);
+        private TimeSpan _movingTime = TimeSpan.FromMilliseconds(500d);
         private TimeSpan _movingElapsedTime = TimeSpan.Zero;
         private TimeSpan _elapsedTime;
         private TimeSpan _stepIntervalTime;
@@ -178,7 +178,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
                 if (!segment.TargetPosition.HasValue)
                 {
-                    segment.SetTargetPosition(s.Previous.Value.SourcePosition.Value);
+                    segment.SetTargetPosition(s.Previous.Value?.SourcePosition.Value);
                 }
 
                 if (!segment.SourcePosition.HasValue)

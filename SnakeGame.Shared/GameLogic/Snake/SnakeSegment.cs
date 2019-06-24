@@ -57,12 +57,12 @@ namespace SnakeGame.Shared.GameLogic.Snake
             RecalculateBounds();
         }
 
-        public void SetTargetPosition(Vector2 targetPosition)
+        public void SetTargetPosition(Vector2? targetPosition)
         {
             _targetPosition = targetPosition;
         }
 
-        public void SetSourcePosition(Vector2 sourcePosition)
+        public void SetSourcePosition(Vector2? sourcePosition)
         {
             _sourcePosition = sourcePosition;
         }
