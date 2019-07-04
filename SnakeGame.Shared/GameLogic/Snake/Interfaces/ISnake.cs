@@ -9,7 +9,9 @@ namespace SnakeGame.Shared.GameLogic.Snake.Interfaces
 {
     public interface ISnake
     {
-        LinkedList<ISnakeSegment> Segments { get; }
+        ISnakeSegment Head { get; }
+
+        IEnumerable<ISnakeSegment> Tail { get; }
 
         Direction Direction { get; }
 

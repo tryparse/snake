@@ -11,6 +11,7 @@ using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
+using SnakeGame.Shared.Settings;
 
 namespace SnakeGame.Shared.GameLogic
 {
@@ -21,6 +22,7 @@ namespace SnakeGame.Shared.GameLogic
         private readonly IFoodManager _foodManager;
         private readonly ISnake _snake;
         private readonly IGameField _gameField;
+        private readonly IGameSettings _gameSettings;
 
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
@@ -29,12 +31,13 @@ namespace SnakeGame.Shared.GameLogic
 
         public int UpdateOrder { get; set; }
 
-        public GameManager(ILogger logger, IFoodManager foodManager, ISnake snake, IGameField gameField)
+        public GameManager(ILogger logger, IFoodManager foodManager, ISnake snake, IGameField gameField, IGameSettings gameSettings)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _foodManager = foodManager ?? throw new ArgumentNullException(nameof(foodManager));
             _snake = snake ?? throw new ArgumentNullException(nameof(snake));
             _gameField = gameField ?? throw new ArgumentNullException(nameof(gameField));
+            _gameSettings = gameSettings;
 
             Initialize();
         }
@@ -49,16 +52,19 @@ namespace SnakeGame.Shared.GameLogic
         {
             if (_snake.State != SnakeState.Moving)
             {
-                var head = _snake.Segments.First();
+                var head = _snake.Tail.FirstOrDefault();
 
-                var tail = _snake.Segments.Skip(1);
-
-                foreach (var part in tail)
+                if (head != null)
                 {
-                    if (head.Bounds.Intersects(part.Bounds))
+                    var tail = _snake.Tail;
+
+                    foreach (var part in tail)
                     {
-                        _logger.Debug($"Collision: r1={head.Bounds} r2={part.Bounds}");
-                        return true;
+                        if (head.Bounds.Intersects(part.Bounds))
+                        {
+                            _logger.Debug($"Collision: r1={head.Bounds} r2={part.Bounds}");
+                            return true;
+                        }
                     }
                 }
             }
@@ -68,14 +74,17 @@ namespace SnakeGame.Shared.GameLogic
 
         public bool CheckFoodCollision()
         {
-            var head = _snake.Segments.First.Value;
+            var head = _snake.Tail.FirstOrDefault();
 
-            foreach (var foodComponent in _foodManager.FoodComponents)
+            if (head != null)
             {
-                if (head.Bounds.Intersects(foodComponent.Food.Bounds))
+                foreach (var foodComponent in _foodManager.FoodComponents)
                 {
-                    _logger.Debug("GameManager: Detected food collision");
-                    return true;
+                    if (head.Bounds.Intersects(foodComponent.Food.Bounds))
+                    {
+                        _logger.Debug("GameManager: Detected food collision");
+                        return true;
+                    }
                 }
             }
 
@@ -84,7 +93,7 @@ namespace SnakeGame.Shared.GameLogic
 
         public IEnumerable<IFoodGameComponent> GetEatenFoods()
         {
-            var head = _snake.Segments.First.Value;
+            var head = _snake.Tail.FirstOrDefault();
 
             if (head == null)
             {
@@ -124,7 +133,7 @@ namespace SnakeGame.Shared.GameLogic
 
         public bool CheckWallsCollision()
         {
-            var head = _snake.Segments
+            var head = _snake.Tail
                 .FirstOrDefault();
 
             if (head != null
@@ -159,9 +168,16 @@ namespace SnakeGame.Shared.GameLogic
                 RemoveFood(GetEatenFoods());
                 _foodManager.Add(_foodManager.GenerateRandomFood());
                 _snake.AddSegments(1);
+                IncreaseGameSpeed();
 
                 _logger.Debug($"GameManager.Update({gameTime.TotalGameTime}): AddedSegment");
             }
+        }
+
+        public void IncreaseGameSpeed()
+        {
+            _gameSettings.CurrentMoveIntervalTime = (int)Math.Truncate((double)_gameSettings.CurrentMoveIntervalTime);
+            _gameSettings.CurrentSnakeMovingTime = (int)Math.Truncate((double)_gameSettings.CurrentSnakeMovingTime);
         }
     }
 }

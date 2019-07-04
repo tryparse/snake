@@ -20,6 +20,11 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly IGameSettings _gameSettings;
         private readonly Vector2 _unitVector;
 
+        private ISnakeSegment _head;
+        private readonly List<ISnakeSegment> tail;
+
+        private readonly Random _random;
+
         public Snake(ILogger logger, IGameField gameField, IMovingCalculator movingCalculator, IGameSettings gameSettings)
         {
             _logger = logger;
@@ -28,58 +33,58 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _gameSettings = gameSettings;
 
             _unitVector = new Vector2(_gameSettings.TileWidth, gameSettings.TileHeight);
-            Segments = new LinkedList<ISnakeSegment>();
+            tail = new List<ISnakeSegment>();
+
+            _random = new Random();
         }
 
-        public LinkedList<ISnakeSegment> Segments { get; }
-        public Direction Direction => Segments.First.Value.Direction;
+        public ISnakeSegment Head => _head;
+        public IEnumerable<ISnakeSegment> Tail => tail;
+
+        public Direction Direction => Head.Direction;
         public SnakeState State { get; private set; }
 
         public void Reset()
         {
-            Segments.Clear();
+            _head = null;
+            tail.Clear();
 
             AddSegments(2);
         }
 
         public void AddSegments(uint count)
         {
+            _logger.Debug($"Snake.AddSegments({count})");
+
             for (var i = 0; i < count; i++)
             {
-                var tail = Segments.LastOrDefault();
-
-                Vector2 newSegmentPosition;
-
-                var newSegmentDirection = default(Direction);
-
-                if (tail == null)
+                if (_head == null)
                 {
-                    var random = new Random();
-                    var x = random.Next(1, _gameField.Columns - 1);
-                    var y = random.Next(1, _gameField.Rows - 1);
-
-                    newSegmentPosition = _gameField.Cells[x, y].Bounds.Center.ToVector2();
-                    newSegmentDirection = DirectionHelper.GetRandom();
+                    _head = GenerateRandomSegment();
                 }
                 else
                 {
-                    newSegmentPosition =
-                        _movingCalculator.CalculateTargetPoint(DirectionHelper.GetOppositeDirection(tail.Direction),
-                            tail.Position, _unitVector);
-                    newSegmentDirection = tail.Direction;
+                    // TODO: tail adding
                 }
-
-                Segments.AddLast(new SnakeSegment(newSegmentPosition, _unitVector, newSegmentDirection));
             }
+        }
 
-            _logger.Debug($"Snake.AddSegments({count})");
+        private ISnakeSegment GenerateRandomSegment()
+        {
+            var x = _random.Next(1, _gameField.Columns - 1);
+            var y = _random.Next(1, _gameField.Rows - 1);
+
+            var position = _gameField.Cells[x, y].Bounds.Center.ToVector2();
+            var direction = DirectionHelper.GetRandom();
+
+            return new SnakeSegment(position, _unitVector, direction);
         }
 
         public void SetDirection(Direction direction)
         {
-            if (Segments.Count > 0)
+            if (_head != null)
             {
-                Segments.First.Value.SetDirection(direction);
+                _head.SetDirection(direction);
             }
         }
 

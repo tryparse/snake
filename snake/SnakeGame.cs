@@ -179,7 +179,7 @@ namespace snake
 
             #region Snake
 
-            var movingCalculator = new MovingCalculator(_logger);
+            var movingCalculator = new MovingCalculator(_logger, gameField);
 
             var snake = new Snake(_logger, gameField, movingCalculator, _gameSettings);
             snake.AddSegments(2);
@@ -196,7 +196,7 @@ namespace snake
 
             #endregion Snake
 
-            _gameManager = new GameManager(_logger, _foodManager, snake, gameField);
+            _gameManager = new GameManager(_logger, _foodManager, snake, gameField, _gameSettings);
 
             Components.Add(_gameManager);
         }

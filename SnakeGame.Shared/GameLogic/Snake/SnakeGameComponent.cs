@@ -25,10 +25,9 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly ILogger _logger;
 
         private Vector2 _unitVector;
-        private TimeSpan _movingTime = TimeSpan.FromMilliseconds(1000d);
+        private TimeSpan _movingTime;
         private TimeSpan _movingElapsedTime = TimeSpan.Zero;
         private TimeSpan _elapsedTime;
-        private TimeSpan _stepIntervalTime;
         private Direction _nextDirection;
 
         public SnakeGameComponent(ISnake snake, IGraphics2DComponent graphicsComponent, IMovingCalculator movingCalculator, SnakeControls controls, IGameSettings gameSettings, ILogger logger)
@@ -59,13 +58,15 @@ namespace SnakeGame.Shared.GameLogic.Snake
         public void Initialize()
         {
             _unitVector = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
-            _stepIntervalTime = TimeSpan.FromMilliseconds(500);
+            _movingTime =  TimeSpan.FromMilliseconds(_gameSettings.DefaultSnakeMovingTime);
             _nextDirection = _snake.Direction;
         }
 
         public void Update(GameTime gameTime)
         {
             _logger.Debug($"SnakeGameComponent.Update({gameTime.TotalGameTime}");
+
+            _movingTime = TimeSpan.FromMilliseconds(_gameSettings.CurrentSnakeMovingTime);
 
             Move(gameTime);
         }
@@ -80,9 +81,9 @@ namespace SnakeGame.Shared.GameLogic.Snake
             {
                 case SnakeState.None:
                     {
-                        if (_elapsedTime >= _stepIntervalTime)
+                        if (_elapsedTime >= _movingTime)
                         {
-                            _elapsedTime -= _stepIntervalTime;
+                            _elapsedTime -= _movingTime;
                             _snake.SetDirection(_nextDirection);
 
                             StartMoving();
@@ -128,17 +129,20 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
             UpdatePosition(gameTime);
 
-            var head = _snake.Segments.First.Value;
+            var head = _snake.Tail.FirstOrDefault();
 
-            if (!head.TargetPosition.HasValue
-                || head.Position == head.TargetPosition.Value)
+            if (head != null)
             {
-                EndMoving();
-            }
+                if (!head.TargetPosition.HasValue
+                    || head.Position == head.TargetPosition.Value)
+                {
+                    EndMoving();
+                }
 
-            if (_movingElapsedTime >= _movingTime)
-            {
-                _movingElapsedTime -= _movingTime;
+                if (_movingElapsedTime >= _movingTime)
+                {
+                    _movingElapsedTime -= _movingTime;
+                }
             }
         }
 
@@ -172,33 +176,37 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
             _logger.Debug($"SnakeComponent.UpdatePosition(): {nameof(_movingElapsedTime)}={_movingElapsedTime}");
 
-            for (var s = _snake.Segments.First; s != null; s = s.Next)
+            foreach (var s in _snake.Tail)
             {
-                var segment = s.Value;
-
-                if (!segment.TargetPosition.HasValue)
-                {
-                    segment.SetTargetPosition(s.Previous.Value.SourcePosition.Value);
-                }
-
-                if (!segment.SourcePosition.HasValue)
-                {
-                    segment.SetSourcePosition(segment.Position);
-                }
-
-                if (segment.SourcePosition.HasValue
-                    && segment.TargetPosition.HasValue)
-                {
-                    segment.MoveTo(_movingCalculator.CalculateMoving(segment.SourcePosition.Value, segment.TargetPosition.Value, _movingTime, _movingElapsedTime));
-                }
             }
+
+            //for (var s = _snake.Segments.First; s != null; s = s.Next)
+            //{
+            //    var segment = s.Value;
+
+            //    if (!segment.TargetPosition.HasValue)
+            //    {
+            //        segment.SetTargetPosition(s.Previous.Value.SourcePosition.Value);
+            //    }
+
+            //    if (!segment.SourcePosition.HasValue)
+            //    {
+            //        segment.SetSourcePosition(segment.Position);
+            //    }
+
+            //    if (segment.SourcePosition.HasValue
+            //        && segment.TargetPosition.HasValue)
+            //    {
+            //        segment.MoveTo(_movingCalculator.CalculateMoving(segment.SourcePosition.Value, segment.TargetPosition.Value, _movingTime, _movingElapsedTime));
+            //    }
+            //}
         }
 
         private void UpdateSourcePositions()
         {
             _logger.Debug($"SnakeComponent.UpdateSourcePositions(): {nameof(_movingElapsedTime)}={_movingElapsedTime}");
 
-            foreach (var p in _snake.Segments)
+            foreach (var p in _snake.Tail)
             {
                 p.SetSourcePosition(p.Position);
             }
@@ -208,21 +216,21 @@ namespace SnakeGame.Shared.GameLogic.Snake
         {
             _logger.Debug($"SnakeComponent.UpdateDestinationPositions(): {nameof(_movingElapsedTime)}={_movingElapsedTime}");
 
-            foreach (var p in _snake.Segments)
+            foreach (var p in _snake.Tail)
             {
-                p.SetTargetPosition(_movingCalculator.CalculateTargetPoint(p.Direction, p.Position, _unitVector));
+                p.SetTargetPosition(_movingCalculator.CalculateTargetPosition(p.Direction, p.Position, _unitVector));
             }
         }
 
         private void UpdateDirections()
         {
-            for (var p = _snake.Segments.Last; p != null; p = p.Previous)
-            {
-                if (p.Previous != null)
-                {
-                    p.Value.SetDirection(p.Previous.Value.Direction);
-                }
-            }
+            //for (var p = _snake.Tail.Last(); p != null; p = p.Previous)
+            //{
+            //    if (p.Previous != null)
+            //    {
+            //        p.Value.SetDirection(p.Previous.Value.Direction);
+            //    }
+            //}
         }
     }
 }

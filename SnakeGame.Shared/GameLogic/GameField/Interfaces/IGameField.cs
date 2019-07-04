@@ -19,5 +19,7 @@ namespace SnakeGame.Shared.GameLogic.GameField.Interfaces
         ICell[,] Cells { get; }
 
         ICell GetRandomCell();
+
+        ICell GetCellByCoordinates(Vector2 position);
     }
 }

@@ -40,7 +40,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private void Rendering()
         {
-            foreach (var segment in _snake.Segments)
+            foreach (var segment in _snake.Tail)
             {
                 var selectedTexture = SelectTexture(segment);
 
@@ -67,11 +67,11 @@ namespace SnakeGame.Shared.GameLogic.Snake
         {
             TextureRegion2D selectedTexture;
 
-            if (segment.Equals(_snake.Segments.First()))
+            if (segment.Equals(_snake.Tail.First()))
             {
                 selectedTexture = _renderingSystem.TextureManager.TextureRegions["Head"];
             }
-            else if (segment.Equals(_snake.Segments.Last()))
+            else if (segment.Equals(_snake.Tail.Last()))
             {
                 selectedTexture = _renderingSystem.TextureManager.TextureRegions["Tail"];
             }
@@ -102,7 +102,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private void DebugRendering()
         {
-            foreach (var segment in _snake.Segments)
+            foreach (var segment in _snake.Tail)
             {
                 var rotation = DirectionHelper.GetRotation(segment.Direction);
 

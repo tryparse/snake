@@ -21,5 +21,7 @@ namespace SnakeGame.Shared.GameLogic
         void RemoveFood(IEnumerable<IFoodGameComponent> foods);
 
         void GenerateRandomFood();
+
+        void IncreaseGameSpeed();
     }
 }

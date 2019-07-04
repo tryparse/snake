@@ -14,11 +14,14 @@ namespace SnakeGame.Shared.GameLogic.GameField
     {
         private readonly Random _random;
         private readonly IGameSettings _gameSettings;
+        private readonly Vector2 _unitVector;
 
         public GameField(ICell[,] cells, IGameSettings gameSettings)
         {
             Cells = cells;
             _gameSettings = gameSettings;
+
+            _unitVector = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
 
             Bounds = new Rectangle(0, 0, Columns * _gameSettings.TileWidth, Rows * _gameSettings.TileHeight);
 
@@ -37,6 +40,19 @@ namespace SnakeGame.Shared.GameLogic.GameField
         {
             var x = _random.Next(0, Columns);
             var y = _random.Next(0, Rows);
+
+            return Cells[x, y];
+        }
+
+        public ICell GetCellByCoordinates(Vector2 position)
+        {
+            if (!Bounds.Contains(position))
+            {
+                throw new InvalidOperationException();
+            }
+
+            var x = (int)Math.Floor((Bounds.Width / position.X) / _unitVector.X);
+            var y = (int)Math.Floor((Bounds.Height / position.Y) / _unitVector.Y);
 
             return Cells[x, y];
         }

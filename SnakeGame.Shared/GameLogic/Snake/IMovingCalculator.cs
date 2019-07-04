@@ -12,6 +12,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
     {
         Vector2 CalculateMoving(Vector2 currentPosition, Vector2 targetPosition, TimeSpan transitionTime, TimeSpan elapsedTransitionTime);
 
-        Vector2 CalculateTargetPoint(Direction direction, Vector2 point, Vector2 step);
+        Vector2 CalculateTargetPosition(Direction direction, Vector2 position, Vector2 step);
     }
 }
