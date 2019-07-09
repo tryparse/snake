@@ -18,8 +18,8 @@ namespace SnakeGame.Shared.GameLogic.Snake.Interfaces
         Direction Direction { get; }
         Rectangle Bounds { get; }
         void MoveTo(Vector2 position);
-        void SetTargetPosition(Vector2 targetPosition);
-        void SetSourcePosition(Vector2 sourcePosition);
+        void SetTargetPosition(Vector2? targetPosition);
+        void SetSourcePosition(Vector2? sourcePosition);
         void SetDirection(Direction direction);
     }
 }
