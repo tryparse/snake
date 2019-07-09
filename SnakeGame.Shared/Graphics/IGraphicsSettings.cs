@@ -1,6 +1,6 @@
-﻿namespace SnakeGame.Shared.Renderers
+﻿namespace SnakeGame.Shared.Graphics
 {
-    public interface IRenderSettings
+    public interface IGraphicsSettings
     {
         bool IsRenderingEnabled { get; set; }
 

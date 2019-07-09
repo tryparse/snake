@@ -14,7 +14,7 @@ using snake.Logging;
 using SnakeGame.Shared.Settings;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.GameLogic.GameField;
-using SnakeGame.Shared.Renderers;
+using SnakeGame.Shared.Graphics;
 using SnakeGame.Shared.GameLogic.Snake;
 using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic;
@@ -22,8 +22,9 @@ using SnakeGame.Shared.Common.ResourceManagers;
 using SnakeGame.Shared.GameLogic.Food;
 using SnakeGame.Shared.GameLogic.Food.Interfaces;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
-using SnakeGame.Shared.Graphics;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
+using System;
+using MonoGame.Extended.Shapes;
 
 namespace snake
 {
@@ -38,7 +39,7 @@ namespace snake
         private SpriteFont _debugSpriteFont;
         private TextureAtlas _textureRegions;
 
-        private IRenderingSystem _renderingSystem;
+        private IGraphicsSystem _renderingSystem;
 
         private InputHandler _inputHandler;
 
@@ -52,7 +53,7 @@ namespace snake
         private IFoodManager _foodManager;
 
         private IGameSettings _gameSettings;
-        private IRenderSettings _renderSettings;
+        private IGraphicsSettings _renderSettings;
         private ITextureManager _textureManager;
         private ILogger _logger;
 
@@ -89,7 +90,7 @@ namespace snake
             _renderSettings = new RenderSettings
             {
                 IsDebugRenderingEnabled = _gameSettings.IsDebugRenderingEnabled,
-                IsRenderingEnabled = true
+                IsRenderingEnabled = _gameSettings.IsRenderingEnabled
             };
 
             _snakeKeys = new SnakeControls(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
@@ -144,14 +145,14 @@ namespace snake
             Components.Add(fps);
 
             _textureManager = new TextureManager(_textureRegions);
-            _renderingSystem = new RenderingSystem(_renderSettings, _spriteBatch, _spriteFont, _debugSpriteFont, _textureManager);
+            _renderingSystem = new GraphicsSystem(_renderSettings, _spriteBatch, _spriteFont, _debugSpriteFont, _textureManager);
 
             CreateGameEntities();
         }
 
         private void CreateGameEntities()
         {
-            _unitVector = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
+            _unitVector = Vector2.Multiply(Vector2.UnitX, _gameSettings.TileSize);
 
             #region Field
 
@@ -184,8 +185,13 @@ namespace snake
             var snake = new Snake(_logger, gameField, movingCalculator, _gameSettings);
             snake.AddSegments(2);
 
+            var movement = new SnakeMovementTurnBased(snake, gameField, _gameSettings, _snakeKeys)
+            {
+                Enabled = true
+            };
+
             var snakeGraphicsComponent = new SnakeGraphicsComponent(snake, _renderingSystem);
-            _snakeGameComponent = new SnakeGameComponent(snake, snakeGraphicsComponent, movingCalculator, _snakeKeys,
+            _snakeGameComponent = new SnakeGameComponent(snake, snakeGraphicsComponent, movement, movingCalculator, _snakeKeys,
                 _gameSettings, _logger)
             {
                 Enabled = true,

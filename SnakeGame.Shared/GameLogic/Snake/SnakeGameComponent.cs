@@ -23,6 +23,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly SnakeControls _controls;
         private readonly IGameSettings _gameSettings;
         private readonly ILogger _logger;
+        private readonly ISnakeMovement _movement;
 
         private Vector2 _unitVector;
         private TimeSpan _movingTime;
@@ -30,10 +31,11 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private TimeSpan _elapsedTime;
         private Direction _nextDirection;
 
-        public SnakeGameComponent(ISnake snake, IGraphics2DComponent graphicsComponent, IMovingCalculator movingCalculator, SnakeControls controls, IGameSettings gameSettings, ILogger logger)
+        public SnakeGameComponent(ISnake snake, IGraphics2DComponent graphicsComponent, ISnakeMovement snakeMovement, IMovingCalculator movingCalculator, SnakeControls controls, IGameSettings gameSettings, ILogger logger)
         {
             _snake = snake ?? throw new ArgumentNullException(nameof(snake));
             _graphicsComponent = graphicsComponent ?? throw new ArgumentNullException(nameof(graphicsComponent));
+            _movement = snakeMovement ?? throw new ArgumentNullException(nameof(snakeMovement));
             _movingCalculator = movingCalculator ?? throw new ArgumentNullException(nameof(movingCalculator));
             _controls = controls ?? throw new ArgumentNullException(nameof(controls));
             _gameSettings = gameSettings ?? throw new ArgumentNullException(nameof(gameSettings));
@@ -57,7 +59,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public void Initialize()
         {
-            _unitVector = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
+            _unitVector = new Vector2(_gameSettings.TileSize);
             _movingTime =  TimeSpan.FromMilliseconds(_gameSettings.DefaultSnakeMovingTime);
             _nextDirection = _snake.Direction;
         }
@@ -66,16 +68,12 @@ namespace SnakeGame.Shared.GameLogic.Snake
         {
             _logger.Debug($"SnakeGameComponent.Update({gameTime.TotalGameTime}");
 
-            _movingTime = TimeSpan.FromMilliseconds(_gameSettings.CurrentSnakeMovingTime);
-
-            Move(gameTime);
+            _movement.Update(gameTime);
         }
 
         private void Move(GameTime gameTime)
         {
             _elapsedTime += gameTime.ElapsedGameTime;
-
-            UpdateNextDirection();
 
             switch (_snake.State)
             {
@@ -97,29 +95,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
                         break;
                     }
-            }
-        }
-
-        /// <summary>
-        /// Update snake's head direction by user input
-        /// </summary>
-        private void UpdateNextDirection()
-        {
-            if (InputHandler.IsKeyDown(_controls.Up) && _snake.Direction != Direction.Down)
-            {
-                _nextDirection = Direction.Up;
-            }
-            else if (InputHandler.IsKeyDown(_controls.Down) && _snake.Direction != Direction.Up)
-            {
-                _nextDirection = Direction.Down;
-            }
-            else if (InputHandler.IsKeyDown(_controls.Right) && _snake.Direction != Direction.Left)
-            {
-                _nextDirection = Direction.Right;
-            }
-            else if (InputHandler.IsKeyDown(_controls.Left) && _snake.Direction != Direction.Right)
-            {
-                _nextDirection = Direction.Left;
             }
         }
 

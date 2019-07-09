@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using SnakeGame.Shared.Common.ResourceManagers;
-using SnakeGame.Shared.Renderers;
+using SnakeGame.Shared.Graphics;
 
 namespace SnakeGame.Shared.Graphics
 {

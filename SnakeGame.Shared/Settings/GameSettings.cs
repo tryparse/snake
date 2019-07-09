@@ -13,13 +13,13 @@ namespace SnakeGame.Shared.Settings
 
         public bool IsDebugRenderingEnabled { get; set; }
 
+        public bool IsRenderingEnabled { get; set; }
+
         public int ScreenWidth { get; set; }
 
         public int ScreenHeight { get; set; }
 
-        public int TileWidth { get; set; }
-
-        public int TileHeight { get; set; }
+        public int TileSize { get; set; }
 
         public int MapWidth { get; set; }
 
@@ -43,6 +43,10 @@ namespace SnakeGame.Shared.Settings
 
             IsDebugRenderingEnabled = isDebugRenderingEnabled;
 
+            bool.TryParse(appSettings["IsRenderingEnabled"], out var isRenderingEnabled);
+
+            IsRenderingEnabled = isRenderingEnabled;
+
             int.TryParse(appSettings["ScreenWidth"], out var screenWidth);
 
             ScreenWidth = screenWidth;
@@ -51,13 +55,9 @@ namespace SnakeGame.Shared.Settings
 
             ScreenHeight = screenHeight;
 
-            int.TryParse(appSettings["TileWidth"], out var tileWidth);
+            int.TryParse(appSettings["TileSize"], out var tileSize);
 
-            TileWidth = tileWidth;
-
-            int.TryParse(appSettings["TileHeight"], out var tileHeight);
-
-            TileHeight = tileHeight;
+            TileSize = tileSize;
 
             int.TryParse(appSettings["MapWidth"], out var mapWidth);
 

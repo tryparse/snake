@@ -21,9 +21,9 @@ namespace SnakeGame.Shared.GameLogic.GameField
             Cells = cells;
             _gameSettings = gameSettings;
 
-            _unitVector = new Vector2(_gameSettings.TileWidth, _gameSettings.TileHeight);
+            _unitVector = new Vector2(_gameSettings.TileSize, 0);
 
-            Bounds = new Rectangle(0, 0, Columns * _gameSettings.TileWidth, Rows * _gameSettings.TileHeight);
+            Bounds = new Rectangle(0, 0, Columns * _gameSettings.TileSize, Rows * _gameSettings.TileSize);
 
             _random = new Random();
         }

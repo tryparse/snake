@@ -5,7 +5,6 @@ using MonoGame.Extended.TextureAtlases;
 using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using SnakeGame.Shared.Graphics;
-using SnakeGame.Shared.Renderers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,22 +16,22 @@ namespace SnakeGame.Shared.GameLogic.Snake
     public class SnakeGraphicsComponent : IGraphics2DComponent
     {
         private readonly ISnake _snake;
-        private readonly IRenderingSystem _renderingSystem;
+        private readonly IGraphicsSystem _graphicsSystem;
 
-        public SnakeGraphicsComponent(ISnake snake, IRenderingSystem renderingSystem)
+        public SnakeGraphicsComponent(ISnake snake, IGraphicsSystem graphicsSystem)
         {
             _snake = snake ?? throw new ArgumentNullException(nameof(snake));
-            _renderingSystem = renderingSystem ?? throw new ArgumentNullException(nameof(renderingSystem));
+            _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));
         }
 
         public void Draw(GameTime gameTime)
         {
-            if (_renderingSystem.RenderSettings.IsRenderingEnabled)
+            if (_graphicsSystem.RenderSettings.IsRenderingEnabled)
             {
                 Rendering();
             }
 
-            if (_renderingSystem.RenderSettings.IsDebugRenderingEnabled)
+            if (_graphicsSystem.RenderSettings.IsDebugRenderingEnabled)
             {
                 DebugRendering();
             }
@@ -40,44 +39,51 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private void Rendering()
         {
+            DrawSegment(_snake.Head);
+
             foreach (var segment in _snake.Tail)
             {
-                var selectedTexture = SelectTexture(segment);
-
-                var rotation = DirectionHelper.GetRotation(segment.Direction);
-                var origin = new Vector2(selectedTexture.Bounds.Width / 2f, selectedTexture.Bounds.Height / 2f);
-
-                var scale = CalculateScale(segment, selectedTexture);
-
-                _renderingSystem.SpriteBatch.Draw(
-                    texture: selectedTexture.Texture,
-                    position: segment.Position,
-                    sourceRectangle: selectedTexture.Bounds,
-                    color: Color.White,
-                    rotation: rotation,
-                    scale: scale,
-                    origin: origin,
-                    effects: SpriteEffects.None,
-                    layerDepth: LayerDepths.Snake
-                );
+                DrawSegment(segment);
             }
+        }
+
+        private void DrawSegment(ISnakeSegment segment)
+        {
+            var selectedTexture = SelectTexture(segment);
+
+            var rotation = DirectionHelper.GetRotation(segment.Direction);
+            var origin = new Vector2(selectedTexture.Bounds.Width / 2f, selectedTexture.Bounds.Height / 2f);
+
+            var scale = CalculateScale(segment, selectedTexture);
+
+            _graphicsSystem.SpriteBatch.Draw(
+                texture: selectedTexture.Texture,
+                position: segment.Position,
+                sourceRectangle: selectedTexture.Bounds,
+                color: Color.White,
+                rotation: rotation,
+                scale: scale,
+                origin: origin,
+                effects: SpriteEffects.None,
+                layerDepth: LayerDepths.Snake
+            );
         }
 
         private TextureRegion2D SelectTexture(ISnakeSegment segment)
         {
             TextureRegion2D selectedTexture;
 
-            if (segment.Equals(_snake.Tail.First()))
+            if (segment.Equals(_snake.Head))
             {
-                selectedTexture = _renderingSystem.TextureManager.TextureRegions["Head"];
+                selectedTexture = _graphicsSystem.TextureManager.TextureRegions["Head"];
             }
-            else if (segment.Equals(_snake.Tail.Last()))
+            else if (_snake.Tail.Any() && segment.Equals(_snake.Tail.Last()))
             {
-                selectedTexture = _renderingSystem.TextureManager.TextureRegions["Tail"];
+                selectedTexture = _graphicsSystem.TextureManager.TextureRegions["Tail"];
             }
             else
             {
-                selectedTexture = _renderingSystem.TextureManager.TextureRegions["Part"];
+                selectedTexture = _graphicsSystem.TextureManager.TextureRegions["Part"];
             }
 
             return selectedTexture;
@@ -102,14 +108,21 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private void DebugRendering()
         {
+            DebugDrawSegment(_snake.Head);
+
             foreach (var segment in _snake.Tail)
             {
-                var rotation = DirectionHelper.GetRotation(segment.Direction);
-
-                _renderingSystem.SpriteBatch.DrawRectangle(segment.Bounds, Color.Red);
-                _renderingSystem.SpriteBatch.DrawLine(segment.Bounds.Center.ToVector2(), segment.Bounds.Width / 2f, rotation, Color.Red);
-                _renderingSystem.SpriteBatch.DrawString(_renderingSystem.DebugSpriteFont, segment.Position.ToString(), segment.Position, Color.Red);
+                DebugDrawSegment(segment);
             }
+        }
+
+        private void DebugDrawSegment(ISnakeSegment segment)
+        {
+            var rotation = DirectionHelper.GetRotation(segment.Direction);
+
+            _graphicsSystem.SpriteBatch.DrawRectangle(segment.Bounds, Color.Red, 2);
+            _graphicsSystem.SpriteBatch.DrawLine(segment.Bounds.Center.ToVector2(), segment.Bounds.Width / 2f, rotation, Color.Red);
+            _graphicsSystem.SpriteBatch.DrawString(_graphicsSystem.DebugSpriteFont, segment.Position.ToString(), segment.Position, Color.Red);
         }
     }
 }

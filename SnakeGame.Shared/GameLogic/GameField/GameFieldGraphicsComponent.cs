@@ -6,7 +6,6 @@ using SnakeGame.Shared.Common.ResourceManagers;
 using SnakeGame.Shared.GameLogic.GameField.Cells.Interfaces;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.Graphics;
-using SnakeGame.Shared.Renderers;
 using SnakeGame.Shared.Settings;
 using System;
 using System.Collections.Generic;
@@ -19,11 +18,11 @@ namespace SnakeGame.Shared.GameLogic.GameField
     public class GameFieldGraphicsComponent : IGraphics2DComponent
     {
         private readonly IGameField _gameField;
-        private readonly IRenderingSystem _renderingCore;
+        private readonly IGraphicsSystem _renderingCore;
         private readonly IGameSettings _gameSettings;
-        private readonly IRenderSettings _renderSettings;
+        private readonly IGraphicsSettings _renderSettings;
 
-        public GameFieldGraphicsComponent(IGameField gameField, IRenderSettings renderSettings, IRenderingSystem renderingCore, IGameSettings gameSettings)
+        public GameFieldGraphicsComponent(IGameField gameField, IGraphicsSettings renderSettings, IGraphicsSystem renderingCore, IGameSettings gameSettings)
         {
             _gameField = gameField ?? throw new ArgumentNullException(nameof(gameField));
             _renderSettings = renderSettings ?? throw new ArgumentNullException(nameof(renderSettings));
@@ -75,12 +74,12 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
         private void RenderTileBorders()
         {
-            for (int x = 0; x <= _gameField.Bounds.Width; x += _gameSettings.TileWidth)
+            for (int x = 0; x <= _gameField.Bounds.Width; x += _gameSettings.TileSize)
             {
                 _renderingCore.SpriteBatch.DrawLine(new Vector2(x, 0), new Vector2(x, _gameField.Bounds.Height), Color.Black);
             }
 
-            for (int y = 0; y <= _gameField.Bounds.Height; y += _gameSettings.TileHeight)
+            for (int y = 0; y <= _gameField.Bounds.Height; y += _gameSettings.TileSize)
             {
                 _renderingCore.SpriteBatch.DrawLine(new Vector2(0, y), new Vector2(_gameField.Bounds.Width, y), Color.Black);
             }

@@ -17,12 +17,12 @@ namespace SnakeGame.Shared.Common
         };
 
         private static Dictionary<Direction, float> _rotations = new Dictionary<Direction, float>
-            {
-                { Direction.Up, MathHelper.ToRadians(-90) },
-                { Direction.Right, MathHelper.ToRadians(0) },
-                { Direction.Down, MathHelper.ToRadians(90) },
-                { Direction.Left, MathHelper.ToRadians(180) }
-            };
+        {
+            { Direction.Up, MathHelper.ToRadians(-90) },
+            { Direction.Right, MathHelper.ToRadians(0) },
+            { Direction.Down, MathHelper.ToRadians(90) },
+            { Direction.Left, MathHelper.ToRadians(180) }
+        };
 
         public static Direction GetOppositeDirection(Direction direction)
         {
@@ -41,6 +41,13 @@ namespace SnakeGame.Shared.Common
         public static float GetRotation(Direction direction)
         {
             return _rotations[direction];
+        }
+
+        public static Vector2 RotateVector(Vector2 input, Direction toDirection)
+        {
+            var rotationMatrix = Matrix.CreateRotationZ(GetRotation(toDirection));
+
+            return Vector2.Transform(input, rotationMatrix);
         }
     }
 }

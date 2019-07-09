@@ -5,7 +5,7 @@ using SnakeGame.Shared.Common;
 using SnakeGame.Shared.Common.ResourceManagers;
 using SnakeGame.Shared.GameLogic.Food.Interfaces;
 using SnakeGame.Shared.Graphics;
-using SnakeGame.Shared.Renderers;
+using SnakeGame.Shared.Graphics;
 using System;
 
 namespace SnakeGame.Shared.GameLogic.Food
@@ -13,9 +13,9 @@ namespace SnakeGame.Shared.GameLogic.Food
     public class FoodGraphicsComponent : IGraphics2DComponent
     {
         private readonly IFood _food;
-        private readonly IRenderingSystem _renderingCore;
+        private readonly IGraphicsSystem _renderingCore;
 
-        public FoodGraphicsComponent(IFood food, IRenderingSystem renderingCore)
+        public FoodGraphicsComponent(IFood food, IGraphicsSystem renderingCore)
         {
             _food = food ?? throw new ArgumentNullException(nameof(food));
             _renderingCore = renderingCore ?? throw new ArgumentNullException(nameof(renderingCore));

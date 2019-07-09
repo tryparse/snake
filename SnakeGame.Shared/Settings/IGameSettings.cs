@@ -13,13 +13,13 @@ namespace SnakeGame.Shared.Settings
 
         bool IsDebugRenderingEnabled { get; set; }
 
+        bool IsRenderingEnabled { get; set; }
+
         int ScreenWidth { get; set; }
 
         int ScreenHeight { get; set; }
 
-        int TileWidth { get; set; }
-
-        int TileHeight { get; set; }
+        int TileSize { get; set; }
 
         int MapWidth { get; set; }
 

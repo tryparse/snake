@@ -3,7 +3,7 @@ using MonoGame.Extended;
 using SnakeGame.Shared.GameLogic.Food.Interfaces;
 using SnakeGame.Shared.GameLogic.GameField;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
-using SnakeGame.Shared.Renderers;
+using SnakeGame.Shared.Graphics;
 using SnakeGame.Shared.Settings;
 using System;
 using System.Collections.Generic;
@@ -16,16 +16,16 @@ namespace SnakeGame.Shared.GameLogic.Food
         private readonly Game _game;
         private readonly IGameField _gameField;
         private readonly IGameSettings _gameSettings;
-        private readonly IRenderingSystem _renderingCore;
+        private readonly IGraphicsSystem _graphicsSystem;
         private readonly Random _random;
 
-        public FoodManager(Game game, IGameField field, IGameSettings gameSettings, IRenderingSystem renderingCore)
+        public FoodManager(Game game, IGameField field, IGameSettings gameSettings, IGraphicsSystem graphicsSystem)
         {
             _foods = new List<IFoodGameComponent>();
             _game = game;
             _gameField = field;
             _gameSettings = gameSettings;
-            _renderingCore = renderingCore;
+            _graphicsSystem = graphicsSystem;
             _random = new Random();
         }
 
@@ -52,10 +52,10 @@ namespace SnakeGame.Shared.GameLogic.Food
 
         public IFoodGameComponent GenerateFood(Vector2 position)
         {
-            var size = new Size2(_gameSettings.TileWidth, _gameSettings.TileHeight);
+            var size = new Size2(_gameSettings.TileSize, _gameSettings.TileSize);
 
             var food = new Food(position, size);
-            var graphicsComponent = new FoodGraphicsComponent(food, _renderingCore);
+            var graphicsComponent = new FoodGraphicsComponent(food, _graphicsSystem);
 
             var component = new FoodComponent(food, graphicsComponent)
             {

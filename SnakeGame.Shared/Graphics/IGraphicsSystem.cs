@@ -1,11 +1,11 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using SnakeGame.Shared.Common.ResourceManagers;
 
-namespace SnakeGame.Shared.Renderers
+namespace SnakeGame.Shared.Graphics
 {
-    public interface IRenderingSystem
+    public interface IGraphicsSystem
     {
-        IRenderSettings RenderSettings { get; }
+        IGraphicsSettings RenderSettings { get; }
 
         SpriteBatch SpriteBatch { get; }
 

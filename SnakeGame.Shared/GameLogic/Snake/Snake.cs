@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
@@ -18,7 +19,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly IGameField _gameField;
         private readonly IMovingCalculator _movingCalculator;
         private readonly IGameSettings _gameSettings;
-        private readonly Vector2 _unitVector;
 
         private ISnakeSegment _head;
         private readonly List<ISnakeSegment> tail;
@@ -32,7 +32,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _movingCalculator = movingCalculator;
             _gameSettings = gameSettings;
 
-            _unitVector = new Vector2(_gameSettings.TileWidth, gameSettings.TileHeight);
             tail = new List<ISnakeSegment>();
 
             _random = new Random();
@@ -76,8 +75,9 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
             var position = _gameField.Cells[x, y].Bounds.Center.ToVector2();
             var direction = DirectionHelper.GetRandom();
+            var size = new Size2(_gameSettings.TileSize, _gameSettings.TileSize);
 
-            return new SnakeSegment(position, _unitVector, direction);
+            return new SnakeSegment(position, size, direction);
         }
 
         public void SetDirection(Direction direction)

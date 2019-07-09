@@ -1,11 +1,11 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using SnakeGame.Shared.Common.ResourceManagers;
 
-namespace SnakeGame.Shared.Renderers
+namespace SnakeGame.Shared.Graphics
 {
-    public class RenderingSystem : IRenderingSystem
+    public class GraphicsSystem : IGraphicsSystem
     {
-        public RenderingSystem(IRenderSettings renderSettings, SpriteBatch spriteBatch, SpriteFont spriteFont, SpriteFont debugSpriteFont, ITextureManager textureManager)
+        public GraphicsSystem(IGraphicsSettings renderSettings, SpriteBatch spriteBatch, SpriteFont spriteFont, SpriteFont debugSpriteFont, ITextureManager textureManager)
         {
             RenderSettings = renderSettings;
             SpriteBatch = spriteBatch;
@@ -14,7 +14,7 @@ namespace SnakeGame.Shared.Renderers
             TextureManager = textureManager;
         }
 
-        public IRenderSettings RenderSettings { get; }
+        public IGraphicsSettings RenderSettings { get; }
 
         public SpriteBatch SpriteBatch { get; }
 

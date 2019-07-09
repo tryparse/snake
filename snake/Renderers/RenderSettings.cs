@@ -1,8 +1,8 @@
-﻿using SnakeGame.Shared.Renderers;
+﻿using SnakeGame.Shared.Graphics;
 
 namespace snake.Renderers
 {
-    public class RenderSettings : IRenderSettings
+    public class RenderSettings : IGraphicsSettings
     {
         public bool IsRenderingEnabled { get; set; }
 

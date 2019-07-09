@@ -34,11 +34,11 @@ namespace SnakeGame.Shared.GameLogic.GameField
                     var cellType = fieldTypeDice <= grassProbability ? CellType.Grass : CellType.Tree;
 
                     cells[x, y] = new Cell(
-                        position: new Vector2(x * _gameSettings.TileWidth, y * _gameSettings.TileHeight),
+                        position: new Vector2(x * _gameSettings.TileSize, y * _gameSettings.TileSize),
                         column: x,
                         row: y,
-                        width: _gameSettings.TileWidth,
-                        height: _gameSettings.TileHeight,
+                        width: _gameSettings.TileSize,
+                        height: _gameSettings.TileSize,
                         cellType: cellType);
                 }
             }
