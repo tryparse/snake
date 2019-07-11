@@ -23,7 +23,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly SnakeControls _controls;
         private readonly IGameSettings _gameSettings;
         private readonly ILogger _logger;
-        private readonly ISnakeMovement _movement;
+        private readonly ISnakeMovementComponent _movement;
 
         private Vector2 _unitVector;
         private TimeSpan _movingTime;
@@ -31,7 +31,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private TimeSpan _elapsedTime;
         private Direction _nextDirection;
 
-        public SnakeGameComponent(ISnake snake, IGraphics2DComponent graphicsComponent, ISnakeMovement snakeMovement, IMovingCalculator movingCalculator, SnakeControls controls, IGameSettings gameSettings, ILogger logger)
+        public SnakeGameComponent(ISnake snake, IGraphics2DComponent graphicsComponent, ISnakeMovementComponent snakeMovement, IMovingCalculator movingCalculator, SnakeControls controls, IGameSettings gameSettings, ILogger logger)
         {
             _snake = snake ?? throw new ArgumentNullException(nameof(snake));
             _graphicsComponent = graphicsComponent ?? throw new ArgumentNullException(nameof(graphicsComponent));

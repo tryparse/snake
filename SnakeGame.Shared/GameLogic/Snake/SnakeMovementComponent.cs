@@ -41,7 +41,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         }
     }
 
-    public class SnakeMovementTurnBased : ISnakeMovement
+    public class SnakeMovementTurnBased : ISnakeMovementComponent
     {
         private readonly ISnake _snake;
         private readonly IGameField _gameField;
