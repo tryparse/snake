@@ -173,7 +173,7 @@ namespace snake
 
             _foodManager = new FoodManager(this, gameField, _gameSettings, _renderingSystem);
 
-            var food = _foodManager.GenerateFood(Vector2.Divide(_unitVector, 2));
+            var food = _foodManager.GenerateFood(gameField.GetRandomCell().Bounds.Center.ToVector2());
             _foodManager.Add(food);
 
             #endregion Food
