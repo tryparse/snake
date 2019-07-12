@@ -70,10 +70,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private ISnakeSegment GenerateRandomSegment()
         {
-            var x = _random.Next(1, _gameField.Columns - 1);
-            var y = _random.Next(1, _gameField.Rows - 1);
-
-            var position = _gameField.Cells[x, y].Bounds.Center.ToVector2();
+            var position = _gameField.GetRandomCell().Bounds.Center.ToVector2();
             var direction = DirectionHelper.GetRandom();
             var size = new Size2(_gameSettings.TileSize, _gameSettings.TileSize);
 
