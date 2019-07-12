@@ -6,9 +6,9 @@ namespace SnakeGame.Shared.Common
 {
     public static class DirectionHelper
     {
-        private static Random _random = new Random();
+        private static readonly Random Random = new Random();
 
-        private static Dictionary<Direction, Direction> _opposites = new Dictionary<Direction, Direction>
+        private static readonly Dictionary<Direction, Direction> Opposites = new Dictionary<Direction, Direction>
         {
             { Direction.Down, Direction.Up },
             { Direction.Up, Direction.Down },
@@ -16,7 +16,7 @@ namespace SnakeGame.Shared.Common
             { Direction.Right, Direction.Left }
         };
 
-        private static Dictionary<Direction, float> _rotations = new Dictionary<Direction, float>
+        private static readonly Dictionary<Direction, float> Rotations = new Dictionary<Direction, float>
         {
             { Direction.Up, MathHelper.ToRadians(-90) },
             { Direction.Right, MathHelper.ToRadians(0) },
@@ -26,12 +26,12 @@ namespace SnakeGame.Shared.Common
 
         public static Direction GetOppositeDirection(Direction direction)
         {
-            return _opposites[direction];
+            return Opposites[direction];
         }
 
         public static Direction GetRandom()
         {
-            var dice = _random.Next(0, 4);
+            var dice = Random.Next(0, 4);
 
             var values = (Direction[])Enum.GetValues(typeof(Direction));
 
@@ -40,7 +40,7 @@ namespace SnakeGame.Shared.Common
 
         public static float GetRotation(Direction direction)
         {
-            return _rotations[direction];
+            return Rotations[direction];
         }
 
         public static Vector2 RotateVector(Vector2 input, Direction toDirection)

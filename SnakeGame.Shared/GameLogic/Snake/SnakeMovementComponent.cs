@@ -56,12 +56,16 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private Direction? _nextDirection;
 
+        #region IUpdateable members
+
         public bool Enabled { get; set; }
 
         public int UpdateOrder { get; set; }
 
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
+
+        #endregion
 
         public SnakeMovementTurnBased(ISnake snake, IGameField gameField, IGameSettings gameSettings, SnakeControls controls)
         {
@@ -72,8 +76,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
             _movingDuration = TimeSpan.FromMilliseconds(_gameSettings.DefaultMoveIntervalTime);
 
-            _movingObjects = new List<IMovingObject>();
-            _movingObjects.Add(new SegmentMoving(_snake.Head));
+            _movingObjects = new List<IMovingObject> { new SegmentMoving(_snake.Head) };
             _movingObjects.AddRange(_snake.Tail.Select(x => new SegmentMoving(x)));
 
             _unitVector = Vector2.Multiply(Vector2.UnitX, _gameSettings.TileSize);
@@ -94,7 +97,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
                 foreach (var mo in _movingObjects)
                 {
-                    mo.TargetPosition = mo.CurrentPosition + DirectionHelper.RotateVector(_unitVector, Direction.Up);
+                    mo.TargetPosition = mo.CurrentPosition + DirectionHelper.RotateVector(_unitVector, mo.CurrentDirection);
                 }
 
                 _elapsedTime -= _movingDuration;

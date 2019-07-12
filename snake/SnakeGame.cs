@@ -55,23 +55,21 @@ namespace snake
         private IGameSettings _gameSettings;
         private IGraphicsSettings _renderSettings;
         private ITextureManager _textureManager;
-        private ILogger _logger;
-
-        private Vector2 _unitVector;
+        private readonly ILogger _logger;
 
         public SnakeGame()
         {
             ReadSettings();
 
             _logger = new NLogFileLogger(_gameSettings);
-
+;
             _graphics = new GraphicsDeviceManager(this)
             {
-
-                PreferredBackBufferHeight = _gameSettings.ScreenHeight,
-                PreferredBackBufferWidth = _gameSettings.ScreenWidth,
-                GraphicsProfile = GraphicsProfile.HiDef
+                //GraphicsProfile = GraphicsProfile.HiDef
             };
+
+            ApplyScreenChanges();
+
             IsMouseVisible = true;
 
             Content.RootDirectory = "Content";
@@ -100,6 +98,13 @@ namespace snake
             Components.Add(_inputHandler);
 
             base.Initialize();
+        }
+
+        private void ApplyScreenChanges()
+        {
+            _graphics.PreferredBackBufferHeight = _gameSettings.ScreenHeight;
+            _graphics.PreferredBackBufferWidth = _gameSettings.ScreenWidth;
+            _graphics.ApplyChanges();
         }
 
         private void ReadSettings()
@@ -152,8 +157,6 @@ namespace snake
 
         private void CreateGameEntities()
         {
-            _unitVector = Vector2.Multiply(Vector2.UnitX, _gameSettings.TileSize);
-
             #region Field
 
             IGameFieldFactory gameFieldFactory = new GameFieldFactory(_gameSettings);

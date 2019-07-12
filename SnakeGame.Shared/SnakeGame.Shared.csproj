@@ -93,6 +93,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Graphics\IGraphicsSettings.cs" />
     <Compile Include="Graphics\GraphicsSystem.cs" />
+    <Compile Include="SceneManagement\IScene.cs" />
     <Compile Include="Settings\GameSettings.cs" />
     <Compile Include="Settings\IGameSettings.cs" />
   </ItemGroup>
