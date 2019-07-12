@@ -11,15 +11,17 @@ namespace SnakeGame.Shared.GameLogic.Snake.Interfaces
     {
         ISnakeSegment Head { get; }
 
-        IEnumerable<ISnakeSegment> Tail { get; }
+        IList<ISnakeSegment> Tail { get; }
 
         Direction Direction { get; }
 
         SnakeState State { get; }
 
+        void Initialize();
+
         void Reset();
 
-        void AddSegments(uint count);
+        void Grow();
 
         void SetDirection(Direction direction);
 

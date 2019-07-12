@@ -12,13 +12,11 @@ namespace SnakeGame.Shared.GameLogic
 
         bool CheckSnakeCollision();
 
-        bool CheckFoodCollision();
+        IFoodGameComponent CheckFoodCollision();
 
         bool CheckWallsCollision();
 
-        IEnumerable<IFoodGameComponent> GetEatenFoods();
-
-        void RemoveFood(IEnumerable<IFoodGameComponent> foods);
+        void RemoveFood(IFoodGameComponent food);
 
         void GenerateRandomFood();
 

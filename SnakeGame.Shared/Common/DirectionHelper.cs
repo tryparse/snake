@@ -45,7 +45,8 @@ namespace SnakeGame.Shared.Common
 
         public static Vector2 RotateVector(Vector2 input, Direction toDirection)
         {
-            var rotationMatrix = Matrix.CreateRotationZ(GetRotation(toDirection));
+            var rotation = GetRotation(toDirection);
+            var rotationMatrix = Matrix.CreateRotationZ(rotation);
 
             return Vector2.Transform(input, rotationMatrix);
         }

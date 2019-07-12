@@ -17,11 +17,13 @@ namespace SnakeGame.Shared.GameLogic.Snake
     {
         private readonly ISnake _snake;
         private readonly IGraphicsSystem _graphicsSystem;
+        private readonly ISnakeMovementComponent _movement;
 
-        public SnakeGraphicsComponent(ISnake snake, IGraphicsSystem graphicsSystem)
+        public SnakeGraphicsComponent(ISnake snake, IGraphicsSystem graphicsSystem, ISnakeMovementComponent movement)
         {
             _snake = snake ?? throw new ArgumentNullException(nameof(snake));
             _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));
+            _movement = movement ?? throw new ArgumentNullException(nameof(movement));
         }
 
         public void Draw(GameTime gameTime)

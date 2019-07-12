@@ -11,36 +11,6 @@ using System.Threading.Tasks;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
-    public interface IMovingObject
-    {
-        Vector2? SourcePosition { get; set; }
-        Vector2? TargetPosition { get; set; }
-        Vector2 CurrentPosition { get; }
-        Direction CurrentDirection { get; }
-    }
-
-    public class SegmentMoving : IMovingObject
-    {
-        private readonly ISnakeSegment _snakeSegment;
-
-        public Vector2? SourcePosition { get; set; }
-
-        public Vector2? TargetPosition { get; set; }
-
-        public Vector2 CurrentPosition { get; }
-
-        public Direction CurrentDirection { get; }
-
-        public SegmentMoving(ISnakeSegment segment)
-        {
-            _snakeSegment = segment;
-
-            CurrentPosition = segment.Position;
-            SourcePosition = segment.Position;
-            CurrentDirection = segment.Direction;
-        }
-    }
-
     public class SnakeMovementTurnBased : ISnakeMovementComponent
     {
         private readonly ISnake _snake;
@@ -49,10 +19,9 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly SnakeControls _controls;
 
         private TimeSpan _elapsedTime;
-        private TimeSpan _movingDuration;
+        private TimeSpan _movingInterval;
 
         private readonly Vector2 _unitVector;
-        private List<IMovingObject> _movingObjects;
 
         private Direction? _nextDirection;
 
@@ -74,33 +43,54 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _gameSettings = gameSettings;
             _controls = controls;
 
-            _movingDuration = TimeSpan.FromMilliseconds(_gameSettings.DefaultMoveIntervalTime);
-
-            _movingObjects = new List<IMovingObject> { new SegmentMoving(_snake.Head) };
-            _movingObjects.AddRange(_snake.Tail.Select(x => new SegmentMoving(x)));
+            _movingInterval = TimeSpan.FromMilliseconds(_gameSettings.DefaultMoveIntervalTime);
 
             _unitVector = Vector2.Multiply(Vector2.UnitX, _gameSettings.TileSize);
         }
 
         public void Update(GameTime gameTime)
         {
-            _elapsedTime += gameTime.ElapsedGameTime;
-
             UpdateNextDirection();
 
-            if (_elapsedTime >= _movingDuration)
+            switch (_snake.State)
             {
-                if (_nextDirection.HasValue)
-                {
-                    _snake.Head.SetDirection(_nextDirection.Value);
-                }
+                case SnakeState.None:
+                    {
+                        _elapsedTime += gameTime.ElapsedGameTime;
 
-                foreach (var mo in _movingObjects)
-                {
-                    mo.TargetPosition = mo.CurrentPosition + DirectionHelper.RotateVector(_unitVector, mo.CurrentDirection);
-                }
+                        if (_elapsedTime >= _movingInterval)
+                        {
+                            if (_nextDirection.HasValue)
+                            {
+                                var head = _snake.Head;
 
-                _elapsedTime -= _movingDuration;
+                                if (head != null)
+                                {
+                                    head.SetDirection(_nextDirection.Value);
+                                }
+                            }
+
+                            _snake.SetState(SnakeState.Moving);
+
+                            _elapsedTime -= _movingInterval;
+                        }
+
+                        break;
+                    }
+                case SnakeState.Moving:
+                    {
+                        for (int i = _snake.Tail.Count - 1; i > 1; i++)
+                        {
+                            var nextMove = _snake.Tail[i - 1].Position;
+                            _snake.Tail[i].MoveTo(nextMove);
+                        }
+
+                        var next = _snake.Head.Position + DirectionHelper.RotateVector(_unitVector, _snake.Head.Direction);
+                        _snake.Head.MoveTo(next);
+                        _snake.SetState(SnakeState.None);
+
+                        break;
+                    }
             }
         }
 
@@ -125,11 +115,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
             {
                 _nextDirection = Direction.Left;
             }
-        }
-
-        private Vector2 GetTargetPosition()
-        {
-            throw new NotImplementedException();
         }
     }
 }

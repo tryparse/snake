@@ -42,6 +42,10 @@ namespace SnakeGame.Shared.GameLogic
             Initialize();
         }
 
+        public void Initialize()
+        {
+        }
+
         public void NewGame()
         {
             _logger.Debug("GameManager.NewGame()");
@@ -72,69 +76,46 @@ namespace SnakeGame.Shared.GameLogic
             return false;
         }
 
-        public bool CheckFoodCollision()
+        public IFoodGameComponent CheckFoodCollision()
         {
-            var head = _snake.Tail.FirstOrDefault();
-
-            if (head != null)
+            if (_snake.State == SnakeState.None)
             {
-                foreach (var foodComponent in _foodManager.FoodComponents)
+                var head = _snake.Head;
+
+                if (head != null)
                 {
-                    if (head.Bounds.Intersects(foodComponent.Food.Bounds))
+                    foreach (var foodComponent in _foodManager.FoodComponents)
                     {
-                        _logger.Debug("GameManager: Detected food collision");
-                        return true;
+                        if (head.Bounds.Intersects(foodComponent.Food.Bounds))
+                        {
+                            _logger.Debug("GameManager: Detected food collision");
+                            return foodComponent;
+                        }
                     }
                 }
             }
 
-            return false;
+            return null;
         }
 
-        public IEnumerable<IFoodGameComponent> GetEatenFoods()
+        public void RemoveFood(IFoodGameComponent food)
         {
-            var head = _snake.Tail.FirstOrDefault();
-
-            if (head == null)
-            {
-                throw new InvalidOperationException("Snake has no parts");
-            }
-
-            var result = new List<IFoodGameComponent>();
-
-            foreach (var foodComponent in _foodManager.FoodComponents)
-            {
-                if (head.Bounds.Intersects(foodComponent.Food.Bounds))
-                {
-                    result.Add(foodComponent);
-                }
-            }
-
-            return result;
-        }
-
-        public void RemoveFood(IEnumerable<IFoodGameComponent> foods)
-        {
-            foreach (var food in foods)
-            {
-                _foodManager.Remove(food);
-            }
-
             _logger.Debug("GameManager: Removed food");
+
+            _foodManager.Remove(food);
         }
 
         public void GenerateRandomFood()
         {
+            _logger.Debug("GameManager: Random food generated");
+
             var food = _foodManager.GenerateRandomFood();
             _foodManager.Add(food);
-
-            _logger.Debug("GameManager: Random food generated");
         }
 
         public bool CheckWallsCollision()
         {
-            var head = _snake.Tail
-                .FirstOrDefault();
+            var head = _snake.Head;
 
             if (head != null
                 && (head.Bounds.Left < _gameField.Bounds.Left
@@ -149,28 +130,23 @@ namespace SnakeGame.Shared.GameLogic
             return false;
         }
 
-        public void Initialize()
-        {
-            Enabled = true;
-        }
-
         public void Update(GameTime gameTime)
         {
             _logger.Debug($"GameManager.Update({gameTime.TotalGameTime})");
 
-            if (CheckSnakeCollision() || CheckWallsCollision())
-            {
-                NewGame();
-            }
+            //if (CheckSnakeCollision() || CheckWallsCollision())
+            //{
+            //    NewGame();
+            //}
 
-            if (CheckFoodCollision())
+            var collidedFood = CheckFoodCollision();
+
+            if (collidedFood != null)
             {
-                RemoveFood(GetEatenFoods());
+                RemoveFood(collidedFood);
                 _foodManager.Add(_foodManager.GenerateRandomFood());
-                _snake.AddSegments(1);
+                _snake.Grow();
                 IncreaseGameSpeed();
-
-                _logger.Debug($"GameManager.Update({gameTime.TotalGameTime}): AddedSegment");
             }
         }
 

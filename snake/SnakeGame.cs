@@ -186,16 +186,15 @@ namespace snake
             var movingCalculator = new MovingCalculator(_logger, gameField);
 
             var snake = new Snake(_logger, gameField, movingCalculator, _gameSettings);
-            snake.AddSegments(2);
+            snake.Grow();
 
             var movement = new SnakeMovementTurnBased(snake, gameField, _gameSettings, _snakeKeys)
             {
                 Enabled = true
             };
 
-            var snakeGraphicsComponent = new SnakeGraphicsComponent(snake, _renderingSystem);
-            _snakeGameComponent = new SnakeGameComponent(snake, snakeGraphicsComponent, movement, movingCalculator, _snakeKeys,
-                _gameSettings, _logger)
+            var snakeGraphicsComponent = new SnakeGraphicsComponent(snake, _renderingSystem, movement);
+            _snakeGameComponent = new SnakeGameComponent(snakeGraphicsComponent, movement, _logger)
             {
                 Enabled = true,
                 Visible = true
@@ -205,7 +204,10 @@ namespace snake
 
             #endregion Snake
 
-            _gameManager = new GameManager(_logger, _foodManager, snake, gameField, _gameSettings);
+            _gameManager = new GameManager(_logger, _foodManager, snake, gameField, _gameSettings)
+            {
+                Enabled = true
+            };
 
             Components.Add(_gameManager);
         }
