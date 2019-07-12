@@ -134,10 +134,10 @@ namespace SnakeGame.Shared.GameLogic
         {
             _logger.Debug($"GameManager.Update({gameTime.TotalGameTime})");
 
-            //if (CheckSnakeCollision() || CheckWallsCollision())
-            //{
-            //    NewGame();
-            //}
+            if (CheckSnakeCollision() || CheckWallsCollision())
+            {
+                NewGame();
+            }
 
             var collidedFood = CheckFoodCollision();
 

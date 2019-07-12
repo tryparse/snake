@@ -51,7 +51,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public void Reset()
         {
-            _head = null;
+            _head = GenerateRandomSegment();
             _tail.Clear();
         }
 
