@@ -15,12 +15,11 @@ using SnakeGame.Shared.Settings;
 
 namespace SnakeGame.Shared.GameLogic
 {
-    // TODO: Make this manager as IUpdatable component
     public class GameManager : IGameManager
     {
         private readonly ILogger _logger;
         private readonly IFoodManager _foodManager;
-        private readonly ISnake _snake;
+        private readonly ISnakeGameComponent _snakeComponent;
         private readonly IGameField _gameField;
         private readonly IGameSettings _gameSettings;
 
@@ -31,11 +30,11 @@ namespace SnakeGame.Shared.GameLogic
 
         public int UpdateOrder { get; set; }
 
-        public GameManager(ILogger logger, IFoodManager foodManager, ISnake snake, IGameField gameField, IGameSettings gameSettings)
+        public GameManager(ILogger logger, IFoodManager foodManager, ISnakeGameComponent snake, IGameField gameField, IGameSettings gameSettings)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _foodManager = foodManager ?? throw new ArgumentNullException(nameof(foodManager));
-            _snake = snake ?? throw new ArgumentNullException(nameof(snake));
+            _snakeComponent = snake ?? throw new ArgumentNullException(nameof(snake));
             _gameField = gameField ?? throw new ArgumentNullException(nameof(gameField));
             _gameSettings = gameSettings;
 
@@ -49,18 +48,18 @@ namespace SnakeGame.Shared.GameLogic
         public void NewGame()
         {
             _logger.Debug("GameManager.NewGame()");
-            _snake.Reset();
+            _snakeComponent.Reset();
         }
 
         public bool CheckSnakeCollision()
         {
-            if (_snake.State != SnakeState.Moving)
+            if (_snakeComponent.Snake.State != SnakeState.Moving)
             {
-                var head = _snake.Tail.FirstOrDefault();
+                var head = _snakeComponent.Snake.Tail.FirstOrDefault();
 
                 if (head != null)
                 {
-                    var tail = _snake.Tail;
+                    var tail = _snakeComponent.Snake.Tail;
 
                     foreach (var part in tail)
                     {
@@ -78,9 +77,9 @@ namespace SnakeGame.Shared.GameLogic
 
         public IFoodGameComponent CheckFoodCollision()
         {
-            if (_snake.State == SnakeState.None)
+            if (_snakeComponent.Snake.State == SnakeState.None)
             {
-                var head = _snake.Head;
+                var head = _snakeComponent.Snake.Head;
 
                 if (head != null)
                 {
@@ -115,7 +114,7 @@ namespace SnakeGame.Shared.GameLogic
 
         public bool CheckWallsCollision()
         {
-            var head = _snake.Head;
+            var head = _snakeComponent.Snake.Head;
 
             if (head != null
                 && (head.Bounds.Left < _gameField.Bounds.Left
@@ -145,7 +144,7 @@ namespace SnakeGame.Shared.GameLogic
             {
                 RemoveFood(collidedFood);
                 _foodManager.Add(_foodManager.GenerateRandomFood());
-                _snake.Grow();
+                _snakeComponent.Snake.Grow();
                 IncreaseGameSpeed();
             }
         }

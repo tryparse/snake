@@ -9,5 +9,9 @@ namespace SnakeGame.Shared.GameLogic.Snake.Interfaces
 {
     public interface ISnakeGameComponent : IGameComponent, IUpdateable, IDrawable
     {
+        ISnake Snake { get; }
+        ISnakeMovementComponent SnakeMovementComponent { get; }
+
+        void Reset();
     }
 }

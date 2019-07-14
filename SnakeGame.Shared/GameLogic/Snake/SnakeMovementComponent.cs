@@ -94,6 +94,11 @@ namespace SnakeGame.Shared.GameLogic.Snake
             }
         }
 
+        public void Reset()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Update snake's head direction by user input
         /// </summary>

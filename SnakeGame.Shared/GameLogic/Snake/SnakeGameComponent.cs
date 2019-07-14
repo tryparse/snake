@@ -18,13 +18,13 @@ namespace SnakeGame.Shared.GameLogic.Snake
     public class SnakeGameComponent : ISnakeGameComponent
     {
         private readonly IGraphics2DComponent _graphicsComponent;
-        private readonly ISnakeMovementComponent _movement;
         private readonly ILogger _logger;
 
-        public SnakeGameComponent(IGraphics2DComponent graphicsComponent, ISnakeMovementComponent snakeMovement, ILogger logger)
+        public SnakeGameComponent(ISnake snake, IGraphics2DComponent graphicsComponent, ISnakeMovementComponent snakeMovement, ILogger logger)
         {
+            Snake = snake ?? throw new ArgumentNullException(nameof(snake));
             _graphicsComponent = graphicsComponent ?? throw new ArgumentNullException(nameof(graphicsComponent));
-            _movement = snakeMovement ?? throw new ArgumentNullException(nameof(snakeMovement));
+            SnakeMovementComponent = snakeMovement ?? throw new ArgumentNullException(nameof(snakeMovement));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             Initialize();
@@ -39,6 +39,10 @@ namespace SnakeGame.Shared.GameLogic.Snake
         public int DrawOrder { get; set; }
 
         public bool Visible { get; set; }
+
+        public ISnake Snake { get; }
+
+        public ISnakeMovementComponent SnakeMovementComponent { get; }
 
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
@@ -55,12 +59,18 @@ namespace SnakeGame.Shared.GameLogic.Snake
         {
             _logger.Debug($"SnakeGameComponent.Update({gameTime.TotalGameTime}");
 
-            _movement.Update(gameTime);
+            SnakeMovementComponent.Update(gameTime);
         }
 
         public void Draw(GameTime gameTime)
         {
             _graphicsComponent.Draw(gameTime);
+        }
+
+        public void Reset()
+        {
+            Snake.Reset();
+            SnakeMovementComponent.Reset();
         }
     }
 }
