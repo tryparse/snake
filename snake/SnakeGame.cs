@@ -194,7 +194,7 @@ namespace snake
             };
 
             var snakeGraphicsComponent = new SnakeGraphicsComponent(snake, _renderingSystem, movement);
-            _snakeGameComponent = new SnakeGameComponent(snakeGraphicsComponent, movement, _logger)
+            _snakeGameComponent = new SnakeGameComponent(snake, snakeGraphicsComponent, movement, _logger)
             {
                 Enabled = true,
                 Visible = true
@@ -204,7 +204,7 @@ namespace snake
 
             #endregion Snake
 
-            _gameManager = new GameManager(_logger, _foodManager, snake, gameField, _gameSettings)
+            _gameManager = new GameManager(_logger, _foodManager, _snakeGameComponent, gameField, _gameSettings)
             {
                 Enabled = true
             };

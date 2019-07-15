@@ -25,10 +25,6 @@ namespace SnakeGame.Shared.Settings
 
         public int MapHeight { get; set; }
 
-        public int DefaultSnakeMovingTime { get; set; }
-
-        public int CurrentSnakeMovingTime { get; set; }
-
         public int DefaultMoveIntervalTime { get; set; }
 
         public int CurrentMoveIntervalTime { get; set; }
@@ -66,11 +62,6 @@ namespace SnakeGame.Shared.Settings
             int.TryParse(appSettings["MapHeight"], out var mapHeight);
 
             MapHeight = mapHeight;
-
-            int.TryParse(appSettings["DefaultSnakeMovingTime"], out var defaultSnakeMovingTime);
-
-            DefaultSnakeMovingTime = defaultSnakeMovingTime;
-            CurrentSnakeMovingTime = defaultSnakeMovingTime;
 
             int.TryParse(appSettings["DefaultMoveIntervalTime"], out var defaultMoveIntervalTime);
 

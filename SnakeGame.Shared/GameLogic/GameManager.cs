@@ -55,7 +55,7 @@ namespace SnakeGame.Shared.GameLogic
         {
             if (_snakeComponent.Snake.State != SnakeState.Moving)
             {
-                var head = _snakeComponent.Snake.Tail.FirstOrDefault();
+                var head = _snakeComponent.Snake.Head;
 
                 if (head != null)
                 {
@@ -151,8 +151,7 @@ namespace SnakeGame.Shared.GameLogic
 
         public void IncreaseGameSpeed()
         {
-            _gameSettings.CurrentMoveIntervalTime = (int)Math.Truncate((double)_gameSettings.CurrentMoveIntervalTime);
-            _gameSettings.CurrentSnakeMovingTime = (int)Math.Truncate((double)_gameSettings.CurrentSnakeMovingTime);
+            _gameSettings.CurrentMoveIntervalTime = (int)Math.Truncate((double)_gameSettings.CurrentMoveIntervalTime * .9d);
         }
     }
 }

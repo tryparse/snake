@@ -24,7 +24,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private readonly Random _random;
 
-        private int growSegments = 0;
+        private Vector2 _unitVector;
 
         public Snake(ILogger logger, IGameField gameField, IMovingCalculator movingCalculator, IGameSettings gameSettings)
         {
@@ -47,6 +47,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
         {
             _head = GenerateRandomSegment();
             _tail = new List<ISnakeSegment>();
+
+            _unitVector = new Vector2(_gameSettings.TileSize, 0);
         }
 
         public void Reset()
@@ -69,7 +71,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
                 if (last != null)
                 {
-                    //var position = last. .CurrentPosition + DirectionHelper.RotateVector(_unitVector, mo.CurrentDirection);
+                    var position = last.Position + DirectionHelper.RotateVector(_unitVector, DirectionHelper.GetOppositeDirection(last.Direction));
+                    _tail.Add(new SnakeSegment(position, last.Size, last.Direction));
                 }
             }
         }

@@ -52,6 +52,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
         {
             UpdateNextDirection();
 
+            _movingInterval = TimeSpan.FromMilliseconds(_gameSettings.CurrentMoveIntervalTime);
+
             switch (_snake.State)
             {
                 case SnakeState.None:
@@ -79,7 +81,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
                     }
                 case SnakeState.Moving:
                     {
-                        for (int i = _snake.Tail.Count - 1; i > 1; i++)
+                        // TODO: fix loop - not include HEAD now
+                        for (int i = _snake.Tail.Count - 1; i > 1; i--)
                         {
                             var nextMove = _snake.Tail[i - 1].Position;
                             _snake.Tail[i].MoveTo(nextMove);
@@ -96,7 +99,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            _nextDirection = null;
+            _movingInterval = TimeSpan.FromMilliseconds(_gameSettings.DefaultMoveIntervalTime);
         }
 
         /// <summary>

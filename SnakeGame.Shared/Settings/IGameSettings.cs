@@ -27,10 +27,6 @@ namespace SnakeGame.Shared.Settings
 
         void ReadFromApplicationSettings(NameValueCollection appSettings);
 
-        int DefaultSnakeMovingTime { get; set; }
-
-        int CurrentSnakeMovingTime { get; set; }
-
         int DefaultMoveIntervalTime { get; set; }
 
         int CurrentMoveIntervalTime { get; set; }
