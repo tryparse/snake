@@ -82,7 +82,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
                     }
                 case SnakeState.Moving:
                     {
-                        // TODO: fix loop - not include HEAD now
                         for (int i = _snake.Tail.Count - 1; i >= 0; i--)
                         {
                             Vector2 position;
