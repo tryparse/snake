@@ -80,6 +80,7 @@
     <Compile Include="GameLogic\Snake\SnakeGraphicsComponent.cs" />
     <Compile Include="GameLogic\Snake\SnakeMovementComponent.cs" />
     <Compile Include="GameLogic\Snake\SnakeSegment.cs" />
+    <Compile Include="Graphics\GraphicsSettings.cs" />
     <Compile Include="Graphics\IGraphics2DComponent.cs" />
     <Compile Include="GameLogic\GameField\CellType.cs" />
     <Compile Include="GameLogic\GameManager.cs" />

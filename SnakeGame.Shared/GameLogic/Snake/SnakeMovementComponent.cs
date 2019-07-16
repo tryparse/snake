@@ -5,6 +5,7 @@ using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using SnakeGame.Shared.Settings;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -82,12 +83,27 @@ namespace SnakeGame.Shared.GameLogic.Snake
                 case SnakeState.Moving:
                     {
                         // TODO: fix loop - not include HEAD now
-                        for (int i = _snake.Tail.Count - 1; i > 1; i--)
+                        for (int i = _snake.Tail.Count - 1; i >= 0; i--)
                         {
-                            var nextMove = _snake.Tail[i - 1].Position;
-                            _snake.Tail[i].MoveTo(nextMove);
-                        }
+                            Vector2 position;
+                            Direction direction;
 
+                            if (i == 0)
+                            {
+                                position = _snake.Head.Position;
+                                direction = _snake.Head.Direction;
+                            }
+                            else
+                            {
+                                position = _snake.Tail[i - 1].Position;
+                                direction = _snake.Tail[i - 1].Direction;
+                            }
+
+                            position = RoundPosition(position);
+
+                            _snake.Tail[i].MoveTo(position);
+                            _snake.Tail[i].SetDirection(direction);
+                        }
 
                         MoveHead();
 
@@ -96,9 +112,24 @@ namespace SnakeGame.Shared.GameLogic.Snake
             }
         }
 
+        /// <summary>
+        /// Rounding position to prevent false collisions
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        private static Vector2 RoundPosition(Vector2 position)
+        {
+            position.X = (float)Math.Round(position.X, 0);
+            position.Y = (float)Math.Round(position.Y, 0);
+            return position;
+        }
+
         private void MoveHead()
         {
             var next = _snake.Head.Position + DirectionHelper.RotateVector(_unitVector, _snake.Head.Direction);
+
+            next = RoundPosition(next);
+
             _snake.Head.MoveTo(next);
             _snake.SetState(SnakeState.None);
         }

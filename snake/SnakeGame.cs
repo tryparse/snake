@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
 using snake.GameComponents;
-using snake.Renderers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -85,7 +84,7 @@ namespace snake
         {
             _logger.Debug("Game.Initialize()");
 
-            _renderSettings = new RenderSettings
+            _renderSettings = new GraphicsSettings
             {
                 IsDebugRenderingEnabled = _gameSettings.IsDebugRenderingEnabled,
                 IsRenderingEnabled = _gameSettings.IsRenderingEnabled

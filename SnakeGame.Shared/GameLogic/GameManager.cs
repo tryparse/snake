@@ -63,7 +63,8 @@ namespace SnakeGame.Shared.GameLogic
 
                     foreach (var part in tail)
                     {
-                        if (head.Bounds.Intersects(part.Bounds))
+                        if (Vector2.Distance(head.Position, part.Position) < _gameSettings.TileSize)
+                        //if (head.Bounds.Intersects(part.Bounds))
                         {
                             _logger.Debug($"Collision: r1={head.Bounds} r2={part.Bounds}");
                             return true;
