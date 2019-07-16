@@ -88,13 +88,19 @@ namespace SnakeGame.Shared.GameLogic.Snake
                             _snake.Tail[i].MoveTo(nextMove);
                         }
 
-                        var next = _snake.Head.Position + DirectionHelper.RotateVector(_unitVector, _snake.Head.Direction);
-                        _snake.Head.MoveTo(next);
-                        _snake.SetState(SnakeState.None);
+
+                        MoveHead();
 
                         break;
                     }
             }
+        }
+
+        private void MoveHead()
+        {
+            var next = _snake.Head.Position + DirectionHelper.RotateVector(_unitVector, _snake.Head.Direction);
+            _snake.Head.MoveTo(next);
+            _snake.SetState(SnakeState.None);
         }
 
         public void Reset()
