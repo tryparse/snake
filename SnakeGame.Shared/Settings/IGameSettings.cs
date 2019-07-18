@@ -30,5 +30,7 @@ namespace SnakeGame.Shared.Settings
         int DefaultMoveIntervalTime { get; set; }
 
         int CurrentMoveIntervalTime { get; set; }
+
+        void ResetMoveIntervalTime();
     }
 }

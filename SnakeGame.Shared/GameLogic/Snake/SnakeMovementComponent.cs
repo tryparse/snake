@@ -136,7 +136,9 @@ namespace SnakeGame.Shared.GameLogic.Snake
         public void Reset()
         {
             _nextDirection = null;
+            _gameSettings.CurrentMoveIntervalTime = _gameSettings.DefaultMoveIntervalTime;
             _movingInterval = TimeSpan.FromMilliseconds(_gameSettings.DefaultMoveIntervalTime);
+            _elapsedTime = TimeSpan.Zero;
         }
 
         /// <summary>

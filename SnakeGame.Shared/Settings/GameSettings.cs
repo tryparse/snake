@@ -68,5 +68,10 @@ namespace SnakeGame.Shared.Settings
             DefaultMoveIntervalTime = defaultMoveIntervalTime;
             CurrentMoveIntervalTime = defaultMoveIntervalTime;
         }
+
+        public void ResetMoveIntervalTime()
+        {
+            CurrentMoveIntervalTime = DefaultMoveIntervalTime;
+        }
     }
 }
