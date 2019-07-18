@@ -56,6 +56,8 @@ namespace snake
         private ITextureManager _textureManager;
         private readonly ILogger _logger;
 
+        private Camera2D _camera;
+
         public SnakeGame()
         {
             ReadSettings();
@@ -95,6 +97,9 @@ namespace snake
             
             _inputHandler = new InputHandler(this);
             Components.Add(_inputHandler);
+
+            _camera = new Camera2D(GraphicsDevice);
+            _camera.ZoomOut(.1f);
 
             base.Initialize();
         }
@@ -263,7 +268,7 @@ namespace snake
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend);
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend, transformMatrix: _camera.GetViewMatrix());
 
             base.Draw(gameTime);
 
