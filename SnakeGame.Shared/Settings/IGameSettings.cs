@@ -19,6 +19,8 @@ namespace SnakeGame.Shared.Settings
 
         int ScreenHeight { get; set; }
 
+        bool IsFullScreen { get; set; }
+
         int TileSize { get; set; }
 
         int MapWidth { get; set; }

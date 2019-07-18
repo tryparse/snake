@@ -99,7 +99,6 @@ namespace snake
             Components.Add(_inputHandler);
 
             _camera = new Camera2D(GraphicsDevice);
-            _camera.ZoomOut(.1f);
 
             base.Initialize();
         }
@@ -108,6 +107,7 @@ namespace snake
         {
             _graphics.PreferredBackBufferHeight = _gameSettings.ScreenHeight;
             _graphics.PreferredBackBufferWidth = _gameSettings.ScreenWidth;
+            _graphics.IsFullScreen = _gameSettings.IsFullScreen;
             _graphics.ApplyChanges();
         }
 

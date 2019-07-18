@@ -55,6 +55,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         {
             _head = GenerateRandomSegment();
             _tail.Clear();
+            Grow();
         }
 
         public void Grow()

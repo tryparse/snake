@@ -19,6 +19,8 @@ namespace SnakeGame.Shared.Settings
 
         public int ScreenHeight { get; set; }
 
+        public bool IsFullScreen { get; set; }
+
         public int TileSize { get; set; }
 
         public int MapWidth { get; set; }
@@ -50,6 +52,10 @@ namespace SnakeGame.Shared.Settings
             int.TryParse(appSettings["ScreenHeight"], out var screenHeight);
 
             ScreenHeight = screenHeight;
+
+            bool.TryParse(appSettings["IsFullScreen"], out var isFullScreen);
+
+            IsFullScreen = isFullScreen;
 
             int.TryParse(appSettings["TileSize"], out var tileSize);
 
