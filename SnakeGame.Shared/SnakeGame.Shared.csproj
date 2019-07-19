@@ -51,6 +51,8 @@
     <Compile Include="Common\Direction.cs" />
     <Compile Include="Common\DirectionHelper.cs" />
     <Compile Include="Common\InputHandler.cs" />
+    <Compile Include="Common\IRandomGenerator.cs" />
+    <Compile Include="Common\RandomGenerator.cs" />
     <Compile Include="Common\ResourceManagers\IFontManager.cs" />
     <Compile Include="Common\ResourceManagers\ITextureManager.cs" />
     <Compile Include="Common\LayerDepth.cs" />
@@ -71,6 +73,8 @@
     <Compile Include="GameLogic\GameField\Interfaces\IGameField.cs" />
     <Compile Include="GameLogic\GameField\Interfaces\IGameFieldComponent.cs" />
     <Compile Include="GameLogic\GameField\Interfaces\IGameFieldFactory.cs" />
+    <Compile Include="GameLogic\GamePoints.cs" />
+    <Compile Include="GameLogic\IGamePoints.cs" />
     <Compile Include="GameLogic\Snake\Interfaces\ISnake.cs" />
     <Compile Include="GameLogic\Snake\Interfaces\ISnakeGameComponent.cs" />
     <Compile Include="GameLogic\Snake\Interfaces\ISnakeMovementComponent.cs" />

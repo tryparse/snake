@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic.GameField.Cells;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.Settings;
@@ -13,13 +14,13 @@ namespace SnakeGame.Shared.GameLogic.GameField
     public class GameFieldFactory : IGameFieldFactory
     {
         private readonly IGameSettings _gameSettings;
-        private readonly Random _random;
+        private readonly IRandomGenerator _random;
 
-        public GameFieldFactory(IGameSettings gameSettings)
+        public GameFieldFactory(IGameSettings gameSettings, IRandomGenerator random)
         {
             _gameSettings = gameSettings;
 
-            _random = new Random();
+            _random = random;
         }
 
         public IGameField GetRandomField(int width, int height, double grassProbability)
@@ -43,7 +44,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
                 }
             }
 
-            var field = new GameField(cells, _gameSettings);
+            var field = new GameField(cells, _gameSettings, _random);
 
             return field;
         }

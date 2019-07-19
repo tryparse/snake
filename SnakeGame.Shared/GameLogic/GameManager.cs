@@ -22,6 +22,7 @@ namespace SnakeGame.Shared.GameLogic
         private readonly ISnakeGameComponent _snakeComponent;
         private readonly IGameField _gameField;
         private readonly IGameSettings _gameSettings;
+        private readonly IGamePoints _gamePoints;
 
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
@@ -30,13 +31,14 @@ namespace SnakeGame.Shared.GameLogic
 
         public int UpdateOrder { get; set; }
 
-        public GameManager(ILogger logger, IFoodManager foodManager, ISnakeGameComponent snake, IGameField gameField, IGameSettings gameSettings)
+        public GameManager(ILogger logger, IFoodManager foodManager, ISnakeGameComponent snake, IGameField gameField, IGameSettings gameSettings, IGamePoints gamePoints)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _foodManager = foodManager ?? throw new ArgumentNullException(nameof(foodManager));
             _snakeComponent = snake ?? throw new ArgumentNullException(nameof(snake));
             _gameField = gameField ?? throw new ArgumentNullException(nameof(gameField));
             _gameSettings = gameSettings;
+            _gamePoints = gamePoints;
 
             Initialize();
         }
@@ -49,6 +51,7 @@ namespace SnakeGame.Shared.GameLogic
         {
             _logger.Debug("GameManager.NewGame()");
             _snakeComponent.Reset();
+            _gamePoints.Reset();
         }
 
         public bool CheckSnakeCollision()
@@ -132,8 +135,6 @@ namespace SnakeGame.Shared.GameLogic
 
         public void Update(GameTime gameTime)
         {
-            _logger.Debug($"GameManager.Update({gameTime.TotalGameTime})");
-
             if (CheckSnakeCollision() || CheckWallsCollision())
             {
                 NewGame();
@@ -147,6 +148,7 @@ namespace SnakeGame.Shared.GameLogic
                 _foodManager.Add(_foodManager.GenerateRandomFood());
                 _snakeComponent.Snake.Grow();
                 IncreaseGameSpeed();
+                _gamePoints.IncrementPoints();
             }
         }
 

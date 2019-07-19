@@ -57,8 +57,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public void Update(GameTime gameTime)
         {
-            _logger.Debug($"SnakeGameComponent.Update({gameTime.TotalGameTime}");
-
             SnakeMovementComponent.Update(gameTime);
         }
 

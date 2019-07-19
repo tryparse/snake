@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended;
+using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic.Food.Interfaces;
 using SnakeGame.Shared.GameLogic.GameField;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.Graphics;
+using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.Settings;
 using System;
 using System.Collections.Generic;
@@ -17,16 +19,18 @@ namespace SnakeGame.Shared.GameLogic.Food
         private readonly IGameField _gameField;
         private readonly IGameSettings _gameSettings;
         private readonly IGraphicsSystem _graphicsSystem;
-        private readonly Random _random;
+        private readonly ILogger _logger;
+        private int _counter;
 
-        public FoodManager(Game game, IGameField field, IGameSettings gameSettings, IGraphicsSystem graphicsSystem)
+        public FoodManager(Game game, IGameField field, IGameSettings gameSettings, IGraphicsSystem graphicsSystem, ILogger logger)
         {
+            _game = game ?? throw new ArgumentNullException(nameof(game));
+            _gameField = field ?? throw new ArgumentNullException(nameof(field));
+            _gameSettings = gameSettings ?? throw new ArgumentNullException(nameof(gameSettings));
+            _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
             _foods = new List<IFoodGameComponent>();
-            _game = game;
-            _gameField = field;
-            _gameSettings = gameSettings;
-            _graphicsSystem = graphicsSystem;
-            _random = new Random();
         }
 
         public IEnumerable<IFoodGameComponent> FoodComponents => _foods;
@@ -45,7 +49,9 @@ namespace SnakeGame.Shared.GameLogic.Food
 
         public IFoodGameComponent GenerateRandomFood()
         {
-            var randomPosition = _gameField.Cells[_random.Next(0, _gameField.Columns), _random.Next(0, _gameField.Rows)].Bounds.Center.ToVector2();
+            var randomPosition = _gameField.GetRandomCell().Bounds.Center.ToVector2();
+
+            //_logger.Debug($"FoodManager.GenerateRandomFood() => {randomPosition.ToString()}");
 
             return GenerateFood(randomPosition);
         }
@@ -57,11 +63,13 @@ namespace SnakeGame.Shared.GameLogic.Food
             var food = new Food(position, size);
             var graphicsComponent = new FoodGraphicsComponent(food, _graphicsSystem);
 
-            var component = new FoodComponent(food, graphicsComponent)
+            var component = new FoodComponent(food, graphicsComponent, _counter.ToString())
             {
                 Enabled = true,
                 Visible = true
             };
+
+            _counter++;
 
             return component;
         }

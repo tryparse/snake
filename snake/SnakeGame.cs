@@ -24,6 +24,7 @@ using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using System;
 using MonoGame.Extended.Shapes;
+using snake.UIComponents;
 
 namespace snake
 {
@@ -38,7 +39,7 @@ namespace snake
         private SpriteFont _debugSpriteFont;
         private TextureAtlas _textureRegions;
 
-        private IGraphicsSystem _renderingSystem;
+        private IGraphicsSystem _graphicsSystem;
 
         private InputHandler _inputHandler;
 
@@ -52,7 +53,7 @@ namespace snake
         private IFoodManager _foodManager;
 
         private IGameSettings _gameSettings;
-        private IGraphicsSettings _renderSettings;
+        private IGraphicsSettings _graphicsSettings;
         private ITextureManager _textureManager;
         private readonly ILogger _logger;
 
@@ -86,7 +87,7 @@ namespace snake
         {
             _logger.Debug("Game.Initialize()");
 
-            _renderSettings = new GraphicsSettings
+            _graphicsSettings = new GraphicsSettings
             {
                 IsDebugRenderingEnabled = _gameSettings.IsDebugRenderingEnabled,
                 IsRenderingEnabled = _gameSettings.IsRenderingEnabled
@@ -149,23 +150,23 @@ namespace snake
             _textureRegions.CreateRegion("BottomRight", n * 3, n * 1, n, n);
             _textureRegions.CreateRegion("Tree", n * 4, n * 1, n, n);
 
-            var fps = new FpsCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), _spriteBatch, _spriteFont, Color.Black);
-
-            Components.Add(fps);
-
             _textureManager = new TextureManager(_textureRegions);
-            _renderingSystem = new GraphicsSystem(_renderSettings, _spriteBatch, _spriteFont, _debugSpriteFont, _textureManager);
+            _graphicsSystem = new GraphicsSystem(_graphicsSettings, _spriteBatch, _spriteFont, _debugSpriteFont, _textureManager);
 
             CreateGameEntities();
         }
 
         private void CreateGameEntities()
         {
+            var random = new RandomGenerator();
+
+            var gamePoints = new GamePoints();
+
             #region Field
 
-            IGameFieldFactory gameFieldFactory = new GameFieldFactory(_gameSettings);
+            IGameFieldFactory gameFieldFactory = new GameFieldFactory(_gameSettings, random);
             IGameField gameField = gameFieldFactory.GetRandomField(_gameSettings.MapWidth, _gameSettings.MapHeight, .8d);
-            IGraphics2DComponent graphicsComponent = new GameFieldGraphicsComponent(gameField, _renderSettings, _renderingSystem, _gameSettings);
+            IGraphics2DComponent graphicsComponent = new GameFieldGraphicsComponent(gameField, _graphicsSettings, _graphicsSystem, _gameSettings);
 
             _gameFieldComponent = new GameFieldComponent(gameField, graphicsComponent)
             {
@@ -178,9 +179,9 @@ namespace snake
 
             #region Food
 
-            _foodManager = new FoodManager(this, gameField, _gameSettings, _renderingSystem);
+            _foodManager = new FoodManager(this, gameField, _gameSettings, _graphicsSystem, _logger);
 
-            var food = _foodManager.GenerateFood(gameField.GetRandomCell().Bounds.Center.ToVector2());
+            var food = _foodManager.GenerateRandomFood();
             _foodManager.Add(food);
 
             #endregion Food
@@ -197,7 +198,7 @@ namespace snake
                 Enabled = true
             };
 
-            var snakeGraphicsComponent = new SnakeGraphicsComponent(snake, _renderingSystem, movement);
+            var snakeGraphicsComponent = new SnakeGraphicsComponent(snake, _graphicsSystem, movement);
             _snakeGameComponent = new SnakeGameComponent(snake, snakeGraphicsComponent, movement, _logger)
             {
                 Enabled = true,
@@ -208,12 +209,23 @@ namespace snake
 
             #endregion Snake
 
-            _gameManager = new GameManager(_logger, _foodManager, _snakeGameComponent, gameField, _gameSettings)
+            _gameManager = new GameManager(_logger, _foodManager, _snakeGameComponent, gameField, _gameSettings, gamePoints)
             {
                 Enabled = true
             };
 
             Components.Add(_gameManager);
+
+            #region UI components
+
+            var fps = new FpsCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), _spriteBatch, _spriteFont, Color.Black);
+            Components.Add(fps);
+
+            var pointsCounterPosition = Vector2.Add(new Vector2(gameField.Bounds.Right, gameField.Bounds.Top), new Vector2(10, 0));
+            var pointsCounter = new PointsCounterComponent(this, pointsCounterPosition, _graphicsSystem, gamePoints);
+            Components.Add(pointsCounter);
+
+            #endregion UI components
         }
 
         /// <summary>
@@ -251,12 +263,12 @@ namespace snake
 
             if (InputHandler.IsKeyPressed(_gameKeys.SwitchDebugRendering))
             {
-                _renderSettings.IsDebugRenderingEnabled = !_renderSettings.IsDebugRenderingEnabled;
+                _graphicsSettings.IsDebugRenderingEnabled = !_graphicsSettings.IsDebugRenderingEnabled;
             }
 
             if (InputHandler.IsKeyPressed(_gameKeys.SwitchRendering))
             {
-                _renderSettings.IsRenderingEnabled = !_renderSettings.IsRenderingEnabled;
+                _graphicsSettings.IsRenderingEnabled = !_graphicsSettings.IsRenderingEnabled;
             }
         }
 

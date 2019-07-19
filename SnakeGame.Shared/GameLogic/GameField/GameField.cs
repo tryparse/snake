@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic.GameField.Cells.Interfaces;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.Settings;
@@ -12,11 +13,11 @@ namespace SnakeGame.Shared.GameLogic.GameField
 {
     public class GameField : IGameField
     {
-        private readonly Random _random;
+        private readonly IRandomGenerator _random;
         private readonly IGameSettings _gameSettings;
         private readonly Vector2 _unitVector;
 
-        public GameField(ICell[,] cells, IGameSettings gameSettings)
+        public GameField(ICell[,] cells, IGameSettings gameSettings, IRandomGenerator random)
         {
             Cells = cells;
             _gameSettings = gameSettings;
@@ -25,7 +26,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
             Bounds = new Rectangle(0, 0, Columns * _gameSettings.TileSize, Rows * _gameSettings.TileSize);
 
-            _random = new Random();
+            _random = random;
         }
 
         public Rectangle Bounds { get; }
