@@ -31,6 +31,8 @@ namespace SnakeGame.Shared.Settings
 
         public int CurrentMoveIntervalTime { get; set; }
 
+        public int LimitMoveIntervalTime { get; set; }
+
         public void ReadFromApplicationSettings(NameValueCollection appSettings)
         {
             bool.TryParse(appSettings["IsLoggingEnabled"], out var isLoggingEnabled);
@@ -73,6 +75,10 @@ namespace SnakeGame.Shared.Settings
 
             DefaultMoveIntervalTime = defaultMoveIntervalTime;
             CurrentMoveIntervalTime = defaultMoveIntervalTime;
+
+            int.TryParse(appSettings["LimitMoveIntervalTime"], out var limitMoveIntervalTime);
+
+            LimitMoveIntervalTime = limitMoveIntervalTime;
         }
 
         public void ResetMoveIntervalTime()

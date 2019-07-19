@@ -152,7 +152,10 @@ namespace SnakeGame.Shared.GameLogic
 
         public void IncreaseGameSpeed()
         {
-            _gameSettings.CurrentMoveIntervalTime = (int)Math.Truncate((double)_gameSettings.CurrentMoveIntervalTime * .9d);
+            if (_gameSettings.CurrentMoveIntervalTime > _gameSettings.LimitMoveIntervalTime)
+            {
+                _gameSettings.CurrentMoveIntervalTime = Math.Max(_gameSettings.LimitMoveIntervalTime, (int)Math.Truncate((double)_gameSettings.CurrentMoveIntervalTime * .9d));
+            }
         }
     }
 }

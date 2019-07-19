@@ -52,8 +52,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         public void Update(GameTime gameTime)
         {
             UpdateNextDirection();
-
-            _movingInterval = TimeSpan.FromMilliseconds(_gameSettings.CurrentMoveIntervalTime);
+            UpdateMoveIntervalTime();
 
             switch (_snake.State)
             {
@@ -109,6 +108,11 @@ namespace SnakeGame.Shared.GameLogic.Snake
                         break;
                     }
             }
+        }
+
+        private void UpdateMoveIntervalTime()
+        {
+            _movingInterval = TimeSpan.FromMilliseconds(_gameSettings.CurrentMoveIntervalTime);
         }
 
         /// <summary>

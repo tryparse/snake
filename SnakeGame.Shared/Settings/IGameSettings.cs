@@ -29,9 +29,20 @@ namespace SnakeGame.Shared.Settings
 
         void ReadFromApplicationSettings(NameValueCollection appSettings);
 
+        /// <summary>
+        /// Default move interval time (in milliseconds)
+        /// </summary>
         int DefaultMoveIntervalTime { get; set; }
 
+        /// <summary>
+        /// Current move interval time (in milliseconds)
+        /// </summary>
         int CurrentMoveIntervalTime { get; set; }
+
+        /// <summary>
+        /// Minimal move interval time (in milliseconds)
+        /// </summary>
+        int LimitMoveIntervalTime { get; set; }
 
         void ResetMoveIntervalTime();
     }
