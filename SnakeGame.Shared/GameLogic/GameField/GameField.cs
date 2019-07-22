@@ -4,27 +4,21 @@ using SnakeGame.Shared.GameLogic.GameField.Cells.Interfaces;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.Settings;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SnakeGame.Shared.GameLogic.GameField
 {
     public class GameField : IGameField
     {
         private readonly IRandomGenerator _random;
-        private readonly IGameSettings _gameSettings;
         private readonly Vector2 _unitVector;
 
         public GameField(ICell[,] cells, IGameSettings gameSettings, IRandomGenerator random)
         {
             Cells = cells;
-            _gameSettings = gameSettings;
 
-            _unitVector = new Vector2(_gameSettings.TileSize, 0);
+            _unitVector = new Vector2(gameSettings.TileSize, 0);
 
-            Bounds = new Rectangle(0, 0, Columns * _gameSettings.TileSize, Rows * _gameSettings.TileSize);
+            Bounds = new Rectangle(0, 0, Columns * gameSettings.TileSize, Rows * gameSettings.TileSize);
 
             _random = random;
         }

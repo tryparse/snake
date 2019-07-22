@@ -6,31 +6,26 @@ namespace SnakeGame.Shared.GameLogic.Food
 {
     public class Food : IFood
     {
-        private Vector2 _position;
-        private Size2 _size;
-        private float _rotation;
-        private Rectangle _bounds;
-
         public Food(Vector2 position, Size2 size, float rotation = 0f)
         {
-            _position = position;
-            _size = size;
-            _rotation = rotation;
+            Position = position;
+            Size = size;
+            Rotation = rotation;
 
             RecalcBoundsRectangle();
         }
 
-        public Vector2 Position => _position;
+        public Vector2 Position { get; }
 
-        public Size2 Size => _size;
+        public Size2 Size { get; }
 
-        public Rectangle Bounds => _bounds;
+        public Rectangle Bounds { get; private set; }
 
-        public float Rotation => _rotation;
+        public float Rotation { get; }
 
         private void RecalcBoundsRectangle()
         {
-            _bounds = new Rectangle(
+            Bounds = new Rectangle(
                 (int)(Position.X - Size.Width / 2),
                 (int)(Position.Y - Size.Height / 2),
                 (int)Size.Width,

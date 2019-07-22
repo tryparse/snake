@@ -12,31 +12,26 @@ namespace SnakeGame.Shared.GameLogic.Snake
 {
     class SnakeSegment : ISnakeSegment
     {
-        private Vector2 _position;
-        private Size2 _size;
-        private Direction _direction;
-        private Rectangle _bounds;
-
         public SnakeSegment(Vector2 position, Size2 size, Direction direction)
         {
-            _position = position;
-            _size = size;
-            _direction = direction;
+            Position = position;
+            Size = size;
+            Direction = direction;
 
             RecalculateBounds();
         }
 
-        public Vector2 Position => _position;
+        public Vector2 Position { get; private set; }
 
-        public Size2 Size => _size;
+        public Size2 Size { get; }
 
-        public Direction Direction => _direction;
+        public Direction Direction { get; private set; }
 
-        public Rectangle Bounds => _bounds;
+        public Rectangle Bounds { get; private set; }
 
         private void RecalculateBounds()
         {
-            _bounds = new Rectangle(
+            Bounds = new Rectangle(
                     (int)(Position.X - Size.Width / 2),
                     (int)(Position.Y - Size.Height / 2),
                     (int)Size.Width,
@@ -46,14 +41,14 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public void MoveTo(Vector2 position)
         {
-            _position = position;
+            Position = position;
 
             RecalculateBounds();
         }
 
         public void SetDirection(Direction direction)
         {
-            _direction = direction;
+            Direction = direction;
         }
     }
 }

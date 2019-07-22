@@ -1,17 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
-using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using SnakeGame.Shared.Graphics;
 using SnakeGame.Shared.Logging;
-using SnakeGame.Shared.Settings;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SnakeGame.Shared.GameLogic.GameField.Interfaces;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {

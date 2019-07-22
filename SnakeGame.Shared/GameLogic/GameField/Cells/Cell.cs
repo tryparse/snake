@@ -5,8 +5,6 @@ namespace SnakeGame.Shared.GameLogic.GameField.Cells
 {
     public class Cell : ICell
     {
-        private Rectangle _bounds;
-
         public Cell(Vector2 position, int column, int row, int width, int height, CellType cellType)
         {
             Position = position;
@@ -30,11 +28,11 @@ namespace SnakeGame.Shared.GameLogic.GameField.Cells
 
         public int Row { get; }
 
-        public Rectangle Bounds => _bounds;
+        public Rectangle Bounds { get; private set; }
 
         private void RecalculateBounds()
         {
-            _bounds = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+            Bounds = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
         }
     }
 }

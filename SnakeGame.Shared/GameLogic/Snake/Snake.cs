@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using SnakeGame.Shared.Common;
-using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
+using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.Settings;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
@@ -19,7 +17,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly IGameField _gameField;
         private readonly IGameSettings _gameSettings;
 
-        private ISnakeSegment _head;
         private List<ISnakeSegment> _tail;
 
         private readonly Random _random;
@@ -37,7 +34,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _random = new Random();
         }
 
-        public ISnakeSegment Head => _head;
+        public ISnakeSegment Head { get; private set; }
+
         public IList<ISnakeSegment> Tail => _tail;
 
         public Direction Direction => Head.Direction;
@@ -45,7 +43,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public void Initialize()
         {
-            _head = GenerateRandomSegment();
+            Head = GenerateRandomSegment();
             _tail = new List<ISnakeSegment>();
 
             _unitVector = new Vector2(_gameSettings.TileSize, 0);
@@ -53,7 +51,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public void Reset()
         {
-            _head = GenerateRandomSegment();
+            Head = GenerateRandomSegment();
             _tail.Clear();
             Grow();
         }
@@ -62,9 +60,9 @@ namespace SnakeGame.Shared.GameLogic.Snake
         {
             _logger.Debug($"Snake.Grow()");
 
-            if (_head == null)
+            if (Head == null)
             {
-                _head = GenerateRandomSegment();
+                Head = GenerateRandomSegment();
             }
             else
             {
@@ -89,10 +87,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public void SetDirection(Direction direction)
         {
-            if (_head != null)
-            {
-                _head.SetDirection(direction);
-            }
+            Head?.SetDirection(direction);
         }
 
         public void SetState(SnakeState state)

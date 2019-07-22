@@ -11,36 +11,36 @@ namespace snake.GameComponents
 {
     class FpsCounter : DrawableGameComponent
     {
-        private readonly Vector2 position;
-        private readonly Color color;
-        private readonly SpriteBatch spriteBatch;
-        private readonly SpriteFont font;
-        private readonly FramesPerSecondCounter fps;
+        private readonly Vector2 _position;
+        private readonly Color _color;
+        private readonly SpriteBatch _spriteBatch;
+        private readonly SpriteFont _font;
+        private readonly FramesPerSecondCounter _fps;
 
         public FpsCounter(Game game, Vector2 position, SpriteBatch spriteBatch, SpriteFont font, Color color) : base(game)
         {
-            this.position = position;
-            this.color = color;
-            this.spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
-            this.font = font;
+            this._position = position;
+            this._color = color;
+            this._spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
+            this._font = font;
 
-            this.fps = new FramesPerSecondCounter();
+            this._fps = new FramesPerSecondCounter();
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            fps.Update(gameTime);
+            _fps.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
 
-            fps.Draw(gameTime);
+            _fps.Draw(gameTime);
 
-            spriteBatch.DrawString(font, fps.FramesPerSecond.ToString(), position, color);
+            _spriteBatch.DrawString(_font, _fps.FramesPerSecond.ToString(), _position, _color);
         }
     }
 }

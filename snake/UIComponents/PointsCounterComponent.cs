@@ -12,19 +12,19 @@ namespace snake.UIComponents
     public class PointsCounterComponent : DrawableGameComponent
     {
         private readonly IGraphicsSystem _graphicsSystem;
-        private readonly IGamePoints gamePoints;
+        private readonly IGamePoints _gamePoints;
         private readonly Vector2 _position;
 
         public PointsCounterComponent(Game game, Vector2 position, IGraphicsSystem graphicsSystem, IGamePoints gamePoints) : base(game)
         {
             _position = position;
             _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));
-            this.gamePoints = gamePoints;
+            this._gamePoints = gamePoints;
         }
 
         public override void Draw(GameTime gameTime)
         {
-            _graphicsSystem.SpriteBatch.DrawString(_graphicsSystem.SpriteFont, $"Points: {gamePoints.Points}", _position, Color.Green);
+            _graphicsSystem.SpriteBatch.DrawString(_graphicsSystem.SpriteFont, $"Points: {_gamePoints.Points}", _position, Color.Green);
         }
     }
 }

@@ -3,11 +3,6 @@ using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic.GameField.Cells;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.Settings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SnakeGame.Shared.GameLogic.GameField
 {
@@ -27,9 +22,9 @@ namespace SnakeGame.Shared.GameLogic.GameField
         {
             var cells = new Cell[width, height];
 
-            for (int x = 0; x < width; x++)
+            for (var x = 0; x < width; x++)
             {
-                for (int y = 0; y < height; y++)
+                for (var y = 0; y < height; y++)
                 {
                     var fieldTypeDice = _random.NextDouble();
                     var cellType = fieldTypeDice <= grassProbability ? CellType.Grass : CellType.Tree;

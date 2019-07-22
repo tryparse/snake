@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SnakeGame.Shared.GameLogic
+﻿namespace SnakeGame.Shared.GameLogic
 {
     public class GamePoints : IGamePoints
     {
-        int _points;
-
-        public int Points => _points;
+        public int Points { get; private set; }
 
         public void IncrementPoints()
         {
-            _points++;
+            Points++;
         }
 
         public void Reset()
         {
-            _points = 0;
+            Points = 0;
         }
     }
 }

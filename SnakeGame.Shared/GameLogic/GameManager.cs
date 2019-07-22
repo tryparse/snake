@@ -1,17 +1,11 @@
-﻿using SnakeGame.Shared.GameLogic.Food;
+﻿using Microsoft.Xna.Framework;
 using SnakeGame.Shared.GameLogic.Food.Interfaces;
-using SnakeGame.Shared.GameLogic.Snake;
-using SnakeGame.Shared.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SnakeGame.Shared.GameLogic.Snake.Interfaces;
-using Microsoft.Xna.Framework;
-using MonoGame.Extended;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
+using SnakeGame.Shared.GameLogic.Snake;
+using SnakeGame.Shared.GameLogic.Snake.Interfaces;
+using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.Settings;
+using System;
 
 namespace SnakeGame.Shared.GameLogic
 {
@@ -156,7 +150,7 @@ namespace SnakeGame.Shared.GameLogic
         {
             if (_gameSettings.CurrentMoveIntervalTime > _gameSettings.LimitMoveIntervalTime)
             {
-                _gameSettings.CurrentMoveIntervalTime = Math.Max(_gameSettings.LimitMoveIntervalTime, (int)Math.Truncate((double)_gameSettings.CurrentMoveIntervalTime * .9d));
+                _gameSettings.CurrentMoveIntervalTime = Math.Max(_gameSettings.LimitMoveIntervalTime, (int)Math.Truncate(_gameSettings.CurrentMoveIntervalTime * .9d));
             }
         }
     }

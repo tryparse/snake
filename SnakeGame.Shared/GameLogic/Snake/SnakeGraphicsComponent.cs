@@ -6,10 +6,7 @@ using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using SnakeGame.Shared.Graphics;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {

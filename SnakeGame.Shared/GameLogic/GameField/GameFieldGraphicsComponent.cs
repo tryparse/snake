@@ -2,16 +2,11 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using SnakeGame.Shared.Common;
-using SnakeGame.Shared.Common.ResourceManagers;
 using SnakeGame.Shared.GameLogic.GameField.Cells.Interfaces;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.Graphics;
 using SnakeGame.Shared.Settings;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SnakeGame.Shared.GameLogic.GameField
 {
@@ -51,22 +46,31 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
         private void Rendering()
         {
-            int fieldWidth = _gameField.Columns;
-            int fieldHeight = _gameField.Rows;
+            var fieldWidth = _gameField.Columns;
+            var fieldHeight = _gameField.Rows;
 
-            for (int x = 0; x < fieldWidth; x++)
+            for (var x = 0; x < fieldWidth; x++)
             {
-                for (int y = 0; y < fieldHeight; y++)
+                for (var y = 0; y < fieldHeight; y++)
                 {
                     var cell = _gameField.Cells[x, y];
 
-                    if (cell.CellType == CellType.Tree)
+                    switch (cell.CellType)
                     {
-                        DrawGrassWithTree(cell);
-                    }
-                    else if (cell.CellType == CellType.Grass)
-                    {
-                        DrawGrass(cell);
+                        case CellType.Tree:
+                        {
+                            DrawGrassWithTree(cell);
+                            break;
+                        }
+                        case CellType.Grass:
+                        {
+                            DrawGrass(cell);
+                            break;
+                        }
+                        default:
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -74,12 +78,12 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
         private void RenderTileBorders()
         {
-            for (int x = 0; x <= _gameField.Bounds.Width; x += _gameSettings.TileSize)
+            for (var x = 0; x <= _gameField.Bounds.Width; x += _gameSettings.TileSize)
             {
                 _graphicsSystem.SpriteBatch.DrawLine(new Vector2(x, 0), new Vector2(x, _gameField.Bounds.Height), Color.Black);
             }
 
-            for (int y = 0; y <= _gameField.Bounds.Height; y += _gameSettings.TileSize)
+            for (var y = 0; y <= _gameField.Bounds.Height; y += _gameSettings.TileSize)
             {
                 _graphicsSystem.SpriteBatch.DrawLine(new Vector2(0, y), new Vector2(_gameField.Bounds.Width, y), Color.Black);
             }
@@ -87,12 +91,12 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
         private void RenderCellIndices()
         {
-            int fieldWidth = _gameField.Cells.GetLength(0);
-            int fieldHeight = _gameField.Cells.GetLength(1);
+            var fieldWidth = _gameField.Cells.GetLength(0);
+            var fieldHeight = _gameField.Cells.GetLength(1);
 
-            for (int x = 0; x < fieldWidth; x++)
+            for (var x = 0; x < fieldWidth; x++)
             {
-                for (int y = 0; y < fieldHeight; y++)
+                for (var y = 0; y < fieldHeight; y++)
                 {
                     var cell = _gameField.Cells[x, y];
 

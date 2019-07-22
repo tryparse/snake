@@ -2,9 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using SnakeGame.Shared.Common;
-using SnakeGame.Shared.Common.ResourceManagers;
 using SnakeGame.Shared.GameLogic.Food.Interfaces;
-using SnakeGame.Shared.Graphics;
 using SnakeGame.Shared.Graphics;
 using System;
 

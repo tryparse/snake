@@ -4,11 +4,6 @@ using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using SnakeGame.Shared.Settings;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
@@ -66,10 +61,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
                             {
                                 var head = _snake.Head;
 
-                                if (head != null)
-                                {
-                                    head.SetDirection(_nextDirection.Value);
-                                }
+                                head?.SetDirection(_nextDirection.Value);
                             }
 
                             _snake.SetState(SnakeState.Moving);
@@ -81,7 +73,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
                     }
                 case SnakeState.Moving:
                     {
-                        for (int i = _snake.Tail.Count - 1; i >= 0; i--)
+                        for (var i = _snake.Tail.Count - 1; i >= 0; i--)
                         {
                             Vector2 position;
                             Direction direction;
