@@ -4,27 +4,21 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
 using snake.GameComponents;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using snake.GameEntities;
-using System.Configuration;
 using snake.Logging;
-using SnakeGame.Shared.Settings;
-using SnakeGame.Shared.Logging;
-using SnakeGame.Shared.GameLogic.GameField;
-using SnakeGame.Shared.Graphics;
-using SnakeGame.Shared.GameLogic.Snake;
+using snake.UIComponents;
 using SnakeGame.Shared.Common;
-using SnakeGame.Shared.GameLogic;
 using SnakeGame.Shared.Common.ResourceManagers;
+using SnakeGame.Shared.GameLogic;
 using SnakeGame.Shared.GameLogic.Food;
 using SnakeGame.Shared.GameLogic.Food.Interfaces;
+using SnakeGame.Shared.GameLogic.GameField;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
-using SnakeGame.Shared.GameLogic.Snake.Interfaces;
-using System;
-using MonoGame.Extended.Shapes;
-using snake.UIComponents;
+using SnakeGame.Shared.GameLogic.Snake;
+using SnakeGame.Shared.Graphics;
+using SnakeGame.Shared.Logging;
+using SnakeGame.Shared.Settings;
+using System.Configuration;
 
 namespace snake
 {
@@ -64,10 +58,10 @@ namespace snake
             ReadSettings();
 
             _logger = new NLogFileLogger(_gameSettings);
-;
+
             _graphics = new GraphicsDeviceManager(this)
             {
-                //GraphicsProfile = GraphicsProfile.HiDef
+                GraphicsProfile = GraphicsProfile.HiDef
             };
 
             ApplyScreenChanges();
@@ -137,18 +131,18 @@ namespace snake
 
             _textureRegions = new TextureAtlas("Textures", texture);
 
-            var n = 384;
+            const int TEXTURE_ATLAS_CONSTANT = 384;
 
-            _textureRegions.CreateRegion("Tail", 0, 0, n, n);
-            _textureRegions.CreateRegion("Part", n, 0, n, n);
-            _textureRegions.CreateRegion("Head", n * 2, 0, n, n);
-            _textureRegions.CreateRegion("Fruit", n * 3, 0, n, n);
-            _textureRegions.CreateRegion("Grass", n * 4, 0, n, n);
-            _textureRegions.CreateRegion("TopLeft", 0, n * 1, n, n);
-            _textureRegions.CreateRegion("TopRight", n * 1, n * 1, n, n);
-            _textureRegions.CreateRegion("BottomLeft", n * 2, n * 1, n, n);
-            _textureRegions.CreateRegion("BottomRight", n * 3, n * 1, n, n);
-            _textureRegions.CreateRegion("Tree", n * 4, n * 1, n, n);
+            _textureRegions.CreateRegion("Tail", 0, 0, TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
+            _textureRegions.CreateRegion("Part", TEXTURE_ATLAS_CONSTANT, 0, TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
+            _textureRegions.CreateRegion("Head", TEXTURE_ATLAS_CONSTANT * 2, 0, TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
+            _textureRegions.CreateRegion("Fruit", TEXTURE_ATLAS_CONSTANT * 3, 0, TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
+            _textureRegions.CreateRegion("Grass", TEXTURE_ATLAS_CONSTANT * 4, 0, TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
+            _textureRegions.CreateRegion("TopLeft", 0, TEXTURE_ATLAS_CONSTANT * 1, TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
+            _textureRegions.CreateRegion("TopRight", TEXTURE_ATLAS_CONSTANT * 1, TEXTURE_ATLAS_CONSTANT * 1, TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
+            _textureRegions.CreateRegion("BottomLeft", TEXTURE_ATLAS_CONSTANT * 2, TEXTURE_ATLAS_CONSTANT * 1, TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
+            _textureRegions.CreateRegion("BottomRight", TEXTURE_ATLAS_CONSTANT * 3, TEXTURE_ATLAS_CONSTANT * 1, TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
+            _textureRegions.CreateRegion("Tree", TEXTURE_ATLAS_CONSTANT * 4, TEXTURE_ATLAS_CONSTANT * 1, TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
 
             _textureManager = new TextureManager(_textureRegions);
             _graphicsSystem = new GraphicsSystem(_graphicsSettings, _spriteBatch, _spriteFont, _debugSpriteFont, _textureManager);

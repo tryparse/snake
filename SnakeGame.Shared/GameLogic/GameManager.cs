@@ -75,21 +75,27 @@ namespace SnakeGame.Shared.GameLogic
 
         public IFoodGameComponent CheckFoodCollision()
         {
-            if (_snakeComponent.Snake.State == SnakeState.None)
+            if (_snakeComponent.Snake.State != SnakeState.None)
             {
-                var head = _snakeComponent.Snake.Head;
+                return null;
+            }
 
-                if (head != null)
+            var head = _snakeComponent.Snake.Head;
+
+            if (head == null)
+            {
+                return null;
+            }
+
+            foreach (var foodComponent in _foodManager.FoodComponents)
+            {
+                if (!head.Bounds.Intersects(foodComponent.Food.Bounds))
                 {
-                    foreach (var foodComponent in _foodManager.FoodComponents)
-                    {
-                        if (head.Bounds.Intersects(foodComponent.Food.Bounds))
-                        {
-                            _logger.Debug("GameManager: Detected food collision");
-                            return foodComponent;
-                        }
-                    }
+                    continue;
                 }
+
+                _logger.Debug("GameManager: Detected food collision");
+                return foodComponent;
             }
 
             return null;
