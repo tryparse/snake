@@ -5,6 +5,7 @@ using SnakeGame.Shared.GameLogic.Snake;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.Settings;
+using SnakeGame.Shared.Settings.Interfaces;
 using System;
 
 namespace SnakeGame.Shared.GameLogic

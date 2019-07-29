@@ -18,6 +18,8 @@ using SnakeGame.Shared.GameLogic.Snake;
 using SnakeGame.Shared.Graphics;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.Settings;
+using SnakeGame.Shared.Settings.Implementation;
+using SnakeGame.Shared.Settings.Interfaces;
 using System.Configuration;
 
 namespace snake

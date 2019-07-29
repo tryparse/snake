@@ -3,6 +3,7 @@ using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using SnakeGame.Shared.Settings;
+using SnakeGame.Shared.Settings.Interfaces;
 using System;
 
 namespace SnakeGame.Shared.GameLogic.Snake

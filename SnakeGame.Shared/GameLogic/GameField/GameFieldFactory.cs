@@ -2,7 +2,7 @@
 using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic.GameField.Cells;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
-using SnakeGame.Shared.Settings;
+using SnakeGame.Shared.Settings.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic.GameField
 {

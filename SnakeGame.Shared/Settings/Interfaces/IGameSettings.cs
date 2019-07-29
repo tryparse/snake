@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Specialized;
 
-namespace SnakeGame.Shared.Settings
+namespace SnakeGame.Shared.Settings.Interfaces
 {
     public interface IGameSettings
     {

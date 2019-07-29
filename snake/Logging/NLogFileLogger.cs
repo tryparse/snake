@@ -1,10 +1,5 @@
-﻿using SnakeGame.Shared.Settings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SnakeGame.Shared.Logging;
+﻿using SnakeGame.Shared.Logging;
+using SnakeGame.Shared.Settings.Interfaces;
 
 namespace snake.Logging
 {

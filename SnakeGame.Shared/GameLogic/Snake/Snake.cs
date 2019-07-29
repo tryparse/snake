@@ -4,7 +4,7 @@ using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using SnakeGame.Shared.Logging;
-using SnakeGame.Shared.Settings;
+using SnakeGame.Shared.Settings.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,8 +19,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private List<ISnakeSegment> _tail;
 
-        private readonly Random _random;
-
         private Vector2 _unitVector;
 
         public Snake(ILogger logger, IGameField gameField, IMovingCalculator movingCalculator, IGameSettings gameSettings)
@@ -30,8 +28,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _gameSettings = gameSettings;
 
             Initialize();
-
-            _random = new Random();
         }
 
         public ISnakeSegment Head { get; private set; }
