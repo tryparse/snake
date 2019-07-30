@@ -20,6 +20,7 @@ using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.Settings.Implementation;
 using SnakeGame.Shared.Settings.Interfaces;
 using System.Configuration;
+using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 
 namespace snake
 {
@@ -38,14 +39,10 @@ namespace snake
 
         private InputHandler _inputHandler;
 
-        private IGameFieldComponent _gameFieldComponent;
-        private SnakeGameComponent _snakeGameComponent;
+        private ISnakeGameComponent _snakeGameComponent;
 
         private GameKeys _gameKeys;
         private SnakeControls _snakeKeys;
-
-        private IGameManager _gameManager;
-        private IFoodManager _foodManager;
 
         private IGameSettings _gameSettings;
         private IGraphicsSettings _graphicsSettings;
@@ -153,9 +150,9 @@ namespace snake
 
         private void CreateGameEntities()
         {
-            var random = new RandomGenerator();
+            IRandomGenerator random = new RandomGenerator();
 
-            var gamePoints = new GamePoints(_gameSettings.RemainingLives);
+            IGamePoints gamePoints = new GamePoints(_gameSettings.RemainingLives);
 
             #region Field
 
@@ -163,21 +160,21 @@ namespace snake
             IGameField gameField = gameFieldFactory.GetRandomField(_gameSettings.MapWidth, _gameSettings.MapHeight, .8d);
             IGraphics2DComponent graphicsComponent = new GameFieldGraphicsComponent(gameField, _graphicsSettings, _graphicsSystem, _gameSettings);
 
-            _gameFieldComponent = new GameFieldComponent(gameField, graphicsComponent)
+            IGameFieldComponent gameFieldComponent = new GameFieldComponent(gameField, graphicsComponent)
             {
                 Visible = true,
                 Enabled = true
             };
-            Components.Add(_gameFieldComponent);
+            Components.Add(gameFieldComponent);
 
             #endregion Field
 
             #region Food
 
-            _foodManager = new FoodManager(this, gameField, _gameSettings, _graphicsSystem, _logger);
+            IFoodManager foodManager = new FoodManager(this, gameField, _gameSettings, _graphicsSystem, _logger);
 
-            var food = _foodManager.GenerateRandomFood();
-            _foodManager.Add(food);
+            IFoodGameComponent foodGameComponent = foodManager.GenerateRandomFood();
+            foodManager.Add(foodGameComponent);
 
             #endregion Food
 
@@ -185,16 +182,16 @@ namespace snake
 
             var movingCalculator = new MovingCalculator(_logger, gameField);
 
-            var snake = new Snake(_logger, gameField, movingCalculator, _gameSettings);
+            ISnake snake = new Snake(_logger, gameField, movingCalculator, _gameSettings);
             snake.Grow();
 
-            var movement = new SnakeMovementTurnBased(snake, gameField, _gameSettings, _snakeKeys)
+            ISnakeMovementComponent movementComponent = new SnakeMovementTurnBased(snake, gameField, _gameSettings, _snakeKeys)
             {
                 Enabled = true
             };
 
-            var snakeGraphicsComponent = new SnakeGraphicsComponent(snake, _graphicsSystem, movement);
-            _snakeGameComponent = new SnakeGameComponent(snake, snakeGraphicsComponent, movement, _logger)
+            IGraphics2DComponent snakeGraphicsComponent = new SnakeGraphicsComponent(snake, _graphicsSystem, movementComponent);
+            _snakeGameComponent = new SnakeGameComponent(snake, snakeGraphicsComponent, movementComponent, _logger)
             {
                 Enabled = true,
                 Visible = true
@@ -204,12 +201,12 @@ namespace snake
 
             #endregion Snake
 
-            _gameManager = new GameManager(_logger, _foodManager, _snakeGameComponent, gameField, _gameSettings, gamePoints)
+            IGameManager gameManager = new GameManager(_logger, foodManager, _snakeGameComponent, gameField, _gameSettings, gamePoints)
             {
                 Enabled = true
             };
 
-            Components.Add(_gameManager);
+            Components.Add(gameManager);
 
             #region UI components
 
