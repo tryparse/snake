@@ -35,27 +35,41 @@ namespace SnakeGame.Shared.GameLogic.Food
 
         public void Add(IFoodGameComponent food)
         {
+            _logger.Debug($"FoodManager.Add(): BEGIN");
+
             _foods.Add(food);
             _game.Components.Add(food);
+
+            _logger.Debug($"FoodManager.Add(): COMPLETE");
         }
 
         public void Remove(IFoodGameComponent food)
         {
+            _logger.Debug($"FoodManager.Remove(): BEGIN");
+
             _foods.Remove(food);
             _game.Components.Remove(food);
+
+            _logger.Debug($"FoodManager.Remove(): COMPLETE");
         }
 
         public IFoodGameComponent GenerateRandomFood()
         {
+            _logger.Debug($"FoodManager.GenerateRandomFood(): BEGIN");
+
             var randomPosition = _gameField.GetRandomCell().Bounds.Center.ToVector2();
 
-            //_logger.Debug($"FoodManager.GenerateRandomFood() => {randomPosition.ToString()}");
+            var food = GenerateFood(randomPosition);
 
-            return GenerateFood(randomPosition);
+            _logger.Debug($"FoodManager.GenerateRandomFood(): COMPLETE");
+
+            return food;
         }
 
         public IFoodGameComponent GenerateFood(Vector2 position)
         {
+            _logger.Debug($"FoodManager.GenerateFood(): BEGIN");
+
             var size = new Size2(_gameSettings.TileSize, _gameSettings.TileSize);
 
             var food = new Food(position, size);
@@ -68,6 +82,8 @@ namespace SnakeGame.Shared.GameLogic.Food
             };
 
             _counter++;
+
+            _logger.Debug($"FoodManager.GenerateFood(): COMPLETE");
 
             return component;
         }
