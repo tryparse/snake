@@ -2,7 +2,9 @@
 {
     public static class LayerDepths
     {
-        public const float Grass = 1f;
+        public const float UI = 1f;
+
+        public const float Grass = .4f;
 
         public const float Fruit = .3f;
 
