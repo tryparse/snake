@@ -31,8 +31,6 @@ namespace snake.UIComponents
 
         public override void Draw(GameTime gameTime)
         {
-            var destination = new Rectangle((int)_position.X, (int) _position.Y, 25, 25);
-
             var size = new Size2(25, 25);
             var scale = new Vector2(size.Width / (float)_foodTexture2D.Width, size.Height / (float)_foodTexture2D.Height);
             var textPosition = new Vector2(_position.X + size.Width, _position.Y);

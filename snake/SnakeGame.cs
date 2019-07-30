@@ -155,7 +155,7 @@ namespace snake
         {
             var random = new RandomGenerator();
 
-            var gamePoints = new GamePoints();
+            var gamePoints = new GamePoints(_gameSettings.RemainingLives);
 
             #region Field
 
@@ -213,12 +213,19 @@ namespace snake
 
             #region UI components
 
-            var fps = new FpsCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), _spriteBatch, _spriteFont, Color.Black);
+            var fps = new FpsCounter(this, new Vector2(GraphicsDevice.Viewport.Width - 50, 0), _spriteBatch,
+                _spriteFont, Color.Black);
             Components.Add(fps);
 
-            var pointsCounterPosition = Vector2.Add(new Vector2(gameField.Bounds.Right, gameField.Bounds.Top), new Vector2(10, 0));
+            var pointsCounterPosition = Vector2.Add(new Vector2(gameField.Bounds.Right, gameField.Bounds.Top),
+                new Vector2(10, 0));
             var pointsCounter = new PointsCounterComponent(this, pointsCounterPosition, _graphicsSystem, gamePoints);
             Components.Add(pointsCounter);
+
+            var remainingLivesPosition = Vector2.Add(new Vector2(gameField.Bounds.Right, gameField.Bounds.Top),
+                new Vector2(10, 25));
+            var remainingLives = new RemainingLivesComponent(this, remainingLivesPosition, _graphicsSystem, gamePoints);
+            Components.Add(remainingLives);
 
             #endregion UI components
         }

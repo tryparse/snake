@@ -39,6 +39,8 @@ namespace SnakeGame.Shared.Settings.Interfaces
         /// </summary>
         int LimitMoveIntervalTime { get; set; }
 
+        int RemainingLives { get; set; }
+
         void ResetMoveIntervalTime();
     }
 }

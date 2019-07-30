@@ -44,9 +44,13 @@ namespace SnakeGame.Shared.GameLogic
 
         public void NewGame()
         {
-            _logger.Debug("GameManager.NewGame()");
+            _logger.Debug("GameManager.NewGame(): BEGIN");
+
             _snakeComponent.Reset();
             _gamePoints.Reset();
+            _gamePoints.DecrementLives();
+
+            _logger.Debug("GameManager.NewGame(): COMPLETE");
         }
 
         public bool CheckSnakeCollision()

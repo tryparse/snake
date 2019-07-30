@@ -29,6 +29,7 @@ namespace SnakeGame.Shared.Settings.Implementation
 
         public int LimitMoveIntervalTime { get; set; }
 
+        public int RemainingLives { get; set; }
         public void ReadFromApplicationSettings(NameValueCollection appSettings)
         {
             bool.TryParse(appSettings["IsLoggingEnabled"], out var isLoggingEnabled);
@@ -75,6 +76,10 @@ namespace SnakeGame.Shared.Settings.Implementation
             int.TryParse(appSettings["LimitMoveIntervalTime"], out var limitMoveIntervalTime);
 
             LimitMoveIntervalTime = limitMoveIntervalTime;
+
+            int.TryParse(appSettings["RemainingLives"], out var remainingLives);
+
+            RemainingLives = remainingLives;
         }
 
         public void ResetMoveIntervalTime()

@@ -12,6 +12,10 @@ namespace SnakeGame.Shared.GameLogic
 
         void IncrementPoints();
 
+        int RemainingLives { get; }
+
+        void DecrementLives();
+
         void Reset();
     }
 }
