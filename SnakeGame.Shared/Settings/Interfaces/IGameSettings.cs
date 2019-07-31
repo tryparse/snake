@@ -41,6 +41,8 @@ namespace SnakeGame.Shared.Settings.Interfaces
 
         int RemainingLives { get; set; }
 
+        bool IsShowDebugInfo { get; set; }
+
         void ResetMoveIntervalTime();
     }
 }

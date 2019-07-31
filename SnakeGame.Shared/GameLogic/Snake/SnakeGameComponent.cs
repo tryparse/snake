@@ -33,14 +33,18 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public ISnake Snake { get; }
 
-        public ISnakeMovementComponent SnakeMovementComponent { get; }
-
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
         public event EventHandler<EventArgs> DrawOrderChanged;
         public event EventHandler<EventArgs> VisibleChanged;
 
         #endregion IUpdatable & IDrawable
+
+        #region ISnakeGameComponent
+
+        public ISnakeMovementComponent SnakeMovementComponent { get; }
+
+        #endregion ISnakeGameComponent
 
         public void Initialize()
         {

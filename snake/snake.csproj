@@ -42,6 +42,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="UIComponents\DebugInfoPanelComponent.cs" />
     <Compile Include="UIComponents\FpsCounter.cs" />
     <Compile Include="GameEntities\GameKeys.cs" />
     <Compile Include="Logging\NLogFileLogger.cs" />

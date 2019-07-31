@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
@@ -86,7 +87,7 @@ namespace snake
             };
 
             _snakeKeys = new SnakeControls(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
-            _gameKeys = new GameKeys(Keys.P, Keys.D, Keys.R, Keys.Escape);
+            _gameKeys = new GameKeys(Keys.P, Keys.D, Keys.R, Keys.Escape, Keys.OemTilde);
             
             _inputHandler = new InputHandler(this);
             Components.Add(_inputHandler);
@@ -224,6 +225,9 @@ namespace snake
             var remainingLives = new RemainingLivesComponent(this, remainingLivesPosition, _graphicsSystem, gamePoints);
             Components.Add(remainingLives);
 
+            var debugPanel = new DebugInfoPanelComponent(this, _graphicsSystem, _gameSettings);
+            Components.Add(debugPanel);
+
             #endregion UI components
         }
 
@@ -268,6 +272,11 @@ namespace snake
             if (InputHandler.IsKeyPressed(_gameKeys.SwitchRendering))
             {
                 _graphicsSettings.IsRenderingEnabled = !_graphicsSettings.IsRenderingEnabled;
+            }
+
+            if (InputHandler.IsKeyPressed(_gameKeys.DebugInfo))
+            {
+                _gameSettings.IsShowDebugInfo = !_gameSettings.IsShowDebugInfo;
             }
         }
 
