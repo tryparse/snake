@@ -13,21 +13,29 @@ namespace snake.UIComponents
     {
         private readonly IGraphicsSystem _graphicsSystem;
         private readonly IGameSettings _gameSettings;
+        private readonly StringBuilder _stringBuilder;
 
         public DebugInfoPanelComponent(Game game, IGraphicsSystem graphicsSystem, IGameSettings gameSettings) : base(game)
         {
             _graphicsSystem = graphicsSystem;
             _gameSettings = gameSettings;
+
+            _stringBuilder = new StringBuilder();
         }
 
         public override void Update(GameTime gameTime)
         {
             Visible = _gameSettings.IsShowDebugInfo;
+
+            _stringBuilder.Clear();
+            _stringBuilder
+                .AppendLine("*** DEBUG INFO ***")
+                .AppendLine($"CurrentMoveTimeInterval = {_gameSettings.CurrentMoveIntervalTime}");
         }
 
         public override void Draw(GameTime gameTime)
         {
-            _graphicsSystem.SpriteBatch.DrawString(_graphicsSystem.DebugSpriteFont, "*** DEBUG INFO ***", Vector2.One, Color.DarkBlue);
+            _graphicsSystem.SpriteBatch.DrawString(_graphicsSystem.DebugSpriteFont, _stringBuilder.ToString(), Vector2.One, Color.Red);
         }
     }
 }
