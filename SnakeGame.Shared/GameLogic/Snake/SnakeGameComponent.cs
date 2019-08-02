@@ -52,18 +52,34 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public void Update(GameTime gameTime)
         {
-            SnakeMovementComponent.Update(gameTime);
+            if (Enabled)
+            {
+                SnakeMovementComponent.Update(gameTime);
+            }
         }
 
         public void Draw(GameTime gameTime)
         {
-            _graphicsComponent.Draw(gameTime);
+            if (Visible)
+            {
+                _graphicsComponent.Draw(gameTime);
+            }
         }
 
         public void Reset()
         {
             Snake.Reset();
             SnakeMovementComponent.Reset();
+        }
+
+        public void ToggleEnabled()
+        {
+            Enabled = !Enabled;
+        }
+
+        public void ToggleEnabled(bool enabled)
+        {
+            Enabled = enabled;
         }
     }
 }

@@ -22,17 +22,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private Direction? _nextDirection;
 
-        #region IUpdateable members
-
-        public bool Enabled { get; set; }
-
-        public int UpdateOrder { get; set; }
-
-        public event EventHandler<EventArgs> EnabledChanged;
-        public event EventHandler<EventArgs> UpdateOrderChanged;
-
-        #endregion
-
         public SnakeMovementTurnBased(ISnake snake, IGameField gameField, IGameSettings gameSettings, SnakeControls controls)
         {
             _snake = snake;

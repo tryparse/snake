@@ -40,7 +40,7 @@ namespace snake
 
         private InputHandler _inputHandler;
 
-        private ISnakeGameComponent _snakeGameComponent;
+        private IGameManager _gameManager;
 
         private GameKeys _gameKeys;
         private SnakeControls _snakeKeys;
@@ -87,7 +87,7 @@ namespace snake
             };
 
             _snakeKeys = new SnakeControls(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
-            _gameKeys = new GameKeys(Keys.P, Keys.D, Keys.R, Keys.Escape, Keys.OemTilde);
+            _gameKeys = new GameKeys(Keys.Pause, Keys.D, Keys.R, Keys.Escape, Keys.OemTilde);
             
             _inputHandler = new InputHandler(this);
             Components.Add(_inputHandler);
@@ -186,28 +186,26 @@ namespace snake
             ISnake snake = new Snake(_logger, gameField, movingCalculator, _gameSettings);
             snake.Grow();
 
-            ISnakeMovementComponent movementComponent = new SnakeMovementTurnBased(snake, gameField, _gameSettings, _snakeKeys)
-            {
-                Enabled = true
-            };
+            ISnakeMovementComponent movementComponent =
+                new SnakeMovementTurnBased(snake, gameField, _gameSettings, _snakeKeys);
 
             IGraphics2DComponent snakeGraphicsComponent = new SnakeGraphicsComponent(snake, _graphicsSystem, movementComponent);
-            _snakeGameComponent = new SnakeGameComponent(snake, snakeGraphicsComponent, movementComponent, _logger)
+            ISnakeGameComponent snakeGameComponent = new SnakeGameComponent(snake, snakeGraphicsComponent, movementComponent, _logger)
             {
                 Enabled = true,
                 Visible = true
             };
 
-            Components.Add(_snakeGameComponent);
+            Components.Add(snakeGameComponent);
 
             #endregion Snake
 
-            IGameManager gameManager = new GameManager(_logger, foodManager, _snakeGameComponent, gameField, _gameSettings, gamePoints)
+            _gameManager = new GameManager(_logger, foodManager, snakeGameComponent, gameField, _gameSettings, gamePoints)
             {
                 Enabled = true
             };
 
-            Components.Add(gameManager);
+            Components.Add(_gameManager);
 
             #region UI components
 
@@ -225,7 +223,7 @@ namespace snake
             var remainingLives = new RemainingLivesComponent(this, remainingLivesPosition, _graphicsSystem, gamePoints);
             Components.Add(remainingLives);
 
-            var debugPanel = new DebugInfoPanelComponent(this, _graphicsSystem, _gameSettings);
+            var debugPanel = new DebugInfoPanelComponent(this, _graphicsSystem, _gameSettings, snakeGameComponent);
             Components.Add(debugPanel);
 
             #endregion UI components
@@ -261,17 +259,17 @@ namespace snake
 
             if (InputHandler.IsKeyPressed(_gameKeys.SwitchPause))
             {
-                _snakeGameComponent.Enabled = !_snakeGameComponent.Enabled;
+                _gameManager.TogglePause();
             }
 
             if (InputHandler.IsKeyPressed(_gameKeys.SwitchDebugRendering))
             {
-                _graphicsSettings.IsDebugRenderingEnabled = !_graphicsSettings.IsDebugRenderingEnabled;
+                _graphicsSettings.ToggleDebugRenderingEnabled();
             }
 
             if (InputHandler.IsKeyPressed(_gameKeys.SwitchRendering))
             {
-                _graphicsSettings.IsRenderingEnabled = !_graphicsSettings.IsRenderingEnabled;
+                _graphicsSettings.ToggleRenderingEnabled();
             }
 
             if (InputHandler.IsKeyPressed(_gameKeys.DebugInfo))

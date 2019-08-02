@@ -40,6 +40,7 @@ namespace SnakeGame.Shared.GameLogic
 
         public void Initialize()
         {
+            IsPaused = false;
         }
 
         public void NewGame()
@@ -163,6 +164,20 @@ namespace SnakeGame.Shared.GameLogic
             {
                 _gameSettings.CurrentMoveIntervalTime = Math.Max(_gameSettings.LimitMoveIntervalTime, (int)Math.Truncate(_gameSettings.CurrentMoveIntervalTime * .9d));
             }
+        }
+
+        public bool IsPaused { get; private set; }
+
+        public void TogglePause()
+        {
+            _snakeComponent.ToggleEnabled();
+            IsPaused = !_snakeComponent.Enabled;
+        }
+
+        public void TogglePause(bool isPaused)
+        {
+            IsPaused = isPaused;
+            _snakeComponent.ToggleEnabled(!isPaused);
         }
     }
 }

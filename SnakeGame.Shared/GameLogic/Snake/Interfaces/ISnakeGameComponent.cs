@@ -14,6 +14,8 @@ namespace SnakeGame.Shared.GameLogic.Snake.Interfaces
 
         void Reset();
 
-        new bool Enabled { get; set; }
+        void ToggleEnabled();
+
+        void ToggleEnabled(bool enabled);
     }
 }
