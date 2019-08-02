@@ -33,8 +33,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public ISnake Snake { get; }
 
-        public ISnakeMovementComponent SnakeMovementComponent { get; }
-
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
         public event EventHandler<EventArgs> DrawOrderChanged;
@@ -42,24 +40,46 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         #endregion IUpdatable & IDrawable
 
+        #region ISnakeGameComponent
+
+        public ISnakeMovementComponent SnakeMovementComponent { get; }
+
+        #endregion ISnakeGameComponent
+
         public void Initialize()
         {
         }
 
         public void Update(GameTime gameTime)
         {
-            SnakeMovementComponent.Update(gameTime);
+            if (Enabled)
+            {
+                SnakeMovementComponent.Update(gameTime);
+            }
         }
 
         public void Draw(GameTime gameTime)
         {
-            _graphicsComponent.Draw(gameTime);
+            if (Visible)
+            {
+                _graphicsComponent.Draw(gameTime);
+            }
         }
 
         public void Reset()
         {
             Snake.Reset();
             SnakeMovementComponent.Reset();
+        }
+
+        public void ToggleEnabled()
+        {
+            Enabled = !Enabled;
+        }
+
+        public void ToggleEnabled(bool enabled)
+        {
+            Enabled = enabled;
         }
     }
 }

@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace SnakeGame.Shared.GameLogic.Snake.Interfaces
 {
-    public interface ISnakeMovementComponent : IUpdateable
+    public interface ISnakeMovementComponent
     {
+        void Update(GameTime gameTime);
+
         void Reset();
     }
 }

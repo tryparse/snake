@@ -5,5 +5,9 @@
         bool IsRenderingEnabled { get; set; }
 
         bool IsDebugRenderingEnabled { get; set; }
+
+        void ToggleRenderingEnabled();
+
+        void ToggleDebugRenderingEnabled();
     }
 }

@@ -21,5 +21,11 @@ namespace SnakeGame.Shared.GameLogic
         void GenerateRandomFood();
 
         void IncreaseGameSpeed();
+
+        bool IsPaused { get; }
+
+        void TogglePause();
+
+        void TogglePause(bool isPaused);
     }
 }

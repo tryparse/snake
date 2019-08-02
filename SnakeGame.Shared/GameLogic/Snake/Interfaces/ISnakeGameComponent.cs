@@ -13,5 +13,9 @@ namespace SnakeGame.Shared.GameLogic.Snake.Interfaces
         ISnakeMovementComponent SnakeMovementComponent { get; }
 
         void Reset();
+
+        void ToggleEnabled();
+
+        void ToggleEnabled(bool enabled);
     }
 }

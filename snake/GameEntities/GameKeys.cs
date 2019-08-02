@@ -1,20 +1,16 @@
 ﻿using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace snake.GameEntities
 {
     public class GameKeys
     {
-        public GameKeys(Keys switchPause, Keys switchDebugRendering, Keys switchRendering, Keys exit)
+        public GameKeys(Keys switchPause, Keys switchDebugRendering, Keys switchRendering, Keys exit, Keys debugInfo)
         {
-            this.SwitchPause = switchPause;
-            this.SwitchDebugRendering = switchDebugRendering;
-            this.SwitchRendering = switchRendering;
-            this.Exit = exit;
+            SwitchPause = switchPause;
+            SwitchDebugRendering = switchDebugRendering;
+            SwitchRendering = switchRendering;
+            Exit = exit;
+            DebugInfo = debugInfo;
         }
 
         public Keys SwitchPause { get; }
@@ -24,5 +20,7 @@ namespace snake.GameEntities
         public Keys SwitchRendering { get; }
 
         public Keys Exit { get; }
+
+        public Keys DebugInfo { get; }
     }
 }

@@ -13,4 +13,21 @@ namespace SnakeGame.Shared.SceneManagement
         void Update(GameTime gameTime);
         void Draw(GameTime gameTime);
     }
+
+    interface ISceneManager
+    {
+        IScene CurrentScene { get; }
+
+        void Load(IScene scene);
+    }
+
+    class SceneManager : ISceneManager
+    {
+        public IScene CurrentScene { get; private set; }
+
+        public void Load(IScene scene)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
