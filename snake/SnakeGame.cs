@@ -223,7 +223,7 @@ namespace snake
             var remainingLives = new RemainingLivesComponent(this, remainingLivesPosition, _graphicsSystem, gamePoints);
             Components.Add(remainingLives);
 
-            var debugPanel = new DebugInfoPanelComponent(this, _graphicsSystem, _gameSettings, snakeGameComponent);
+            var debugPanel = new DebugInfoPanelComponent(this, _graphicsSystem, _gameSettings, _gameManager);
             Components.Add(debugPanel);
 
             #endregion UI components
