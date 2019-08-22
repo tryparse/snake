@@ -30,8 +30,8 @@ namespace SnakeGame.Shared.SceneManagement
         private IGamePoints _gamePoints;
         private IGameManager _gameManager;
 
-        public GameScene(Game game, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, ILogger logger) : base(
-            game, graphicsSystem, gameSettings, logger)
+        public GameScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, ILogger logger, IGameKeys gameKeys) : base(
+            game, sceneManager, graphicsSystem, gameSettings, logger, gameKeys)
         {
         }
 
@@ -106,7 +106,7 @@ namespace SnakeGame.Shared.SceneManagement
 
         public override void Update(GameTime gameTime)
         {
-            
+            HandleInput();
         }
 
         public override void Draw(GameTime gameTime)
@@ -119,6 +119,34 @@ namespace SnakeGame.Shared.SceneManagement
             Game.Components.Remove(_gameFieldComponent);
             Game.Components.Remove(_snakeGameComponent);
             Game.Components.Remove(_gameManager);
+        }
+
+        private void HandleInput()
+        {
+            if (InputHandler.IsKeyPressed(GameKeys.Exit))
+            {
+                Game.Exit();
+            }
+
+            if (InputHandler.IsKeyPressed(GameKeys.SwitchPause))
+            {
+                _gameManager.TogglePause();
+            }
+
+            if (InputHandler.IsKeyPressed(GameKeys.SwitchDebugRendering))
+            {
+                GraphicsSystem.RenderSettings.ToggleDebugRenderingEnabled();
+            }
+
+            if (InputHandler.IsKeyPressed(GameKeys.SwitchRendering))
+            {
+                GraphicsSystem.RenderSettings.ToggleRenderingEnabled();
+            }
+
+            if (InputHandler.IsKeyPressed(GameKeys.DebugInfo))
+            {
+                GameSettings.IsShowDebugInfo = !GameSettings.IsShowDebugInfo;
+            }
         }
     }
 }

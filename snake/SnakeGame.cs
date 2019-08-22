@@ -127,7 +127,7 @@ namespace snake
 
             Components.Add(_sceneManager);
 
-            _sceneManager.Load(new LoadingScene(this, _graphicsSystem, _gameSettings, _logger));
+            _sceneManager.Load(new LoadingScene(this, _sceneManager, _graphicsSystem, _gameSettings, _logger, _gameKeys));
         }
 
         private void LoadFonts()
@@ -179,37 +179,7 @@ namespace snake
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            HandleInput();
-
             base.Update(gameTime);
-        }
-
-        private void HandleInput()
-        {
-            //if (InputHandler.IsKeyPressed(_gameKeys.Exit))
-            //{
-            //    Exit();
-            //}
-
-            //if (InputHandler.IsKeyPressed(_gameKeys.SwitchPause))
-            //{
-            //    _gameManager.TogglePause();
-            //}
-
-            //if (InputHandler.IsKeyPressed(_gameKeys.SwitchDebugRendering))
-            //{
-            //    _graphicsSettings.ToggleDebugRenderingEnabled();
-            //}
-
-            //if (InputHandler.IsKeyPressed(_gameKeys.SwitchRendering))
-            //{
-            //    _graphicsSettings.ToggleRenderingEnabled();
-            //}
-
-            //if (InputHandler.IsKeyPressed(_gameKeys.DebugInfo))
-            //{
-            //    _gameSettings.IsShowDebugInfo = !_gameSettings.IsShowDebugInfo;
-            //}
         }
 
         /// <summary>
