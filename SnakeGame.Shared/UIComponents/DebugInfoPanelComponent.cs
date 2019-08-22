@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using SnakeGame.Shared.GameLogic;
-using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using SnakeGame.Shared.Graphics;
 using SnakeGame.Shared.Settings.Interfaces;
 
-namespace snake.UIComponents
+namespace SnakeGame.Shared.UIComponents
 {
     public class DebugInfoPanelComponent : DrawableGameComponent
     {

@@ -21,7 +21,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private Vector2 _unitVector;
 
-        public Snake(ILogger logger, IGameField gameField, IMovingCalculator movingCalculator, IGameSettings gameSettings)
+        public Snake(ILogger logger, IGameField gameField, IGameSettings gameSettings)
         {
             _logger = logger;
             _gameField = gameField;
