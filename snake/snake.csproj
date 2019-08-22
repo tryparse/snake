@@ -42,15 +42,10 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="UIComponents\DebugInfoPanelComponent.cs" />
-    <Compile Include="UIComponents\FpsCounter.cs" />
-    <Compile Include="GameEntities\GameKeys.cs" />
     <Compile Include="Logging\NLogFileLogger.cs" />
     <Compile Include="SnakeGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UIComponents\PointsCounterComponent.cs" />
-    <Compile Include="UIComponents\RemainingLivesComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />

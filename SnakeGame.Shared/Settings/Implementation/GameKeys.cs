@@ -1,8 +1,9 @@
 ﻿using Microsoft.Xna.Framework.Input;
+using SnakeGame.Shared.Settings.Interfaces;
 
-namespace snake.GameEntities
+namespace SnakeGame.Shared.Settings.Implementation
 {
-    public class GameKeys
+    public class GameKeys : IGameKeys
     {
         public GameKeys(Keys switchPause, Keys switchDebugRendering, Keys switchRendering, Keys exit, Keys debugInfo)
         {
@@ -14,13 +15,9 @@ namespace snake.GameEntities
         }
 
         public Keys SwitchPause { get; }
-
         public Keys SwitchDebugRendering { get; }
-
         public Keys SwitchRendering { get; }
-
         public Keys Exit { get; }
-
         public Keys DebugInfo { get; }
     }
 }

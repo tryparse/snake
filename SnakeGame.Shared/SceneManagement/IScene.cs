@@ -1,33 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Screens;
 
 namespace SnakeGame.Shared.SceneManagement
 {
-    interface IScene
+    public interface IScene
     {
+        /// <summary>
+        /// Should be invoked after constructor for loading resources, etc.
+        /// </summary>
         void Initialize();
         void Update(GameTime gameTime);
         void Draw(GameTime gameTime);
-    }
-
-    interface ISceneManager
-    {
-        IScene CurrentScene { get; }
-
-        void Load(IScene scene);
-    }
-
-    class SceneManager : ISceneManager
-    {
-        public IScene CurrentScene { get; private set; }
-
-        public void Load(IScene scene)
-        {
-            throw new NotImplementedException();
-        }
+        void Unload();
     }
 }
