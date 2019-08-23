@@ -5,16 +5,16 @@ namespace SnakeGame.Shared.Graphics
 {
     public class GraphicsSystem : IGraphicsSystem
     {
-        public GraphicsSystem(IGraphicsSettings renderSettings, SpriteBatch spriteBatch, SpriteFont spriteFont, SpriteFont debugSpriteFont, ITextureManager textureManager)
+        public GraphicsSystem(IGraphicsSettings graphicsSettings, SpriteBatch spriteBatch, SpriteFont spriteFont, SpriteFont debugSpriteFont, ITextureManager textureManager)
         {
-            RenderSettings = renderSettings;
+            GraphicsSettings = graphicsSettings;
             SpriteBatch = spriteBatch;
             SpriteFont = spriteFont;
             DebugSpriteFont = debugSpriteFont;
             TextureManager = textureManager;
         }
 
-        public IGraphicsSettings RenderSettings { get; }
+        public IGraphicsSettings GraphicsSettings { get; }
 
         public SpriteBatch SpriteBatch { get; }
 

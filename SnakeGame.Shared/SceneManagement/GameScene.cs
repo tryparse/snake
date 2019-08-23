@@ -62,7 +62,7 @@ namespace SnakeGame.Shared.SceneManagement
                     _gameFieldFactory = new GameFieldFactory(GameSettings, _randomGenerator);
                     _gameField = _gameFieldFactory.GetRandomField(GameSettings.MapWidth, GameSettings.MapHeight, .8d);
                     _gameFieldComponent = new GameFieldComponent(_gameField,
-                        new GameFieldGraphicsComponent(_gameField, GraphicsSystem.RenderSettings, GraphicsSystem,
+                        new GameFieldGraphicsComponent(_gameField, GraphicsSystem.GraphicsSettings, GraphicsSystem,
                             GameSettings))
                     {
                         Visible = true,
@@ -174,12 +174,12 @@ namespace SnakeGame.Shared.SceneManagement
 
             if (InputHandler.IsKeyPressed(GameKeys.SwitchDebugRendering))
             {
-                GraphicsSystem.RenderSettings.ToggleDebugRenderingEnabled();
+                GraphicsSystem.GraphicsSettings.ToggleDebugRenderingEnabled();
             }
 
             if (InputHandler.IsKeyPressed(GameKeys.SwitchRendering))
             {
-                GraphicsSystem.RenderSettings.ToggleRenderingEnabled();
+                GraphicsSystem.GraphicsSettings.ToggleRenderingEnabled();
             }
 
             if (InputHandler.IsKeyPressed(GameKeys.DebugInfo))

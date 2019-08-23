@@ -33,7 +33,6 @@ namespace snake
         private InputHandler _inputHandler;
 
         private IGameKeys _gameKeys;
-        private SnakeControls _snakeKeys;
 
         private IGameSettings _gameSettings;
         private IGraphicsSettings _graphicsSettings;
@@ -78,7 +77,6 @@ namespace snake
                 IsRenderingEnabled = _gameSettings.IsRenderingEnabled
             };
 
-            _snakeKeys = new SnakeControls(Keys.Up, Keys.Down, Keys.Left, Keys.Right);
             _gameKeys = new GameKeys(Keys.Pause, Keys.D, Keys.R, Keys.Escape, Keys.OemTilde);
             
             _inputHandler = new InputHandler(this);

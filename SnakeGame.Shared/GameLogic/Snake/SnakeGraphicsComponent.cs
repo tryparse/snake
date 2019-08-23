@@ -25,12 +25,12 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public void Draw(GameTime gameTime)
         {
-            if (_graphicsSystem.RenderSettings.IsRenderingEnabled)
+            if (_graphicsSystem.GraphicsSettings.IsRenderingEnabled)
             {
                 Rendering();
             }
 
-            if (_graphicsSystem.RenderSettings.IsDebugRenderingEnabled)
+            if (_graphicsSystem.GraphicsSettings.IsDebugRenderingEnabled)
             {
                 DebugRendering();
             }

@@ -5,7 +5,7 @@ namespace SnakeGame.Shared.Graphics
 {
     public interface IGraphicsSystem
     {
-        IGraphicsSettings RenderSettings { get; }
+        IGraphicsSettings GraphicsSettings { get; }
 
         SpriteBatch SpriteBatch { get; }
 
