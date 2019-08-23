@@ -12,7 +12,7 @@ namespace SnakeGame.Shared.SceneManagement
         /// <summary>
         /// Should be invoked after constructor for loading resources, etc.
         /// </summary>
-        void Initialize();
+        void Load();
         void Update(GameTime gameTime);
         void Draw(GameTime gameTime);
         void Unload();

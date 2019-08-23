@@ -93,5 +93,10 @@ namespace SnakeGame.Shared.Settings.Implementation
         {
             CurrentMoveIntervalTime = DefaultMoveIntervalTime;
         }
+
+        public void ToggleDebugInfo()
+        {
+            IsShowDebugInfo = !IsShowDebugInfo;
+        }
     }
 }
