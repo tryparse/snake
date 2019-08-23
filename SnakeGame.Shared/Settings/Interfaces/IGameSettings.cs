@@ -44,5 +44,7 @@ namespace SnakeGame.Shared.Settings.Interfaces
         bool IsShowDebugInfo { get; set; }
 
         void ResetMoveIntervalTime();
+
+        void ToggleDebugInfo();
     }
 }

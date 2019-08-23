@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SnakeGame.Shared.Common;
@@ -30,78 +31,106 @@ namespace SnakeGame.Shared.SceneManagement
         private IGamePoints _gamePoints;
         private IGameManager _gameManager;
 
+        private FpsCounter _fpsCounter;
+        private PointsCounterComponent _pointsCounterComponent;
+        private RemainingLivesComponent _remainingLivesComponent;
+        private DebugInfoPanelComponent _debugInfoPanelComponent;
+
+        private readonly string LoadingText = "loading...";
+        private Rectangle _screenBounds;
+
         public GameScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, ILogger logger, IGameKeys gameKeys) : base(
             game, sceneManager, graphicsSystem, gameSettings, logger, gameKeys)
         {
         }
 
-        public override void Initialize()
+        public override void Load()
         {
-            Task.Run(() =>
+            _screenBounds = new Rectangle(0, 0, GameSettings.ScreenWidth, GameSettings.ScreenHeight);
+
+            LoadAsync();
+        }
+
+        private async Task LoadAsync()
+        {
+            var tasks = new List<Task>
             {
-                _randomGenerator = new RandomGenerator(1);
-
-                _gameFieldFactory = new GameFieldFactory(GameSettings, _randomGenerator);
-                _gameField = _gameFieldFactory.GetRandomField(GameSettings.MapWidth, GameSettings.MapHeight, .8d);
-                _gameFieldComponent = new GameFieldComponent(_gameField,
-                    new GameFieldGraphicsComponent(_gameField, GraphicsSystem.RenderSettings, GraphicsSystem,
-                        GameSettings))
+                Task.Run(() =>
                 {
-                    Visible = true,
-                    Enabled = true
-                };
+                    _randomGenerator = new RandomGenerator(1);
 
-                _foodManager = new FoodManager(Game, _gameField, GameSettings, GraphicsSystem, Logger);
-                _foodGameComponent = _foodManager.GenerateRandomFood();
-                _foodManager.Add(_foodGameComponent);
+                    _gameFieldFactory = new GameFieldFactory(GameSettings, _randomGenerator);
+                    _gameField = _gameFieldFactory.GetRandomField(GameSettings.MapWidth, GameSettings.MapHeight, .8d);
+                    _gameFieldComponent = new GameFieldComponent(_gameField,
+                        new GameFieldGraphicsComponent(_gameField, GraphicsSystem.RenderSettings, GraphicsSystem,
+                            GameSettings))
+                    {
+                        Visible = true,
+                        Enabled = true
+                    };
 
-                _snake = new Snake(Logger, _gameField, GameSettings);
-                _snake.Grow();
-                _snakeMovementComponent =
-                    new SnakeMovementTurnBased(_snake, _gameField, GameSettings,
-                        new SnakeControls(Keys.Up, Keys.Down, Keys.Left, Keys.Right));
-                _snakeGameComponent = new SnakeGameComponent(_snake,
-                    new SnakeGraphicsComponent(_snake, GraphicsSystem, _snakeMovementComponent),
-                    _snakeMovementComponent, Logger)
-                {
-                    Enabled = true,
-                    Visible = true
-                };
+                    _foodManager = new FoodManager(Game, _gameField, GameSettings, GraphicsSystem, Logger);
+                    _foodGameComponent = _foodManager.GenerateRandomFood();
+                    
 
-                _gamePoints = new GamePoints(GameSettings.RemainingLives);
-                _gameManager = new GameManager(Logger, _foodManager, _snakeGameComponent, _gameField, GameSettings,
-                    _gamePoints)
-                {
-                    Enabled = true
-                };
+                    _snake = new Snake(Logger, _gameField, GameSettings);
+                    _snake.Grow();
+                    _snakeMovementComponent =
+                        new SnakeMovementTurnBased(_snake, _gameField, GameSettings,
+                            new SnakeControls(Keys.Up, Keys.Down, Keys.Left, Keys.Right));
+                    _snakeGameComponent = new SnakeGameComponent(_snake,
+                        new SnakeGraphicsComponent(_snake, GraphicsSystem, _snakeMovementComponent),
+                        _snakeMovementComponent, Logger)
+                    {
+                        Enabled = true,
+                        Visible = true
+                    };
 
-                Game.Components.Add(_gameFieldComponent);
-                Game.Components.Add(_snakeGameComponent);
-                Game.Components.Add(_gameManager);
+                    #region Common
 
-                #region UI components
+                    _gamePoints = new GamePoints(GameSettings.RemainingLives);
+                    _gameManager = new GameManager(Logger, _foodManager, _snakeGameComponent, _gameField, GameSettings,
+                        _gamePoints)
+                    {
+                        Enabled = true
+                    };
 
-                var fps = new FpsCounter(Game, new Vector2(Game.GraphicsDevice.Viewport.Width - 50, 0), GraphicsSystem.SpriteBatch,
-                    GraphicsSystem.SpriteFont, Color.Black);
-                Game.Components.Add(fps);
+                    #endregion Common
 
-                var pointsCounterPosition = Vector2.Add(new Vector2(_gameField.Bounds.Right, _gameField.Bounds.Top),
-                    new Vector2(10, 0));
-                var pointsCounter = new PointsCounterComponent(Game, pointsCounterPosition, GraphicsSystem, _gamePoints);
-                Game.Components.Add(pointsCounter);
+                    #region UI components
 
-                var remainingLivesPosition = Vector2.Add(new Vector2(_gameField.Bounds.Right, _gameField.Bounds.Top),
-                    new Vector2(10, 25));
-                var remainingLives = new RemainingLivesComponent(Game, remainingLivesPosition, GraphicsSystem, _gamePoints);
-                Game.Components.Add(remainingLives);
+                    _fpsCounter = new FpsCounter(Game, new Vector2(Game.GraphicsDevice.Viewport.Width - 50, 0), GraphicsSystem.SpriteBatch,
+                        GraphicsSystem.SpriteFont, Color.Black);
 
-                var debugPanel = new DebugInfoPanelComponent(Game, GraphicsSystem, GameSettings, _gameManager);
-                Game.Components.Add(debugPanel);
+                    var pointsCounterPosition = Vector2.Add(new Vector2(_gameField.Bounds.Right, _gameField.Bounds.Top),
+                        new Vector2(10, 0));
+                    _pointsCounterComponent = new PointsCounterComponent(Game, pointsCounterPosition, GraphicsSystem, _gamePoints);
 
-                #endregion UI components
+                    var remainingLivesPosition = Vector2.Add(new Vector2(_gameField.Bounds.Right, _gameField.Bounds.Top),
+                        new Vector2(10, 25));
+                    _remainingLivesComponent = new RemainingLivesComponent(Game, remainingLivesPosition, GraphicsSystem, _gamePoints);
 
-                IsInitialized = true;
-            });
+                    _debugInfoPanelComponent = new DebugInfoPanelComponent(Game, GraphicsSystem, GameSettings, _gameManager);
+                    
+                    #endregion UI components
+                })
+            };
+
+            var result = Task.WhenAll(tasks.ToArray());
+
+            await result;
+
+            IsLoaded = true;
+
+            Game.Components.Add(_gameFieldComponent);
+            Game.Components.Add(_snakeGameComponent);
+            _foodManager.Add(_foodGameComponent);
+            Game.Components.Add(_gameManager);
+
+            Game.Components.Add(_fpsCounter);
+            Game.Components.Add(_pointsCounterComponent);
+            Game.Components.Add(_remainingLivesComponent);
+            Game.Components.Add(_debugInfoPanelComponent);
         }
 
         public override void Update(GameTime gameTime)
@@ -111,7 +140,13 @@ namespace SnakeGame.Shared.SceneManagement
 
         public override void Draw(GameTime gameTime)
         {
+            if (!IsLoaded)
+            {
+                var textSize = GraphicsSystem.SpriteFont.MeasureString(LoadingText);
+                var loadingTextPosition = Vector2.Add(_screenBounds.Center.ToVector2(), -Vector2.Divide(textSize, 2));
 
+                GraphicsSystem.SpriteBatch.DrawString(GraphicsSystem.SpriteFont, LoadingText, loadingTextPosition, Color.White);
+            }
         }
 
         public override void Unload()
@@ -119,6 +154,10 @@ namespace SnakeGame.Shared.SceneManagement
             Game.Components.Remove(_gameFieldComponent);
             Game.Components.Remove(_snakeGameComponent);
             Game.Components.Remove(_gameManager);
+            Game.Components.Remove(_fpsCounter);
+            Game.Components.Remove(_pointsCounterComponent);
+            Game.Components.Remove(_remainingLivesComponent);
+            Game.Components.Remove(_debugInfoPanelComponent);
         }
 
         private void HandleInput()
@@ -145,7 +184,7 @@ namespace SnakeGame.Shared.SceneManagement
 
             if (InputHandler.IsKeyPressed(GameKeys.DebugInfo))
             {
-                GameSettings.IsShowDebugInfo = !GameSettings.IsShowDebugInfo;
+                GameSettings.ToggleDebugInfo();
             }
         }
     }

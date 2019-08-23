@@ -14,7 +14,7 @@ namespace SnakeGame.Shared.SceneManagement
         protected readonly IGameSettings GameSettings;
         protected readonly ILogger Logger;
         protected readonly IGameKeys GameKeys;
-        protected bool IsInitialized;
+        protected bool IsLoaded;
 
         protected BaseScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, ILogger logger, IGameKeys gameKeys)
         {
@@ -26,7 +26,7 @@ namespace SnakeGame.Shared.SceneManagement
             GameKeys = gameKeys ?? throw new ArgumentNullException(nameof(gameKeys));
         }
 
-        public abstract void Initialize();
+        public abstract void Load();
 
         public abstract void Update(GameTime gameTime);
 

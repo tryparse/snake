@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
@@ -23,21 +24,33 @@ namespace SnakeGame.Shared.SceneManagement
         public LoadingScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, ILogger logger, IGameKeys gameKeys) :
             base(game, sceneManager, graphicsSystem, gameSettings, logger, gameKeys)
         {
-            IsInitialized = false;
+            IsLoaded = false;
         }
 
-        public override void Initialize()
+        public override void Load()
         {
-            var task = Task.Run(() =>
+            LoadAsync();
+        }
+
+        private async Task LoadAsync()
+        {
+            var tasks = new List<Task>
             {
-                _screenBounds = new Rectangle(0, 0, GameSettings.ScreenWidth, GameSettings.ScreenHeight);
+                Task.Run(() =>
+                {
+                    _screenBounds = new Rectangle(0, 0, GameSettings.ScreenWidth, GameSettings.ScreenHeight);
 
-                CalculateTextPosition();
+                    CalculateTextPosition();
+                }),
 
-                Thread.Sleep(1000);
+                Task.Delay(1000)
+            };
 
-                IsInitialized = true;
-            });
+            var result = Task.WhenAll(tasks.ToArray());
+
+            await result;
+
+            IsLoaded = true;
         }
 
         private void CalculateTextPosition()
@@ -51,7 +64,9 @@ namespace SnakeGame.Shared.SceneManagement
 
         public override void Update(GameTime gameTime)
         {
-            if (IsInitialized
+            HandleInput();
+
+            if (IsLoaded
                 && InputHandler.IsKeyPressed(Keys.Enter))
             {
                 SceneManager.Load(new GameScene(Game, SceneManager, GraphicsSystem, GameSettings, Logger, GameKeys));
@@ -60,7 +75,10 @@ namespace SnakeGame.Shared.SceneManagement
 
         public override void Draw(GameTime gameTime)
         {
-            if (!IsInitialized)
+            GraphicsSystem.SpriteBatch.DrawString(GraphicsSystem.SpriteFont, gameTime.TotalGameTime.ToString(),
+                Vector2.One, Color.Red);
+
+            if (!IsLoaded)
             {
                 GraphicsSystem.SpriteBatch.DrawString(GraphicsSystem.SpriteFont, LoadingText, _loadingTextPosition, Color.White);
             }
@@ -73,6 +91,14 @@ namespace SnakeGame.Shared.SceneManagement
         public override void Unload()
         {
             // TODO: something
+        }
+
+        private void HandleInput()
+        {
+            if (InputHandler.IsKeyPressed(GameKeys.Exit))
+            {
+                Game.Exit();
+            }
         }
     }
 }
