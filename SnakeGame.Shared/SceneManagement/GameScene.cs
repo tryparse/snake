@@ -79,7 +79,7 @@ namespace SnakeGame.Shared.SceneManagement
                         new SnakeMovementTurnBased(_snake, _gameField, GameSettings,
                             new SnakeControls(Keys.Up, Keys.Down, Keys.Left, Keys.Right));
                     _snakeGameComponent = new SnakeGameComponent(_snake,
-                        new SnakeGraphicsComponent(_snake, GraphicsSystem, _snakeMovementComponent),
+                        new SnakeGraphicsComponent(_snake, GraphicsSystem, _snakeMovementComponent, _gameField),
                         _snakeMovementComponent, Logger)
                     {
                         Enabled = true,

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.TextureAtlases;
 using SnakeGame.Shared.Common;
+using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using SnakeGame.Shared.Graphics;
 using System;
@@ -15,12 +16,14 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly ISnake _snake;
         private readonly IGraphicsSystem _graphicsSystem;
         private readonly ISnakeMovementComponent _movement;
+        private readonly IGameField _gameField;
 
-        public SnakeGraphicsComponent(ISnake snake, IGraphicsSystem graphicsSystem, ISnakeMovementComponent movement)
+        public SnakeGraphicsComponent(ISnake snake, IGraphicsSystem graphicsSystem, ISnakeMovementComponent movement, IGameField gameField)
         {
             _snake = snake ?? throw new ArgumentNullException(nameof(snake));
             _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));
             _movement = movement ?? throw new ArgumentNullException(nameof(movement));
+            _gameField = gameField ?? throw new ArgumentNullException(nameof(gameField));
         }
 
         public void Draw(GameTime gameTime)
@@ -42,7 +45,10 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
             foreach (var segment in _snake.Tail)
             {
-                DrawSegment(segment);
+                if (_gameField.Bounds.Contains(segment.Position))
+                {
+                    DrawSegment(segment);
+                }
             }
         }
 
