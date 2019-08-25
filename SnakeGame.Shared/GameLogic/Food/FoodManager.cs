@@ -87,5 +87,13 @@ namespace SnakeGame.Shared.GameLogic.Food
 
             return component;
         }
+
+        public void Reset()
+        {
+            foreach (var c in FoodComponents)
+            {
+                _game.Components.Remove(c);
+            }
+        }
     }
 }

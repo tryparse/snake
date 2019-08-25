@@ -153,6 +153,7 @@ namespace SnakeGame.Shared.SceneManagement
         {
             Game.Components.Remove(_gameFieldComponent);
             Game.Components.Remove(_snakeGameComponent);
+            _foodManager.Reset();
             Game.Components.Remove(_gameManager);
             Game.Components.Remove(_fpsCounter);
             Game.Components.Remove(_pointsCounterComponent);
@@ -164,7 +165,7 @@ namespace SnakeGame.Shared.SceneManagement
         {
             if (InputHandler.IsKeyPressed(GameKeys.Exit))
             {
-                Game.Exit();
+                SceneManager.Load(new LoadingScene(Game, SceneManager, GraphicsSystem, GameSettings, Logger, GameKeys));
             }
 
             if (InputHandler.IsKeyPressed(GameKeys.SwitchPause))

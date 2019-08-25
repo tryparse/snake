@@ -18,5 +18,7 @@ namespace SnakeGame.Shared.GameLogic.Food.Interfaces
         void Add(IFoodGameComponent food);
 
         void Remove(IFoodGameComponent food);
+
+        void Reset();
     }
 }

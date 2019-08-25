@@ -12,8 +12,10 @@ namespace SnakeGame.Shared.SceneManagement
 
         public void Load(IScene scene)
         {
+            CurrentScene?.Unload();
+
             CurrentScene = scene;
-            scene.Load();
+            CurrentScene.Load();
         }
 
         public override void Update(GameTime gameTime)
