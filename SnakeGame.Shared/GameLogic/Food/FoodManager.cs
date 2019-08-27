@@ -7,6 +7,7 @@ using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.Settings.Interfaces;
 using System;
 using System.Collections.Generic;
+using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic.Food
 {
@@ -18,15 +19,17 @@ namespace SnakeGame.Shared.GameLogic.Food
         private readonly IGameSettings _gameSettings;
         private readonly IGraphicsSystem _graphicsSystem;
         private readonly ILogger _logger;
+        private readonly ISnake _snake;
         private int _counter;
 
-        public FoodManager(Game game, IGameField field, IGameSettings gameSettings, IGraphicsSystem graphicsSystem, ILogger logger)
+        public FoodManager(Game game, IGameField field, IGameSettings gameSettings, IGraphicsSystem graphicsSystem, ILogger logger, ISnake snake)
         {
             _game = game ?? throw new ArgumentNullException(nameof(game));
             _gameField = field ?? throw new ArgumentNullException(nameof(field));
             _gameSettings = gameSettings ?? throw new ArgumentNullException(nameof(gameSettings));
             _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _snake = snake ?? throw new ArgumentNullException(nameof(snake));
 
             _foods = new List<IFoodGameComponent>();
         }
@@ -57,7 +60,11 @@ namespace SnakeGame.Shared.GameLogic.Food
         {
             _logger.Debug($"FoodManager.GenerateRandomFood(): BEGIN");
 
-            var randomPosition = _gameField.GetRandomCell().Bounds.Center.ToVector2();
+            var randomPosition = _gameField
+                .GetRandomCellWithoutSnake(_snake)
+                .Bounds
+                .Center
+                .ToVector2();
 
             var food = GenerateFood(randomPosition);
 

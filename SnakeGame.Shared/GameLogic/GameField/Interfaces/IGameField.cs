@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic.GameField.Interfaces
 {
@@ -19,6 +20,8 @@ namespace SnakeGame.Shared.GameLogic.GameField.Interfaces
         ICell[,] Cells { get; }
 
         ICell GetRandomCell();
+
+        ICell GetRandomCellWithoutSnake(ISnake snake);
 
         ICell GetCellByCoordinates(Vector2 position);
     }

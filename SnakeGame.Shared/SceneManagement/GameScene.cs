@@ -69,10 +69,6 @@ namespace SnakeGame.Shared.SceneManagement
                         Enabled = true
                     };
 
-                    _foodManager = new FoodManager(Game, _gameField, GameSettings, GraphicsSystem, Logger);
-                    _foodGameComponent = _foodManager.GenerateRandomFood();
-                    
-
                     _snake = new Snake(Logger, _gameField, GameSettings);
                     _snake.Grow();
                     _snakeMovementComponent =
@@ -85,6 +81,9 @@ namespace SnakeGame.Shared.SceneManagement
                         Enabled = true,
                         Visible = true
                     };
+
+                    _foodManager = new FoodManager(Game, _gameField, GameSettings, GraphicsSystem, Logger, _snake);
+                    _foodGameComponent = _foodManager.GenerateRandomFood();
 
                     #region Common
 
