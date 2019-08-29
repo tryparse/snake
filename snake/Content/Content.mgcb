@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Effects/grayscale.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/grayscale.fx
+
 #begin Fonts/big.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

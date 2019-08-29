@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SnakeGame.Shared.Common.ResourceManagers;
 
 namespace SnakeGame.Shared.Graphics
@@ -14,5 +15,7 @@ namespace SnakeGame.Shared.Graphics
         SpriteFont SpriteFont { get; }
 
         ITextureManager TextureManager { get;}
+
+        Effect LoadEffect(string path);
     }
 }

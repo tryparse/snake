@@ -17,6 +17,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly IGraphicsSystem _graphicsSystem;
         private readonly ISnakeMovementComponent _movement;
         private readonly IGameField _gameField;
+        private readonly Effect _grayscaleEffect;
 
         public SnakeGraphicsComponent(ISnake snake, IGraphicsSystem graphicsSystem, ISnakeMovementComponent movement, IGameField gameField)
         {
@@ -24,6 +25,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));
             _movement = movement ?? throw new ArgumentNullException(nameof(movement));
             _gameField = gameField ?? throw new ArgumentNullException(nameof(gameField));
+
+            _grayscaleEffect = graphicsSystem.LoadEffect("Effects/grayscale");
         }
 
         public void Draw(GameTime gameTime)

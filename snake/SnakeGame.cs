@@ -119,7 +119,7 @@ namespace snake
             LoadTextures();
 
             _textureManager = new TextureManager(_textureRegions);
-            _graphicsSystem = new GraphicsSystem(_graphicsSettings, _spriteBatch, _spriteFont, _debugSpriteFont, _textureManager);
+            _graphicsSystem = new GraphicsSystem(_graphicsSettings, Content, _spriteBatch, _spriteFont, _debugSpriteFont, _textureManager);
 
             _sceneManager = new SceneManager(this);
 
