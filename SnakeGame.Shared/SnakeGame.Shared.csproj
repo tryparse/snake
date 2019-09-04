@@ -99,6 +99,7 @@
     <Compile Include="Graphics\IGraphicsSettings.cs" />
     <Compile Include="Graphics\GraphicsSystem.cs" />
     <Compile Include="SceneManagement\BaseScene.cs" />
+    <Compile Include="SceneManagement\GameOverScene.cs" />
     <Compile Include="SceneManagement\GameScene.cs" />
     <Compile Include="SceneManagement\IScene.cs" />
     <Compile Include="SceneManagement\ISceneManager.cs" />
