@@ -10,10 +10,10 @@ namespace SnakeGame.Shared.GameLogic.Food
 {
     public class FoodGraphicsComponent : IGraphics2DComponent
     {
-        private readonly IFood _food;
+        private readonly IFoodEntity _food;
         private readonly IGraphicsSystem _graphicsSystem;
 
-        public FoodGraphicsComponent(IFood food, IGraphicsSystem graphicsSystem)
+        public FoodGraphicsComponent(IFoodEntity food, IGraphicsSystem graphicsSystem)
         {
             _food = food ?? throw new ArgumentNullException(nameof(food));
             _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));

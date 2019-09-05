@@ -9,7 +9,7 @@ namespace SnakeGame.Shared.GameLogic.Food
     {
         private readonly IGraphics2DComponent _graphicsComponent;
 
-        public FoodComponent(IFood food, IGraphics2DComponent graphicsComponent, string id)
+        public FoodComponent(IFoodEntity food, IGraphics2DComponent graphicsComponent, string id)
         {
             Food = food;
             ID = id;
@@ -18,7 +18,7 @@ namespace SnakeGame.Shared.GameLogic.Food
 
         public string ID { get; }
 
-        public IFood Food { get; }
+        public IFoodEntity Food { get; }
 
         public bool Enabled { get; set; }
 

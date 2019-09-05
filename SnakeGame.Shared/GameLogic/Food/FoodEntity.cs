@@ -4,9 +4,9 @@ using SnakeGame.Shared.GameLogic.Food.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic.Food
 {
-    public class Food : IFood
+    public class FoodEntity : IFoodEntity
     {
-        public Food(Vector2 position, Size2 size, float rotation = 0f)
+        public FoodEntity(Vector2 position, Size2 size, float rotation = 0f)
         {
             Position = position;
             Size = size;

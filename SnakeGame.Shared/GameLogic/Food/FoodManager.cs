@@ -79,7 +79,7 @@ namespace SnakeGame.Shared.GameLogic.Food
 
             var size = new Size2(_gameSettings.TileSize, _gameSettings.TileSize);
 
-            var food = new Food(position, size);
+            var food = new FoodEntity(position, size);
             var graphicsComponent = new FoodGraphicsComponent(food, _graphicsSystem);
 
             var component = new FoodComponent(food, graphicsComponent, _counter.ToString())

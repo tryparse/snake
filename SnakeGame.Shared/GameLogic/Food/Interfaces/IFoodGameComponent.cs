@@ -7,6 +7,6 @@ namespace SnakeGame.Shared.GameLogic.Food.Interfaces
     {
         string ID { get; }
 
-        IFood Food { get; }
+        IFoodEntity Food { get; }
     }
 }
