@@ -27,6 +27,11 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
         public void Draw(GameTime gameTime)
         {
+            _graphicsSystem.SpriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                sortMode: SpriteSortMode.Deferred, blendState: BlendState.AlphaBlend,
+                transformMatrix: _graphicsSystem.Camera2D.GetViewMatrix(), depthStencilState: DepthStencilState.Default,
+                rasterizerState: RasterizerState.CullNone);
+
             if (_graphicsSettings.IsRenderingEnabled)
             {
                 Rendering();
@@ -36,6 +41,8 @@ namespace SnakeGame.Shared.GameLogic.GameField
             {
                 DebugRendering();
             }
+
+            _graphicsSystem.SpriteBatch.End();
         }
 
         private void DebugRendering()

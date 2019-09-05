@@ -21,6 +21,10 @@ namespace SnakeGame.Shared.GameLogic.Food
 
         public void Draw(GameTime gameTime)
         {
+            _graphicsSystem.SpriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend,
+                transformMatrix: _graphicsSystem.Camera2D.GetViewMatrix(), depthStencilState: DepthStencilState.Default);
+
             if (_graphicsSystem.GraphicsSettings.IsRenderingEnabled)
             {
                 Rendering();
@@ -30,6 +34,8 @@ namespace SnakeGame.Shared.GameLogic.Food
             {
                 DebugRendering();
             }
+
+            _graphicsSystem.SpriteBatch.End();
         }
 
         private void DebugRendering()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Screens;
 using SnakeGame.Shared.Common;
@@ -75,6 +76,10 @@ namespace SnakeGame.Shared.SceneManagement
 
         public override void Draw(GameTime gameTime)
         {
+            GraphicsSystem.SpriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend,
+                transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(), depthStencilState: DepthStencilState.Default);
+
             GraphicsSystem.SpriteBatch.DrawString(GraphicsSystem.SpriteFont, gameTime.TotalGameTime.ToString(),
                 Vector2.One, Color.Red);
 
@@ -86,6 +91,8 @@ namespace SnakeGame.Shared.SceneManagement
             {
                 GraphicsSystem.SpriteBatch.DrawString(GraphicsSystem.SpriteFont, _titleText, _textPosition, Color.DarkGreen);
             }
+
+            GraphicsSystem.SpriteBatch.End();
         }
 
         public override void Unload()

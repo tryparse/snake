@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SnakeGame.Shared.GameLogic;
 using SnakeGame.Shared.Graphics;
 using SnakeGame.Shared.Settings.Interfaces;
@@ -36,7 +37,13 @@ namespace SnakeGame.Shared.UIComponents
 
         public override void Draw(GameTime gameTime)
         {
+            _graphicsSystem.SpriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend,
+                transformMatrix: _graphicsSystem.Camera2D.GetViewMatrix());
+
             _graphicsSystem.SpriteBatch.DrawString(_graphicsSystem.DebugSpriteFont, _stringBuilder.ToString(), Vector2.One, Color.Red);
+
+            _graphicsSystem.SpriteBatch.End();
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SnakeGame.Shared.Graphics;
 
 namespace SnakeGame.Shared.UIComponents
 {
@@ -16,13 +17,15 @@ namespace SnakeGame.Shared.UIComponents
         private readonly SpriteBatch _spriteBatch;
         private readonly SpriteFont _font;
         private readonly FramesPerSecondCounter _fps;
+        private readonly IGraphicsSystem _graphicsSystem;
 
-        public FpsCounter(Game game, Vector2 position, SpriteBatch spriteBatch, SpriteFont font, Color color) : base(game)
+        public FpsCounter(Game game, Vector2 position, SpriteBatch spriteBatch, SpriteFont font, Color color, IGraphicsSystem graphicsSystem) : base(game)
         {
             this._position = position;
             this._color = color;
             this._spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
             this._font = font;
+            _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));
 
             this._fps = new FramesPerSecondCounter();
         }
@@ -36,11 +39,17 @@ namespace SnakeGame.Shared.UIComponents
 
         public override void Draw(GameTime gameTime)
         {
+            _graphicsSystem.SpriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend,
+                transformMatrix: _graphicsSystem.Camera2D.GetViewMatrix());
+
             base.Draw(gameTime);
 
             _fps.Draw(gameTime);
 
             _spriteBatch.DrawString(_font, _fps.FramesPerSecond.ToString(), _position, _color);
+
+            _graphicsSystem.SpriteBatch.End();
         }
     }
 }

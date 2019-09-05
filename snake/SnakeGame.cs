@@ -119,7 +119,7 @@ namespace snake
             LoadTextures();
 
             _textureManager = new TextureManager(_textureRegions);
-            _graphicsSystem = new GraphicsSystem(_graphicsSettings, Content, _spriteBatch, _spriteFont, _debugSpriteFont, _textureManager);
+            _graphicsSystem = new GraphicsSystem(_graphicsSettings, Content, _spriteBatch, _spriteFont, _debugSpriteFont, _textureManager, _camera);
 
             _sceneManager = new SceneManager(this);
 
@@ -188,11 +188,11 @@ namespace snake
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend, transformMatrix: _camera.GetViewMatrix());
+            //_spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend, transformMatrix: _camera.GetViewMatrix());
 
             base.Draw(gameTime);
 
-            _spriteBatch.End();
+            //_spriteBatch.End();
         }
     }
 }

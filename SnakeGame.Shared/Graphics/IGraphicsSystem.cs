@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using SnakeGame.Shared.Common.ResourceManagers;
 
 namespace SnakeGame.Shared.Graphics
@@ -17,5 +18,7 @@ namespace SnakeGame.Shared.Graphics
         ITextureManager TextureManager { get;}
 
         Effect LoadEffect(string path);
+
+        Camera2D Camera2D { get; }
     }
 }

@@ -31,10 +31,16 @@ namespace SnakeGame.Shared.UIComponents
                 size.Height / (float) _headTexture2D.Height);
             var textPosition = new Vector2(_position.X + size.Width, _position.Y);
 
+            _graphicsSystem.SpriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend,
+                transformMatrix: _graphicsSystem.Camera2D.GetViewMatrix());
+
             _graphicsSystem.SpriteBatch.Draw(_headTexture2D.Texture, _position, _headTexture2D.Bounds, Color.White, 0,
                 Vector2.Zero, scale, SpriteEffects.None, LayerDepths.UI);
             _graphicsSystem.SpriteBatch.DrawString(_graphicsSystem.SpriteFont, $" x {_gamePoints.RemainingLives}",
                 textPosition, _gamePoints.RemainingLives < 2 ? Color.Red : Color.Green);
+
+            _graphicsSystem.SpriteBatch.End();
         }
     }
 }

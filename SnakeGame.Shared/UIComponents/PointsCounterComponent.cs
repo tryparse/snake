@@ -31,8 +31,14 @@ namespace SnakeGame.Shared.UIComponents
             var scale = new Vector2(size.Width / (float)_foodTexture2D.Width, size.Height / (float)_foodTexture2D.Height);
             var textPosition = new Vector2(_position.X + size.Width, _position.Y);
 
+            _graphicsSystem.SpriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend,
+                transformMatrix: _graphicsSystem.Camera2D.GetViewMatrix());
+
             _graphicsSystem.SpriteBatch.Draw(_foodTexture2D.Texture, _position, _foodTexture2D.Bounds, Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, LayerDepths.UI);
             _graphicsSystem.SpriteBatch.DrawString(_graphicsSystem.SpriteFont, $" x {_gamePoints.Points}", textPosition, Color.Green);
+
+            _graphicsSystem.SpriteBatch.End();
         }
     }
 }

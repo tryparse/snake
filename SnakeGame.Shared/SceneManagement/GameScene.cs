@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic;
@@ -99,7 +100,7 @@ namespace SnakeGame.Shared.SceneManagement
                     #region UI components
 
                     _fpsCounter = new FpsCounter(Game, new Vector2(Game.GraphicsDevice.Viewport.Width - 50, 0), GraphicsSystem.SpriteBatch,
-                        GraphicsSystem.SpriteFont, Color.Black);
+                        GraphicsSystem.SpriteFont, Color.Black, GraphicsSystem);
 
                     var pointsCounterPosition = Vector2.Add(new Vector2(_gameField.Bounds.Right, _gameField.Bounds.Top),
                         new Vector2(10, 0));
@@ -139,6 +140,10 @@ namespace SnakeGame.Shared.SceneManagement
 
         public override void Draw(GameTime gameTime)
         {
+            GraphicsSystem.SpriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend,
+                transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(), depthStencilState: DepthStencilState.Default);
+
             if (!IsLoaded)
             {
                 var textSize = GraphicsSystem.SpriteFont.MeasureString(LoadingText);
@@ -146,6 +151,8 @@ namespace SnakeGame.Shared.SceneManagement
 
                 GraphicsSystem.SpriteBatch.DrawString(GraphicsSystem.SpriteFont, LoadingText, loadingTextPosition, Color.White);
             }
+
+            GraphicsSystem.SpriteBatch.End();
         }
 
         public override void Unload()
