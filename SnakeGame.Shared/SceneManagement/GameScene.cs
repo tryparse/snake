@@ -115,21 +115,9 @@ namespace SnakeGame.Shared.SceneManagement
                 })
             };
 
-            var result = Task.WhenAll(tasks.ToArray());
-
-            await result;
+            await Task.WhenAll(tasks.ToArray());
 
             IsLoaded = true;
-
-            //Game.Components.Add(_gameFieldComponent);
-            //Game.Components.Add(_snakeGameComponent);
-            //_foodManager.Add(_foodGameComponent);
-            //Game.Components.Add(_gameManager);
-
-            //Game.Components.Add(_fpsCounter);
-            //Game.Components.Add(_pointsCounterComponent);
-            //Game.Components.Add(_remainingLivesComponent);
-            //Game.Components.Add(_debugInfoPanelComponent);
         }
 
         public override void Update(GameTime gameTime)
@@ -150,8 +138,8 @@ namespace SnakeGame.Shared.SceneManagement
         public override void Draw(GameTime gameTime)
         {
             _gameSpriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                sortMode: SpriteSortMode.Texture, blendState: BlendState.AlphaBlend,
-                transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(), depthStencilState: DepthStencilState.Default);
+                sortMode: SpriteSortMode.Texture, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(),
+                depthStencilState: DepthStencilState.Default);
             _uiSpriteBatch.Begin(samplerState: SamplerState.PointClamp,
                 sortMode: SpriteSortMode.Deferred, blendState: BlendState.AlphaBlend,
                 transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
@@ -174,14 +162,7 @@ namespace SnakeGame.Shared.SceneManagement
 
         public override void Unload()
         {
-            //Game.Components.Remove(_gameFieldComponent);
-            //Game.Components.Remove(_snakeGameComponent);
-            //_foodManager.Reset();
-            //Game.Components.Remove(_gameManager);
-            //Game.Components.Remove(_fpsCounter);
-            //Game.Components.Remove(_pointsCounterComponent);
-            //Game.Components.Remove(_remainingLivesComponent);
-            //Game.Components.Remove(_debugInfoPanelComponent);
+            
         }
 
         private void HandleInput()

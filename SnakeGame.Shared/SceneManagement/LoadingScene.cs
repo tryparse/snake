@@ -50,7 +50,7 @@ namespace SnakeGame.Shared.SceneManagement
                     
                 }),
 
-                Task.Delay(1000)
+                Task.Delay(300)
             };
 
             var result = Task.WhenAll(tasks.ToArray());

@@ -140,7 +140,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
         private void DrawGrassWithTree(ICell cell, SpriteBatch spriteBatch)
         {
             DrawGrass(cell, spriteBatch);
-            DrawTree(cell, spriteBatch);
+            //DrawTree(cell, spriteBatch);
         }
     }
 }

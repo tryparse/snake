@@ -186,13 +186,9 @@ namespace snake
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            //_spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend, transformMatrix: _camera.GetViewMatrix());
+            GraphicsDevice.Clear(Color.YellowGreen);
 
             base.Draw(gameTime);
-
-            //_spriteBatch.End();
         }
     }
 }
