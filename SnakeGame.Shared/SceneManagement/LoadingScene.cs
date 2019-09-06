@@ -22,10 +22,14 @@ namespace SnakeGame.Shared.SceneManagement
         private Vector2 _textPosition;
         private Vector2 _loadingTextPosition;
 
+        private SpriteBatch _uiSpriteBatch;
+
         public LoadingScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, ILogger logger, IGameKeys gameKeys) :
             base(game, sceneManager, graphicsSystem, gameSettings, logger, gameKeys)
         {
             IsLoaded = false;
+
+            _uiSpriteBatch = new SpriteBatch(Game.GraphicsDevice);
         }
 
         public override void Load()
@@ -42,6 +46,8 @@ namespace SnakeGame.Shared.SceneManagement
                     _screenBounds = new Rectangle(0, 0, GameSettings.ScreenWidth, GameSettings.ScreenHeight);
 
                     CalculateTextPosition();
+
+                    
                 }),
 
                 Task.Delay(1000)
@@ -76,23 +82,21 @@ namespace SnakeGame.Shared.SceneManagement
 
         public override void Draw(GameTime gameTime)
         {
-            GraphicsSystem.SpriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend,
-                transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(), depthStencilState: DepthStencilState.Default);
+            _uiSpriteBatch.Begin();
 
-            GraphicsSystem.SpriteBatch.DrawString(GraphicsSystem.SpriteFont, gameTime.TotalGameTime.ToString(),
+            _uiSpriteBatch.DrawString(GraphicsSystem.SpriteFont, gameTime.TotalGameTime.ToString(),
                 Vector2.One, Color.Red);
 
             if (!IsLoaded)
             {
-                GraphicsSystem.SpriteBatch.DrawString(GraphicsSystem.SpriteFont, LoadingText, _loadingTextPosition, Color.White);
+                _uiSpriteBatch.DrawString(GraphicsSystem.SpriteFont, LoadingText, _loadingTextPosition, Color.White);
             }
             else
             {
-                GraphicsSystem.SpriteBatch.DrawString(GraphicsSystem.SpriteFont, _titleText, _textPosition, Color.DarkGreen);
+                _uiSpriteBatch.DrawString(GraphicsSystem.SpriteFont, _titleText, _textPosition, Color.DarkGreen);
             }
 
-            GraphicsSystem.SpriteBatch.End();
+            _uiSpriteBatch.End();
         }
 
         public override void Unload()

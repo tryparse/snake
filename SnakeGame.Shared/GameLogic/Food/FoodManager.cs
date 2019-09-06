@@ -41,7 +41,6 @@ namespace SnakeGame.Shared.GameLogic.Food
             _logger.Debug($"FoodManager.Add(): BEGIN");
 
             _foods.Add(food);
-            _game.Components.Add(food);
 
             _logger.Debug($"FoodManager.Add(): COMPLETE");
         }
@@ -51,7 +50,6 @@ namespace SnakeGame.Shared.GameLogic.Food
             _logger.Debug($"FoodManager.Remove(): BEGIN");
 
             _foods.Remove(food);
-            _game.Components.Remove(food);
 
             _logger.Debug($"FoodManager.Remove(): COMPLETE");
         }
@@ -82,11 +80,7 @@ namespace SnakeGame.Shared.GameLogic.Food
             var food = new FoodEntity(position, size);
             var graphicsComponent = new FoodGraphicsComponent(food, _graphicsSystem);
 
-            var component = new FoodComponent(food, graphicsComponent, _counter.ToString())
-            {
-                Enabled = true,
-                Visible = true
-            };
+            var component = new FoodComponent(food, graphicsComponent, _counter.ToString());
 
             _counter++;
 
@@ -99,7 +93,7 @@ namespace SnakeGame.Shared.GameLogic.Food
         {
             foreach (var c in FoodComponents)
             {
-                _game.Components.Remove(c);
+                //_game.Components.Remove(c);
             }
         }
     }

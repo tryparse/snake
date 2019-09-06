@@ -171,7 +171,7 @@ namespace SnakeGame.Shared.GameLogic
         public void TogglePause()
         {
             _snakeComponent.ToggleEnabled();
-            IsPaused = !_snakeComponent.Enabled;
+            //IsPaused = !_snakeComponent.Enabled;
         }
 
         public void TogglePause(bool isPaused)

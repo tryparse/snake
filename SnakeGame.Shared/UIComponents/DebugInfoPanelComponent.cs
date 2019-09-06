@@ -2,20 +2,21 @@
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Sprites;
 using SnakeGame.Shared.GameLogic;
 using SnakeGame.Shared.Graphics;
 using SnakeGame.Shared.Settings.Interfaces;
 
 namespace SnakeGame.Shared.UIComponents
 {
-    public class DebugInfoPanelComponent : DrawableGameComponent
+    public class DebugInfoPanelComponent : IUiComponent
     {
         private readonly IGraphicsSystem _graphicsSystem;
         private readonly IGameSettings _gameSettings;
         private readonly IGameManager _gameManager;
         private readonly StringBuilder _stringBuilder;
 
-        public DebugInfoPanelComponent(Game game, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, IGameManager gameManager) : base(game)
+        public DebugInfoPanelComponent(IGraphicsSystem graphicsSystem, IGameSettings gameSettings, IGameManager gameManager)
         {
             _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));
             _gameSettings = gameSettings ?? throw new ArgumentNullException(nameof(gameSettings));
@@ -24,9 +25,12 @@ namespace SnakeGame.Shared.UIComponents
             _stringBuilder = new StringBuilder();
         }
 
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
-            Visible = _gameSettings.IsShowDebugInfo;
+            if (!_gameSettings.IsShowDebugInfo)
+            {
+                return;
+            }
 
             _stringBuilder.Clear();
             _stringBuilder
@@ -35,15 +39,9 @@ namespace SnakeGame.Shared.UIComponents
                 .AppendLine($"IsPaused = {_gameManager.IsPaused}");
         }
 
-        public override void Draw(GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            _graphicsSystem.SpriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend,
-                transformMatrix: _graphicsSystem.Camera2D.GetViewMatrix());
-
-            _graphicsSystem.SpriteBatch.DrawString(_graphicsSystem.DebugSpriteFont, _stringBuilder.ToString(), Vector2.One, Color.Red);
-
-            _graphicsSystem.SpriteBatch.End();
+            spriteBatch.DrawString(_graphicsSystem.DebugSpriteFont, _stringBuilder.ToString(), Vector2.One, Color.Red);
         }
     }
 }

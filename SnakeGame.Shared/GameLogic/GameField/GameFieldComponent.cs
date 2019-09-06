@@ -2,6 +2,7 @@
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.Graphics;
 using System;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SnakeGame.Shared.GameLogic.GameField
 {
@@ -11,28 +12,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
         public GameFieldComponent(IGameField gameField, IGraphics2DComponent graphicsComponent)
         {
-            GameField = gameField;
             _graphicsComponent = graphicsComponent;
-        }
-
-        public bool Enabled { get; set; }
-
-        public int UpdateOrder { get; set; }
-
-        public int DrawOrder { get; set; }
-
-        public bool Visible { get; set; }
-
-        public IGameField GameField { get; }
-
-        public event EventHandler<EventArgs> EnabledChanged;
-        public event EventHandler<EventArgs> UpdateOrderChanged;
-        public event EventHandler<EventArgs> DrawOrderChanged;
-        public event EventHandler<EventArgs> VisibleChanged;
-
-        public void Initialize()
-        {
-            
         }
 
         public void Update(GameTime gameTime)
@@ -40,9 +20,9 @@ namespace SnakeGame.Shared.GameLogic.GameField
             
         }
 
-        public void Draw(GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            _graphicsComponent.Draw(gameTime);
+            _graphicsComponent.Draw(spriteBatch, gameTime);
         }
     }
 }

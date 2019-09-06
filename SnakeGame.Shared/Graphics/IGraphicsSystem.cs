@@ -9,8 +9,6 @@ namespace SnakeGame.Shared.Graphics
     {
         IGraphicsSettings GraphicsSettings { get; }
 
-        SpriteBatch SpriteBatch { get; }
-
         SpriteFont DebugSpriteFont { get; }
 
         SpriteFont SpriteFont { get; }

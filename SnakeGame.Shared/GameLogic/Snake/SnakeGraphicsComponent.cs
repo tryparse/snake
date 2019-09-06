@@ -8,6 +8,7 @@ using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using SnakeGame.Shared.Graphics;
 using System;
 using System.Linq;
+using MonoGame.Extended.Sprites;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
@@ -29,39 +30,28 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _grayscaleEffect = graphicsSystem.LoadEffect("Effects/grayscale");
         }
 
-        public void Draw(GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            _graphicsSystem.SpriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend,
-                transformMatrix: _graphicsSystem.Camera2D.GetViewMatrix(), depthStencilState: DepthStencilState.Default, rasterizerState: RasterizerState.CullNone);
-
             if (_graphicsSystem.GraphicsSettings.IsRenderingEnabled)
             {
-                Rendering();
+                DrawSegment(spriteBatch, _snake.Head);
+
+                foreach (var segment in _snake.Tail)
+                {
+                    if (_gameField.Bounds.Contains(segment.Position))
+                    {
+                        DrawSegment(spriteBatch, segment);
+                    }
+                }
             }
 
             if (_graphicsSystem.GraphicsSettings.IsDebugRenderingEnabled)
             {
-                DebugRendering();
-            }
-
-            _graphicsSystem.SpriteBatch.End();
-        }
-
-        private void Rendering()
-        {
-            DrawSegment(_snake.Head);
-
-            foreach (var segment in _snake.Tail)
-            {
-                if (_gameField.Bounds.Contains(segment.Position))
-                {
-                    DrawSegment(segment);
-                }
+                DebugDraw(spriteBatch);
             }
         }
 
-        private void DrawSegment(ISnakeSegment segment)
+        private void DrawSegment(SpriteBatch spriteBatch, ISnakeSegment segment)
         {
             var selectedTexture = SelectTexture(segment);
 
@@ -70,7 +60,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
             var scale = CalculateScale(segment, selectedTexture);
 
-            _graphicsSystem.SpriteBatch.Draw(
+            spriteBatch.Draw(
                 texture: selectedTexture.Texture,
                 position: segment.Position,
                 sourceRectangle: selectedTexture.Bounds,
@@ -120,23 +110,23 @@ namespace SnakeGame.Shared.GameLogic.Snake
             return scale;
         }
 
-        private void DebugRendering()
+        private void DebugDraw(SpriteBatch spriteBatch)
         {
-            DebugDrawSegment(_snake.Head);
+            DebugDrawSegment(spriteBatch, _snake.Head);
 
             foreach (var segment in _snake.Tail)
             {
-                DebugDrawSegment(segment);
+                DebugDrawSegment(spriteBatch, segment);
             }
         }
 
-        private void DebugDrawSegment(ISnakeSegment segment)
+        private void DebugDrawSegment(SpriteBatch spriteBatch, ISnakeSegment segment)
         {
             var rotation = DirectionHelper.GetRotation(segment.Direction);
 
-            _graphicsSystem.SpriteBatch.DrawRectangle(segment.Bounds, Color.Red, 2);
-            _graphicsSystem.SpriteBatch.DrawLine(segment.Bounds.Center.ToVector2(), segment.Bounds.Width / 2f, rotation, Color.Red);
-            _graphicsSystem.SpriteBatch.DrawString(_graphicsSystem.DebugSpriteFont, segment.Position.ToString(), segment.Position, Color.Red);
+            spriteBatch.DrawRectangle(segment.Bounds, Color.Red, 2);
+            spriteBatch.DrawLine(segment.Bounds.Center.ToVector2(), segment.Bounds.Width / 2f, rotation, Color.Red);
+            spriteBatch.DrawString(_graphicsSystem.DebugSpriteFont, segment.Position.ToString(), segment.Position, Color.Red);
         }
     }
 }

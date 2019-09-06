@@ -3,6 +3,7 @@ using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using SnakeGame.Shared.Graphics;
 using SnakeGame.Shared.Logging;
 using System;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
@@ -17,28 +18,9 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _graphicsComponent = graphicsComponent ?? throw new ArgumentNullException(nameof(graphicsComponent));
             SnakeMovementComponent = snakeMovement ?? throw new ArgumentNullException(nameof(snakeMovement));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
-            Initialize();
         }
 
-        #region IUpdatable & IDrawable
-
-        public bool Enabled { get; set; }
-
-        public int UpdateOrder { get; set; }
-
-        public int DrawOrder { get; set; }
-
-        public bool Visible { get; set; }
-
         public ISnake Snake { get; }
-
-        public event EventHandler<EventArgs> EnabledChanged;
-        public event EventHandler<EventArgs> UpdateOrderChanged;
-        public event EventHandler<EventArgs> DrawOrderChanged;
-        public event EventHandler<EventArgs> VisibleChanged;
-
-        #endregion IUpdatable & IDrawable
 
         #region ISnakeGameComponent
 
@@ -46,24 +28,19 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         #endregion ISnakeGameComponent
 
-        public void Initialize()
+        public void ToggleEnabled(bool enabled)
         {
+            throw new NotImplementedException();
         }
 
         public void Update(GameTime gameTime)
         {
-            if (Enabled)
-            {
-                SnakeMovementComponent.Update(gameTime);
-            }
+            SnakeMovementComponent.Update(gameTime);
         }
 
-        public void Draw(GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            if (Visible)
-            {
-                _graphicsComponent.Draw(gameTime);
-            }
+            _graphicsComponent.Draw(spriteBatch, gameTime);
         }
 
         public void Reset()
@@ -74,12 +51,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public void ToggleEnabled()
         {
-            Enabled = !Enabled;
-        }
-
-        public void ToggleEnabled(bool enabled)
-        {
-            Enabled = enabled;
+            
         }
     }
 }

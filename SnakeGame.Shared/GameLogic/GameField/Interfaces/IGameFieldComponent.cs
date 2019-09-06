@@ -5,11 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SnakeGame.Shared.GameLogic.GameField.Interfaces
 {
-    public interface IGameFieldComponent : IGameComponent, IUpdateable, IDrawable
+    public interface IGameFieldComponent
     {
-        IGameField GameField { get; }
+        void Update(GameTime gameTime);
+
+        void Draw(SpriteBatch spriteBatch, GameTime gameTime);
     }
 }

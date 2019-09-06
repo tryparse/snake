@@ -7,6 +7,7 @@ using SnakeGame.Shared.GameLogic.GameField.Interfaces;
 using SnakeGame.Shared.Graphics;
 using SnakeGame.Shared.Settings.Interfaces;
 using System;
+using MonoGame.Extended.Sprites;
 
 namespace SnakeGame.Shared.GameLogic.GameField
 {
@@ -25,78 +26,67 @@ namespace SnakeGame.Shared.GameLogic.GameField
             _gameSettings = gameSettings ?? throw new ArgumentNullException(nameof(gameSettings));
         }
 
-        public void Draw(GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            _graphicsSystem.SpriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                sortMode: SpriteSortMode.Deferred, blendState: BlendState.AlphaBlend,
-                transformMatrix: _graphicsSystem.Camera2D.GetViewMatrix(), depthStencilState: DepthStencilState.Default,
-                rasterizerState: RasterizerState.CullNone);
-
             if (_graphicsSettings.IsRenderingEnabled)
             {
-                Rendering();
-            }
+                var fieldWidth = _gameField.Columns;
+                var fieldHeight = _gameField.Rows;
 
-            if (_graphicsSettings.IsDebugRenderingEnabled)
-            {
-                DebugRendering();
-            }
-
-            _graphicsSystem.SpriteBatch.End();
-        }
-
-        private void DebugRendering()
-        {
-            RenderTileBorders();
-            RenderCellIndices();
-        }
-
-        private void Rendering()
-        {
-            var fieldWidth = _gameField.Columns;
-            var fieldHeight = _gameField.Rows;
-
-            for (var x = 0; x < fieldWidth; x++)
-            {
-                for (var y = 0; y < fieldHeight; y++)
+                for (var x = 0; x < fieldWidth; x++)
                 {
-                    var cell = _gameField.Cells[x, y];
-
-                    switch (cell.CellType)
+                    for (var y = 0; y < fieldHeight; y++)
                     {
-                        case CellType.Tree:
+                        var cell = _gameField.Cells[x, y];
+
+                        switch (cell.CellType)
                         {
-                            DrawGrassWithTree(cell);
-                            break;
-                        }
-                        case CellType.Grass:
-                        {
-                            DrawGrass(cell);
-                            break;
-                        }
-                        default:
-                        {
-                            break;
+                            case CellType.Tree:
+                            {
+                                DrawGrassWithTree(cell, spriteBatch);
+                                break;
+                            }
+                            case CellType.Grass:
+                            {
+                                DrawGrass(cell, spriteBatch);
+                                break;
+                            }
+                            case CellType.None:
+                            default:
+                            {
+                                break;
+                            }
                         }
                     }
                 }
             }
+
+            if (_graphicsSettings.IsDebugRenderingEnabled)
+            {
+                DebugDraw(spriteBatch);
+            }
         }
 
-        private void RenderTileBorders()
+        private void DebugDraw(SpriteBatch spriteBatch)
+        {
+            DrawTileBorders(spriteBatch);
+            DrawCellIndices(spriteBatch);
+        }
+
+        private void DrawTileBorders(SpriteBatch spriteBatch)
         {
             for (var x = 0; x <= _gameField.Bounds.Width; x += _gameSettings.TileSize)
             {
-                _graphicsSystem.SpriteBatch.DrawLine(new Vector2(x, 0), new Vector2(x, _gameField.Bounds.Height), Color.Black);
+                spriteBatch.DrawLine(new Vector2(x, 0), new Vector2(x, _gameField.Bounds.Height), Color.Black);
             }
 
             for (var y = 0; y <= _gameField.Bounds.Height; y += _gameSettings.TileSize)
             {
-                _graphicsSystem.SpriteBatch.DrawLine(new Vector2(0, y), new Vector2(_gameField.Bounds.Width, y), Color.Black);
+                spriteBatch.DrawLine(new Vector2(0, y), new Vector2(_gameField.Bounds.Width, y), Color.Black);
             }
         }
 
-        private void RenderCellIndices()
+        private void DrawCellIndices(SpriteBatch spriteBatch)
         {
             var fieldWidth = _gameField.Cells.GetLength(0);
             var fieldHeight = _gameField.Cells.GetLength(1);
@@ -107,7 +97,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
                 {
                     var cell = _gameField.Cells[x, y];
 
-                    _graphicsSystem.SpriteBatch.DrawString(
+                    spriteBatch.DrawString(
                         spriteFont: _graphicsSystem.DebugSpriteFont,
                         text: $"{cell.Column};{cell.Row}",
                         position: cell.Position,
@@ -121,9 +111,9 @@ namespace SnakeGame.Shared.GameLogic.GameField
             }
         }
 
-        private void DrawGrass(ICell cell)
+        private void DrawGrass(ICell cell, SpriteBatch spriteBatch)
         {
-            _graphicsSystem.SpriteBatch.Draw(
+            spriteBatch.Draw(
                 texture: _graphicsSystem.TextureManager.TextureRegions["Grass"].Texture,
                 destinationRectangle: cell.Bounds,
                 sourceRectangle: _graphicsSystem.TextureManager.TextureRegions["Grass"].Bounds,
@@ -134,9 +124,9 @@ namespace SnakeGame.Shared.GameLogic.GameField
                 layerDepth: LayerDepths.Grass);
         }
 
-        private void DrawTree(ICell cell)
+        private void DrawTree(ICell cell, SpriteBatch spriteBatch)
         {
-            _graphicsSystem.SpriteBatch.Draw(
+            spriteBatch.Draw(
                 texture: _graphicsSystem.TextureManager.TextureRegions["Tree"].Texture,
                 destinationRectangle: cell.Bounds,
                 sourceRectangle: _graphicsSystem.TextureManager.TextureRegions["Tree"].Bounds,
@@ -147,10 +137,10 @@ namespace SnakeGame.Shared.GameLogic.GameField
                 layerDepth: LayerDepths.Tree);
         }
 
-        private void DrawGrassWithTree(ICell cell)
+        private void DrawGrassWithTree(ICell cell, SpriteBatch spriteBatch)
         {
-            DrawGrass(cell);
-            DrawTree(cell);
+            DrawGrass(cell, spriteBatch);
+            DrawTree(cell, spriteBatch);
         }
     }
 }

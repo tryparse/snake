@@ -1,15 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SnakeGame.Shared.Graphics;
 
-namespace SnakeGame.Shared.GameLogic.Food.Interfaces
+namespace SnakeGame.Shared.UIComponents
 {
-    public interface IFoodGameComponent
+    internal interface IUiComponent
     {
-        string ID { get; }
-
-        IFoodEntity Food { get; }
-
         void Update(GameTime gameTime);
 
         void Draw(SpriteBatch spriteBatch, GameTime gameTime);

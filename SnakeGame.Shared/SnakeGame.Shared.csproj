@@ -112,6 +112,7 @@
     <Compile Include="Settings\Interfaces\IGameSettings.cs" />
     <Compile Include="UIComponents\DebugInfoPanelComponent.cs" />
     <Compile Include="UIComponents\FPSCounter.cs" />
+    <Compile Include="UIComponents\IUiComponent.cs" />
     <Compile Include="UIComponents\PointsCounterComponent.cs" />
     <Compile Include="UIComponents\RemainingLivesComponent.cs" />
   </ItemGroup>

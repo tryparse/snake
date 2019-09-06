@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Sprites;
 using SnakeGame.Shared.Common;
 using SnakeGame.Shared.GameLogic;
 using SnakeGame.Shared.GameLogic.Food;
@@ -40,9 +41,16 @@ namespace SnakeGame.Shared.SceneManagement
         private readonly string LoadingText = "loading...";
         private Rectangle _screenBounds;
 
+        private SpriteBatch _gameSpriteBatch;
+        private SpriteBatch _uiSpriteBatch;
+        private SpriteBatch _debugSpriteBatch;
+
         public GameScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, ILogger logger, IGameKeys gameKeys) : base(
             game, sceneManager, graphicsSystem, gameSettings, logger, gameKeys)
         {
+            _gameSpriteBatch = new SpriteBatch(Game.GraphicsDevice);
+            _uiSpriteBatch = new SpriteBatch(Game.GraphicsDevice);
+            _debugSpriteBatch = new SpriteBatch(Game.GraphicsDevice);
         }
 
         public override void Load()
@@ -64,11 +72,7 @@ namespace SnakeGame.Shared.SceneManagement
                     _gameField = _gameFieldFactory.GetRandomField(GameSettings.MapWidth, GameSettings.MapHeight, .8d);
                     _gameFieldComponent = new GameFieldComponent(_gameField,
                         new GameFieldGraphicsComponent(_gameField, GraphicsSystem.GraphicsSettings, GraphicsSystem,
-                            GameSettings))
-                    {
-                        Visible = true,
-                        Enabled = true
-                    };
+                            GameSettings));
 
                     _snake = new Snake(Logger, _gameField, GameSettings);
                     _snake.Grow();
@@ -77,11 +81,7 @@ namespace SnakeGame.Shared.SceneManagement
                             new SnakeControls(Keys.Up, Keys.Down, Keys.Left, Keys.Right));
                     _snakeGameComponent = new SnakeGameComponent(_snake,
                         new SnakeGraphicsComponent(_snake, GraphicsSystem, _snakeMovementComponent, _gameField),
-                        _snakeMovementComponent, Logger)
-                    {
-                        Enabled = true,
-                        Visible = true
-                    };
+                        _snakeMovementComponent, Logger);
 
                     _foodManager = new FoodManager(Game, _gameField, GameSettings, GraphicsSystem, Logger, _snake);
                     _foodGameComponent = _foodManager.GenerateRandomFood();
@@ -99,18 +99,17 @@ namespace SnakeGame.Shared.SceneManagement
 
                     #region UI components
 
-                    _fpsCounter = new FpsCounter(Game, new Vector2(Game.GraphicsDevice.Viewport.Width - 50, 0), GraphicsSystem.SpriteBatch,
-                        GraphicsSystem.SpriteFont, Color.Black, GraphicsSystem);
+                    _fpsCounter = new FpsCounter(new Vector2(Game.GraphicsDevice.Viewport.Width - 50, 0), GraphicsSystem.SpriteFont, Color.Black, GraphicsSystem);
 
                     var pointsCounterPosition = Vector2.Add(new Vector2(_gameField.Bounds.Right, _gameField.Bounds.Top),
                         new Vector2(10, 0));
-                    _pointsCounterComponent = new PointsCounterComponent(Game, pointsCounterPosition, GraphicsSystem, _gamePoints);
+                    _pointsCounterComponent = new PointsCounterComponent(pointsCounterPosition, GraphicsSystem, _gamePoints);
 
                     var remainingLivesPosition = Vector2.Add(new Vector2(_gameField.Bounds.Right, _gameField.Bounds.Top),
                         new Vector2(10, 25));
-                    _remainingLivesComponent = new RemainingLivesComponent(Game, remainingLivesPosition, GraphicsSystem, _gamePoints);
+                    _remainingLivesComponent = new RemainingLivesComponent(remainingLivesPosition, GraphicsSystem, _gamePoints);
 
-                    _debugInfoPanelComponent = new DebugInfoPanelComponent(Game, GraphicsSystem, GameSettings, _gameManager);
+                    _debugInfoPanelComponent = new DebugInfoPanelComponent(GraphicsSystem, GameSettings, _gameManager);
                     
                     #endregion UI components
                 })
@@ -122,49 +121,67 @@ namespace SnakeGame.Shared.SceneManagement
 
             IsLoaded = true;
 
-            Game.Components.Add(_gameFieldComponent);
-            Game.Components.Add(_snakeGameComponent);
-            _foodManager.Add(_foodGameComponent);
-            Game.Components.Add(_gameManager);
+            //Game.Components.Add(_gameFieldComponent);
+            //Game.Components.Add(_snakeGameComponent);
+            //_foodManager.Add(_foodGameComponent);
+            //Game.Components.Add(_gameManager);
 
-            Game.Components.Add(_fpsCounter);
-            Game.Components.Add(_pointsCounterComponent);
-            Game.Components.Add(_remainingLivesComponent);
-            Game.Components.Add(_debugInfoPanelComponent);
+            //Game.Components.Add(_fpsCounter);
+            //Game.Components.Add(_pointsCounterComponent);
+            //Game.Components.Add(_remainingLivesComponent);
+            //Game.Components.Add(_debugInfoPanelComponent);
         }
 
         public override void Update(GameTime gameTime)
         {
-            HandleInput();
+            if (IsLoaded)
+            {
+                HandleInput();
+
+                _gameFieldComponent.Update(gameTime);
+
+                _fpsCounter.Update(gameTime);
+                _pointsCounterComponent.Update(gameTime);
+                _remainingLivesComponent.Update(gameTime);
+                _debugInfoPanelComponent.Update(gameTime);
+            }
         }
 
         public override void Draw(GameTime gameTime)
         {
-            GraphicsSystem.SpriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                sortMode: SpriteSortMode.BackToFront, blendState: BlendState.AlphaBlend,
+            _gameSpriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                sortMode: SpriteSortMode.Texture, blendState: BlendState.AlphaBlend,
                 transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(), depthStencilState: DepthStencilState.Default);
+            _uiSpriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                sortMode: SpriteSortMode.Deferred, blendState: BlendState.AlphaBlend,
+                transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
 
             if (!IsLoaded)
             {
                 var textSize = GraphicsSystem.SpriteFont.MeasureString(LoadingText);
                 var loadingTextPosition = Vector2.Add(_screenBounds.Center.ToVector2(), -Vector2.Divide(textSize, 2));
 
-                GraphicsSystem.SpriteBatch.DrawString(GraphicsSystem.SpriteFont, LoadingText, loadingTextPosition, Color.White);
+                _uiSpriteBatch.DrawString(GraphicsSystem.SpriteFont, LoadingText, loadingTextPosition, Color.White);
+            }
+            else
+            {
+                _gameFieldComponent.Draw(_gameSpriteBatch, gameTime);
             }
 
-            GraphicsSystem.SpriteBatch.End();
+            _gameSpriteBatch.End();
+            _uiSpriteBatch.End();
         }
 
         public override void Unload()
         {
-            Game.Components.Remove(_gameFieldComponent);
-            Game.Components.Remove(_snakeGameComponent);
-            _foodManager.Reset();
-            Game.Components.Remove(_gameManager);
-            Game.Components.Remove(_fpsCounter);
-            Game.Components.Remove(_pointsCounterComponent);
-            Game.Components.Remove(_remainingLivesComponent);
-            Game.Components.Remove(_debugInfoPanelComponent);
+            //Game.Components.Remove(_gameFieldComponent);
+            //Game.Components.Remove(_snakeGameComponent);
+            //_foodManager.Reset();
+            //Game.Components.Remove(_gameManager);
+            //Game.Components.Remove(_fpsCounter);
+            //Game.Components.Remove(_pointsCounterComponent);
+            //Game.Components.Remove(_remainingLivesComponent);
+            //Game.Components.Remove(_debugInfoPanelComponent);
         }
 
         private void HandleInput()
