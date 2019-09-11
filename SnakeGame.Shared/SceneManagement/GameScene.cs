@@ -139,7 +139,7 @@ namespace SnakeGame.Shared.SceneManagement
                 var loadingTextPosition = Vector2.Add(_screenBounds.Center.ToVector2(), -Vector2.Divide(textSize, 2));
 
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                    sortMode: SpriteSortMode.Texture, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(),
+                    sortMode: SpriteSortMode.Texture, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(), 
                     depthStencilState: DepthStencilState.Default);
 
                 _spriteBatch.DrawString(GraphicsSystem.SpriteFont, LoadingText, loadingTextPosition, Color.White);
@@ -150,15 +150,15 @@ namespace SnakeGame.Shared.SceneManagement
             {
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
                     sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(),
-                    depthStencilState: DepthStencilState.DepthRead);
+                    depthStencilState: DepthStencilState.Default);
 
                 _gameFieldComponent.Draw(_spriteBatch, gameTime);
-                
+
                 _spriteBatch.End();
 
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
                     sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(),
-                    depthStencilState: DepthStencilState.DepthRead);
+                    depthStencilState: DepthStencilState.Default);
 
                 _snakeGameComponent.Draw(_spriteBatch, gameTime);
 
