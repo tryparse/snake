@@ -41,16 +41,12 @@ namespace SnakeGame.Shared.SceneManagement
         private readonly string LoadingText = "loading...";
         private Rectangle _screenBounds;
 
-        private SpriteBatch _gameSpriteBatch;
-        private SpriteBatch _uiSpriteBatch;
-        private SpriteBatch _debugSpriteBatch;
+        private SpriteBatch _spriteBatch;
 
         public GameScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, ILogger logger, IGameKeys gameKeys) : base(
             game, sceneManager, graphicsSystem, gameSettings, logger, gameKeys)
         {
-            _gameSpriteBatch = new SpriteBatch(Game.GraphicsDevice);
-            _uiSpriteBatch = new SpriteBatch(Game.GraphicsDevice);
-            _debugSpriteBatch = new SpriteBatch(Game.GraphicsDevice);
+            _spriteBatch = new SpriteBatch(Game.GraphicsDevice);
         }
 
         public override void Load()
@@ -69,7 +65,7 @@ namespace SnakeGame.Shared.SceneManagement
                     _randomGenerator = new RandomGenerator(1);
 
                     _gameFieldFactory = new GameFieldFactory(GameSettings, _randomGenerator);
-                    _gameField = _gameFieldFactory.GetRandomField(GameSettings.MapWidth, GameSettings.MapHeight, .8d);
+                    _gameField = _gameFieldFactory.GetRandomField(GameSettings.MapWidth, GameSettings.MapHeight, .5d);
                     _gameFieldComponent = new GameFieldComponent(_gameField,
                         new GameFieldGraphicsComponent(_gameField, GraphicsSystem.GraphicsSettings, GraphicsSystem,
                             GameSettings));
@@ -84,7 +80,7 @@ namespace SnakeGame.Shared.SceneManagement
                         _snakeMovementComponent, Logger);
 
                     _foodManager = new FoodManager(Game, _gameField, GameSettings, GraphicsSystem, Logger, _snake);
-                    _foodGameComponent = _foodManager.GenerateRandomFood();
+                    //_foodGameComponent = _foodManager.GenerateRandomFood();
 
                     #region Common
 
@@ -137,27 +133,37 @@ namespace SnakeGame.Shared.SceneManagement
 
         public override void Draw(GameTime gameTime)
         {
-            _gameSpriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                sortMode: SpriteSortMode.Texture, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(),
-                depthStencilState: DepthStencilState.Default);
-            _uiSpriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                sortMode: SpriteSortMode.Deferred, blendState: BlendState.AlphaBlend,
-                transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
-
             if (!IsLoaded)
             {
                 var textSize = GraphicsSystem.SpriteFont.MeasureString(LoadingText);
                 var loadingTextPosition = Vector2.Add(_screenBounds.Center.ToVector2(), -Vector2.Divide(textSize, 2));
 
-                _uiSpriteBatch.DrawString(GraphicsSystem.SpriteFont, LoadingText, loadingTextPosition, Color.White);
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                    sortMode: SpriteSortMode.Texture, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(),
+                    depthStencilState: DepthStencilState.Default);
+
+                _spriteBatch.DrawString(GraphicsSystem.SpriteFont, LoadingText, loadingTextPosition, Color.White);
+
+                _spriteBatch.End();
             }
             else
             {
-                _gameFieldComponent.Draw(_gameSpriteBatch, gameTime);
-            }
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                    sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(),
+                    depthStencilState: DepthStencilState.DepthRead);
 
-            _gameSpriteBatch.End();
-            _uiSpriteBatch.End();
+                _gameFieldComponent.Draw(_spriteBatch, gameTime);
+                
+                _spriteBatch.End();
+
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                    sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(),
+                    depthStencilState: DepthStencilState.DepthRead);
+
+                _snakeGameComponent.Draw(_spriteBatch, gameTime);
+
+                _spriteBatch.End();
+            }
         }
 
         public override void Unload()
