@@ -15,14 +15,14 @@ namespace SnakeGame.Shared.GameLogic.Food
     {
         private readonly List<IFoodGameComponent> _foods;
         private readonly Game _game;
-        private readonly IGameField _gameField;
+        private readonly IGameFieldEntity _gameField;
         private readonly IGameSettings _gameSettings;
         private readonly IGraphicsSystem _graphicsSystem;
         private readonly ILogger _logger;
-        private readonly ISnake _snake;
+        private readonly ISnakeEntity _snake;
         private int _counter;
 
-        public FoodManager(Game game, IGameField field, IGameSettings gameSettings, IGraphicsSystem graphicsSystem, ILogger logger, ISnake snake)
+        public FoodManager(Game game, IGameFieldEntity field, IGameSettings gameSettings, IGraphicsSystem graphicsSystem, ILogger logger, ISnakeEntity snake)
         {
             _game = game ?? throw new ArgumentNullException(nameof(game));
             _gameField = field ?? throw new ArgumentNullException(nameof(field));

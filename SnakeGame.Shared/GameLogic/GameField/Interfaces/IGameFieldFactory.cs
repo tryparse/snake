@@ -8,6 +8,6 @@ namespace SnakeGame.Shared.GameLogic.GameField.Interfaces
 {
     public interface IGameFieldFactory
     {
-        IGameField GetRandomField(int width, int height, double grassProbability);
+        IGameFieldEntity GetRandomField(int width, int height, double grassProbability);
     }
 }

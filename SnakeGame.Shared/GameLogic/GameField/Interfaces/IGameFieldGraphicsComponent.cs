@@ -1,18 +1,14 @@
-﻿using Microsoft.Xna.Framework;
-using SnakeGame.Shared.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace SnakeGame.Shared.GameLogic.GameField.Interfaces
 {
-    public interface IGameFieldComponent
+    public interface IGameFieldGraphicsComponent
     {
-        void Update(GameTime gameTime);
-
         void DrawGrass(SpriteBatch spriteBatch);
 
         void DrawTrees(SpriteBatch spriteBatch);

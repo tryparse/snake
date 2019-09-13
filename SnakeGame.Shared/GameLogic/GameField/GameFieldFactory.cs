@@ -18,7 +18,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
             _random = random;
         }
 
-        public IGameField GetRandomField(int width, int height, double grassProbability)
+        public IGameFieldEntity GetRandomField(int width, int height, double grassProbability)
         {
             var cells = new Cell[width, height];
 
@@ -39,7 +39,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
                 }
             }
 
-            var field = new GameField(cells, _gameSettings, _random);
+            var field = new GameFieldEntity(cells, _gameSettings, _random);
 
             return field;
         }

@@ -12,10 +12,10 @@ float4 PixelShaderFunction(float2 coords: TEXCOORD0) : COLOR0
     return float4(1, 0, 0, 1);
 }
 
-technique Technique1
+technique PostProcess
 {
-    pass Pass1
-    {
+    pass P0
+    {  
         PixelShader = compile PS_SHADERMODEL PixelShaderFunction();
     }
 }

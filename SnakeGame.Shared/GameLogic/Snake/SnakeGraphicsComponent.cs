@@ -14,13 +14,13 @@ namespace SnakeGame.Shared.GameLogic.Snake
 {
     public class SnakeGraphicsComponent : IGraphics2DComponent
     {
-        private readonly ISnake _snake;
+        private readonly ISnakeEntity _snake;
         private readonly IGraphicsSystem _graphicsSystem;
         private readonly ISnakeMovementComponent _movement;
-        private readonly IGameField _gameField;
+        private readonly IGameFieldEntity _gameField;
         private readonly Effect _grayscaleEffect;
 
-        public SnakeGraphicsComponent(ISnake snake, IGraphicsSystem graphicsSystem, ISnakeMovementComponent movement, IGameField gameField)
+        public SnakeGraphicsComponent(ISnakeEntity snake, IGraphicsSystem graphicsSystem, ISnakeMovementComponent movement, IGameFieldEntity gameField)
         {
             _snake = snake ?? throw new ArgumentNullException(nameof(snake));
             _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));

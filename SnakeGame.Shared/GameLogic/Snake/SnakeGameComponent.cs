@@ -12,7 +12,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly IGraphics2DComponent _graphicsComponent;
         private readonly ILogger _logger;
 
-        public SnakeGameComponent(ISnake snake, IGraphics2DComponent graphicsComponent, ISnakeMovementComponent snakeMovement, ILogger logger)
+        public SnakeGameComponent(ISnakeEntity snake, IGraphics2DComponent graphicsComponent, ISnakeMovementComponent snakeMovement, ILogger logger)
         {
             Snake = snake ?? throw new ArgumentNullException(nameof(snake));
             _graphicsComponent = graphicsComponent ?? throw new ArgumentNullException(nameof(graphicsComponent));
@@ -20,7 +20,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public ISnake Snake { get; }
+        public ISnakeEntity Snake { get; }
 
         #region ISnakeGameComponent
 

@@ -10,16 +10,13 @@ using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic.GameField
 {
-    public class GameField : IGameField
+    public class GameFieldEntity : IGameFieldEntity
     {
         private readonly IRandomGenerator _random;
-        private readonly Vector2 _unitVector;
 
-        public GameField(ICell[,] cells, IGameSettings gameSettings, IRandomGenerator random)
+        public GameFieldEntity(ICell[,] cells, IGameSettings gameSettings, IRandomGenerator random)
         {
             Cells = cells;
-
-            _unitVector = new Vector2(gameSettings.TileSize, 0);
 
             Bounds = new Rectangle(0, 0, Columns * gameSettings.TileSize, Rows * gameSettings.TileSize);
 
@@ -42,7 +39,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
             return Cells[x, y];
         }
 
-        public ICell GetRandomCellWithoutSnake(ISnake snake)
+        public ICell GetRandomCellWithoutSnake(ISnakeEntity snake)
         {
             var segments = new List<ISnakeSegment>(snake.Tail) {snake.Head};
 
@@ -60,7 +57,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
         {
             if (!Bounds.Contains(position))
             {
-                throw new InvalidOperationException();
+                return null;
             }
 
             var x = (int) Math.Floor((position.X / Bounds.Width) * Columns);

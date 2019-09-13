@@ -8,11 +8,11 @@ namespace SnakeGame.Shared.GameLogic.GameField
 {
     public class GameFieldComponent : IGameFieldComponent
     {
-        private readonly IGraphics2DComponent _graphicsComponent;
+        private readonly IGameFieldGraphicsComponent _gameFieldGraphicsComponent;
 
-        public GameFieldComponent(IGameField gameField, IGraphics2DComponent graphicsComponent)
+        public GameFieldComponent(IGameFieldEntity gameField, IGameFieldGraphicsComponent gameFieldGraphicsComponent)
         {
-            _graphicsComponent = graphicsComponent;
+            _gameFieldGraphicsComponent = gameFieldGraphicsComponent;
         }
 
         public void Update(GameTime gameTime)
@@ -20,9 +20,14 @@ namespace SnakeGame.Shared.GameLogic.GameField
             
         }
 
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void DrawGrass(SpriteBatch spriteBatch)
         {
-            _graphicsComponent.Draw(spriteBatch, gameTime);
+            _gameFieldGraphicsComponent.DrawGrass(spriteBatch);
+        }
+
+        public void DrawTrees(SpriteBatch spriteBatch)
+        {
+            _gameFieldGraphicsComponent.DrawTrees(spriteBatch);
         }
     }
 }

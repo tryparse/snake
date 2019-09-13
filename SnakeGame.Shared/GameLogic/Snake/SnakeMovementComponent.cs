@@ -10,8 +10,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
 {
     public class SnakeMovementTurnBased : ISnakeMovementComponent
     {
-        private readonly ISnake _snake;
-        private readonly IGameField _gameField;
+        private readonly ISnakeEntity _snake;
+        private readonly IGameFieldEntity _gameField;
         private readonly IGameSettings _gameSettings;
         private readonly SnakeControls _controls;
 
@@ -22,7 +22,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private Direction? _nextDirection;
 
-        public SnakeMovementTurnBased(ISnake snake, IGameField gameField, IGameSettings gameSettings, SnakeControls controls)
+        public SnakeMovementTurnBased(ISnakeEntity snake, IGameFieldEntity gameField, IGameSettings gameSettings, SnakeControls controls)
         {
             _snake = snake;
             _gameField = gameField;

@@ -15,9 +15,10 @@ namespace SnakeGame.Shared.GameLogic
         private readonly ILogger _logger;
         private readonly IFoodManager _foodManager;
         private readonly ISnakeGameComponent _snakeComponent;
-        private readonly IGameField _gameField;
+        private readonly IGameFieldEntity _gameField;
         private readonly IGameSettings _gameSettings;
         private readonly IGamePoints _gamePoints;
+        private readonly ISnakeEntity _snakeEntity;
 
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
@@ -26,14 +27,16 @@ namespace SnakeGame.Shared.GameLogic
 
         public int UpdateOrder { get; set; }
 
-        public GameManager(ILogger logger, IFoodManager foodManager, ISnakeGameComponent snake, IGameField gameField, IGameSettings gameSettings, IGamePoints gamePoints)
+        public GameManager(ILogger logger, IFoodManager foodManager, ISnakeGameComponent snake, IGameFieldEntity gameField,
+            IGameSettings gameSettings, IGamePoints gamePoints, ISnakeEntity snakeEntity)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _foodManager = foodManager ?? throw new ArgumentNullException(nameof(foodManager));
             _snakeComponent = snake ?? throw new ArgumentNullException(nameof(snake));
             _gameField = gameField ?? throw new ArgumentNullException(nameof(gameField));
-            _gameSettings = gameSettings;
-            _gamePoints = gamePoints;
+            _gameSettings = gameSettings ?? throw new ArgumentNullException(nameof(gameSettings));
+            _gamePoints = gamePoints ?? throw new ArgumentNullException(nameof(gamePoints));
+            _snakeEntity = snakeEntity ?? throw new ArgumentNullException(nameof(snakeEntity));
 
             Initialize();
         }
@@ -56,13 +59,13 @@ namespace SnakeGame.Shared.GameLogic
 
         public bool CheckSnakeCollision()
         {
-            if (_snakeComponent.Snake.State != SnakeState.Moving)
+            if (_snakeEntity.State != SnakeState.Moving)
             {
-                var head = _snakeComponent.Snake.Head;
+                var head = _snakeEntity.Head;
 
                 if (head != null)
                 {
-                    var tail = _snakeComponent.Snake.Tail;
+                    var tail = _snakeEntity.Tail;
 
                     foreach (var part in tail)
                     {
@@ -81,12 +84,12 @@ namespace SnakeGame.Shared.GameLogic
 
         public IFoodGameComponent CheckFoodCollision()
         {
-            if (_snakeComponent.Snake.State != SnakeState.None)
+            if (_snakeEntity.State != SnakeState.None)
             {
                 return null;
             }
 
-            var head = _snakeComponent.Snake.Head;
+            var head = _snakeEntity.Head;
 
             if (head == null)
             {
@@ -124,7 +127,7 @@ namespace SnakeGame.Shared.GameLogic
 
         public bool CheckWallsCollision()
         {
-            var head = _snakeComponent.Snake.Head;
+            var head = _snakeEntity.Head;
 
             if (head != null
                 && (head.Bounds.Left < _gameField.Bounds.Left
@@ -152,7 +155,7 @@ namespace SnakeGame.Shared.GameLogic
             {
                 RemoveFood(collidedFood);
                 _foodManager.Add(_foodManager.GenerateRandomFood());
-                _snakeComponent.Snake.Grow();
+                _snakeEntity.Grow();
                 IncreaseGameSpeed();
                 _gamePoints.IncrementPoints();
             }

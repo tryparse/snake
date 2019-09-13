@@ -23,15 +23,16 @@ namespace SnakeGame.Shared.SceneManagement
     {
         private IRandomGenerator _randomGenerator;
         private IGameFieldFactory _gameFieldFactory;
-        private IGameField _gameField;
+        private IGameFieldEntity _gameField;
         private IGameFieldComponent _gameFieldComponent;
         private IFoodManager _foodManager;
         private IFoodGameComponent _foodGameComponent;
-        private ISnake _snake;
+        private ISnakeEntity _snakeEntity;
         private ISnakeMovementComponent _snakeMovementComponent;
         private ISnakeGameComponent _snakeGameComponent;
         private IGamePoints _gamePoints;
         private IGameManager _gameManager;
+        private Effect grayScaleEffect;
 
         private FpsCounter _fpsCounter;
         private PointsCounterComponent _pointsCounterComponent;
@@ -70,28 +71,30 @@ namespace SnakeGame.Shared.SceneManagement
                         new GameFieldGraphicsComponent(_gameField, GraphicsSystem.GraphicsSettings, GraphicsSystem,
                             GameSettings));
 
-                    _snake = new Snake(Logger, _gameField, GameSettings);
-                    _snake.Grow();
+                    _snakeEntity = new SnakeEntity(Logger, _gameField, GameSettings);
+                    _snakeEntity.Grow();
                     _snakeMovementComponent =
-                        new SnakeMovementTurnBased(_snake, _gameField, GameSettings,
+                        new SnakeMovementTurnBased(_snakeEntity, _gameField, GameSettings,
                             new SnakeControls(Keys.Up, Keys.Down, Keys.Left, Keys.Right));
-                    _snakeGameComponent = new SnakeGameComponent(_snake,
-                        new SnakeGraphicsComponent(_snake, GraphicsSystem, _snakeMovementComponent, _gameField),
+                    _snakeGameComponent = new SnakeGameComponent(_snakeEntity,
+                        new SnakeGraphicsComponent(_snakeEntity, GraphicsSystem, _snakeMovementComponent, _gameField),
                         _snakeMovementComponent, Logger);
 
-                    _foodManager = new FoodManager(Game, _gameField, GameSettings, GraphicsSystem, Logger, _snake);
+                    _foodManager = new FoodManager(Game, _gameField, GameSettings, GraphicsSystem, Logger, _snakeEntity);
                     //_foodGameComponent = _foodManager.GenerateRandomFood();
 
                     #region Common
 
                     _gamePoints = new GamePoints(GameSettings.RemainingLives);
                     _gameManager = new GameManager(Logger, _foodManager, _snakeGameComponent, _gameField, GameSettings,
-                        _gamePoints)
+                        _gamePoints, _snakeEntity)
                     {
                         Enabled = true
                     };
 
                     #endregion Common
+
+                    grayScaleEffect = Game.Content.Load<Effect>("Effects/grayscale");
 
                     #region UI components
 
@@ -150,9 +153,9 @@ namespace SnakeGame.Shared.SceneManagement
             {
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
                     sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(),
-                    depthStencilState: DepthStencilState.Default);
+                    depthStencilState: DepthStencilState.Default, effect: grayScaleEffect);
 
-                _gameFieldComponent.Draw(_spriteBatch, gameTime);
+                _gameFieldComponent.DrawGrass(_spriteBatch);
 
                 _spriteBatch.End();
 
@@ -161,6 +164,14 @@ namespace SnakeGame.Shared.SceneManagement
                     depthStencilState: DepthStencilState.Default);
 
                 _snakeGameComponent.Draw(_spriteBatch, gameTime);
+
+                _spriteBatch.End();
+
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                    sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(),
+                    depthStencilState: DepthStencilState.Default);
+
+                _gameFieldComponent.DrawTrees(_spriteBatch);
 
                 _spriteBatch.End();
             }

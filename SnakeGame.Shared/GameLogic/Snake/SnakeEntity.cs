@@ -11,17 +11,17 @@ using System.Linq;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
-    public class Snake : ISnake
+    public class SnakeEntity : ISnakeEntity
     {
         private readonly ILogger _logger;
-        private readonly IGameField _gameField;
+        private readonly IGameFieldEntity _gameField;
         private readonly IGameSettings _gameSettings;
 
         private List<ISnakeSegment> _tail;
 
         private Vector2 _unitVector;
 
-        public Snake(ILogger logger, IGameField gameField, IGameSettings gameSettings)
+        public SnakeEntity(ILogger logger, IGameFieldEntity gameField, IGameSettings gameSettings)
         {
             _logger = logger;
             _gameField = gameField;

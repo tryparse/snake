@@ -14,9 +14,9 @@ namespace SnakeGame.Shared.GameLogic.Snake
     public class MovingCalculator : IMovingCalculator
     {
         private readonly ILogger _logger;
-        private readonly IGameField _gameField;
+        private readonly IGameFieldEntity _gameField;
 
-        public MovingCalculator(ILogger logger, IGameField gameField)
+        public MovingCalculator(ILogger logger, IGameFieldEntity gameField)
         {
             _logger = logger;
             _gameField = gameField;

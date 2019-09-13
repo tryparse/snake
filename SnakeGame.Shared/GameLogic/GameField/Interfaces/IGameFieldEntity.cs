@@ -9,7 +9,7 @@ using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic.GameField.Interfaces
 {
-    public interface IGameField
+    public interface IGameFieldEntity
     {
         Rectangle Bounds { get; }
 
@@ -21,7 +21,7 @@ namespace SnakeGame.Shared.GameLogic.GameField.Interfaces
 
         ICell GetRandomCell();
 
-        ICell GetRandomCellWithoutSnake(ISnake snake);
+        ICell GetRandomCellWithoutSnake(ISnakeEntity snake);
 
         ICell GetCellByCoordinates(Vector2 position);
     }
