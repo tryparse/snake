@@ -118,6 +118,12 @@ namespace SnakeGame.Shared.GameLogic.GameField
                     }
                 }
             }
+        }
+
+        public void DrawGrassDebug(SpriteBatch spriteBatch)
+        {
+            var fieldWidth = _gameFieldEntity.Columns;
+            var fieldHeight = _gameFieldEntity.Rows;
 
             if (_graphicsSettings.IsDebugRenderingEnabled)
             {
@@ -172,6 +178,12 @@ namespace SnakeGame.Shared.GameLogic.GameField
                     }
                 }
             }
+        }
+
+        public void DrawTreesDebug(SpriteBatch spriteBatch)
+        {
+            var fieldWidth = _gameFieldEntity.Columns;
+            var fieldHeight = _gameFieldEntity.Rows;
 
             if (_graphicsSettings.IsDebugRenderingEnabled)
             {

@@ -153,42 +153,64 @@ namespace SnakeGame.Shared.SceneManagement
             }
             else
             {
-                _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                    sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
+                DrawGrass();
 
-                _gameFieldComponent.DrawGrass(_spriteBatch);
+                DrawSnake(gameTime);
 
-                _spriteBatch.End();
+                DrawTrees();
 
-                _spriteBatch.Begin(samplerState: SamplerState.LinearWrap, blendState: BlendState.AlphaBlend, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(), effect: grayScaleEffect);
+                DrawUI(gameTime);
 
-                _snakeGameComponent.Draw(_spriteBatch, gameTime);
-
-                _spriteBatch.End();
-
-                _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                    sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
-
-                _gameFieldComponent.DrawTrees(_spriteBatch);
-
-                _spriteBatch.End();
-
-                _uiBatch.Begin();
-
-                _debugInfoPanelComponent.Draw(_uiBatch, gameTime);
-                _fpsCounter.Draw(_uiBatch, gameTime);
-
-                _uiBatch.End();
-
-                if (GameSettings.IsDebugRenderingEnabled)
+                if (GraphicsSystem.GraphicsSettings.IsDebugRenderingEnabled)
                 {
                     _debugBatch.Begin();
 
+                    _gameFieldComponent.DrawGrassDebug(_debugBatch);
+                    _gameFieldComponent.DrawTreesDebug(_debugBatch);
                     _snakeGameComponent.DebugDraw(_debugBatch);
 
                     _debugBatch.End();
                 }
             }
+        }
+
+        private void DrawUI(GameTime gameTime)
+        {
+            _uiBatch.Begin();
+
+            _debugInfoPanelComponent.Draw(_uiBatch, gameTime);
+            _fpsCounter.Draw(_uiBatch, gameTime);
+
+            _uiBatch.End();
+        }
+
+        private void DrawTrees()
+        {
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
+
+            _gameFieldComponent.DrawTrees(_spriteBatch);
+
+            _spriteBatch.End();
+        }
+
+        private void DrawSnake(GameTime gameTime)
+        {
+            _spriteBatch.Begin(samplerState: SamplerState.LinearWrap, blendState: BlendState.AlphaBlend, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(), effect: grayScaleEffect);
+
+            _snakeGameComponent.Draw(_spriteBatch, gameTime);
+
+            _spriteBatch.End();
+        }
+
+        private void DrawGrass()
+        {
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
+                                sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
+
+            _gameFieldComponent.DrawGrass(_spriteBatch);
+
+            _spriteBatch.End();
         }
 
         public override void Unload()

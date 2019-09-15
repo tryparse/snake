@@ -15,6 +15,10 @@ namespace SnakeGame.Shared.GameLogic.GameField.Interfaces
 
         void DrawGrass(SpriteBatch spriteBatch);
 
+        void DrawGrassDebug(SpriteBatch spriteBatch);
+
         void DrawTrees(SpriteBatch spriteBatch);
+
+        void DrawTreesDebug(SpriteBatch spriteBatch);
     }
 }
