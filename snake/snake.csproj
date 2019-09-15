@@ -91,7 +91,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="app.manifest" />
-    <None Include="Content\Effects\grayscale.xnb" />
     <None Include="Content\Fonts\big.xnb" />
     <None Include="Content\Fonts\debug-font.xnb" />
     <None Include="Content\Fonts\joystix monospace.ttf" />
