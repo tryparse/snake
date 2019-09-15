@@ -43,11 +43,15 @@ namespace SnakeGame.Shared.SceneManagement
         private Rectangle _screenBounds;
 
         private SpriteBatch _spriteBatch;
+        private SpriteBatch _debugBatch;
+        private SpriteBatch _uiBatch;
 
         public GameScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, ILogger logger, IGameKeys gameKeys) : base(
             game, sceneManager, graphicsSystem, gameSettings, logger, gameKeys)
         {
             _spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+            _debugBatch = new SpriteBatch(Game.GraphicsDevice);
+            _uiBatch = new SpriteBatch(Game.GraphicsDevice);
         }
 
         public override void Load()
@@ -141,9 +145,7 @@ namespace SnakeGame.Shared.SceneManagement
                 var textSize = GraphicsSystem.SpriteFont.MeasureString(LoadingText);
                 var loadingTextPosition = Vector2.Add(_screenBounds.Center.ToVector2(), -Vector2.Divide(textSize, 2));
 
-                _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                    sortMode: SpriteSortMode.Texture, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(), 
-                    depthStencilState: DepthStencilState.Default);
+                _spriteBatch.Begin();
 
                 _spriteBatch.DrawString(GraphicsSystem.SpriteFont, LoadingText, loadingTextPosition, Color.White);
 
@@ -152,28 +154,40 @@ namespace SnakeGame.Shared.SceneManagement
             else
             {
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                    sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(),
-                    depthStencilState: DepthStencilState.Default, effect: grayScaleEffect);
+                    sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
 
                 _gameFieldComponent.DrawGrass(_spriteBatch);
 
                 _spriteBatch.End();
 
-                _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                    sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(),
-                    depthStencilState: DepthStencilState.Default);
+                _spriteBatch.Begin(samplerState: SamplerState.LinearWrap, blendState: BlendState.AlphaBlend, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(), effect: grayScaleEffect);
 
                 _snakeGameComponent.Draw(_spriteBatch, gameTime);
 
                 _spriteBatch.End();
 
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                    sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(),
-                    depthStencilState: DepthStencilState.Default);
+                    sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
 
                 _gameFieldComponent.DrawTrees(_spriteBatch);
 
                 _spriteBatch.End();
+
+                _uiBatch.Begin();
+
+                _debugInfoPanelComponent.Draw(_uiBatch, gameTime);
+                _fpsCounter.Draw(_uiBatch, gameTime);
+
+                _uiBatch.End();
+
+                if (GameSettings.IsDebugRenderingEnabled)
+                {
+                    _debugBatch.Begin();
+
+                    _snakeGameComponent.DebugDraw(_debugBatch);
+
+                    _debugBatch.End();
+                }
             }
         }
 

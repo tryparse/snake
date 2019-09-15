@@ -43,6 +43,11 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _graphicsComponent.Draw(spriteBatch, gameTime);
         }
 
+        public void DebugDraw(SpriteBatch spriteBatch)
+        {
+            _graphicsComponent.DebugDraw(spriteBatch);
+        }
+
         public void Reset()
         {
             Snake.Reset();

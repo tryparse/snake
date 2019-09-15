@@ -17,6 +17,7 @@
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
+/processorParam:Defines=
 /build:Effects/grayscale.fx
 
 #begin Fonts/big.spritefont

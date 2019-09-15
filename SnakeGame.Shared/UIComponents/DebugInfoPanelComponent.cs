@@ -36,7 +36,8 @@ namespace SnakeGame.Shared.UIComponents
             _stringBuilder
                 .AppendLine("*** DEBUG INFO ***")
                 .AppendLine($"CurrentMoveTimeInterval = {_gameSettings.CurrentMoveIntervalTime}")
-                .AppendLine($"IsPaused = {_gameManager.IsPaused}");
+                .AppendLine($"IsPaused = {_gameManager.IsPaused}")
+                .AppendLine($"IsDebugRenderingEnabled = {_graphicsSystem.GraphicsSettings.IsDebugRenderingEnabled}");
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)

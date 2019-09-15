@@ -18,7 +18,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly IGraphicsSystem _graphicsSystem;
         private readonly ISnakeMovementComponent _movement;
         private readonly IGameFieldEntity _gameField;
-        private readonly Effect _grayscaleEffect;
+
+        private readonly Sprite _sprite;
 
         public SnakeGraphicsComponent(ISnakeEntity snake, IGraphicsSystem graphicsSystem, ISnakeMovementComponent movement, IGameFieldEntity gameField)
         {
@@ -26,8 +27,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));
             _movement = movement ?? throw new ArgumentNullException(nameof(movement));
             _gameField = gameField ?? throw new ArgumentNullException(nameof(gameField));
-
-            _grayscaleEffect = graphicsSystem.LoadEffect("Effects/grayscale");
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -44,10 +43,18 @@ namespace SnakeGame.Shared.GameLogic.Snake
                     }
                 }
             }
+        }
 
+        public void DebugDraw(SpriteBatch spriteBatch)
+        {
             if (_graphicsSystem.GraphicsSettings.IsDebugRenderingEnabled)
             {
-                DebugDraw(spriteBatch);
+                DebugDrawSegment(spriteBatch, _snake.Head);
+
+                foreach (var segment in _snake.Tail)
+                {
+                    DebugDrawSegment(spriteBatch, segment);
+                }
             }
         }
 
@@ -108,16 +115,6 @@ namespace SnakeGame.Shared.GameLogic.Snake
             }
 
             return scale;
-        }
-
-        private void DebugDraw(SpriteBatch spriteBatch)
-        {
-            DebugDrawSegment(spriteBatch, _snake.Head);
-
-            foreach (var segment in _snake.Tail)
-            {
-                DebugDrawSegment(spriteBatch, segment);
-            }
         }
 
         private void DebugDrawSegment(SpriteBatch spriteBatch, ISnakeSegment segment)

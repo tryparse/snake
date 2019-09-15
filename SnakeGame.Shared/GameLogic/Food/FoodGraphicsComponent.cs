@@ -47,7 +47,7 @@ namespace SnakeGame.Shared.GameLogic.Food
             }
         }
 
-        private void DebugDraw(SpriteBatch spriteBatch)
+        public void DebugDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawRectangle(_food.Bounds, Color.Orange, 1);
             spriteBatch.DrawString(_graphicsSystem.DebugSpriteFont, _food.Position.ToString(), _food.Position, Color.Black);

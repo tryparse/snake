@@ -7,9 +7,20 @@
 	#define PS_SHADERMODEL ps_4_0_level_9_1
 #endif
 
-float4 PixelShaderFunction(float2 coords: TEXCOORD0) : COLOR0
+sampler s0;
+
+struct VertexShaderOutput
+{  
+    float4 Position : SV_POSITION;  
+    float4 Color : COLOR0;  
+    float2 TextureCoordinates : TEXCOORD0;
+};
+
+float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-    return float4(1, 0, 0, 1);
+    float4 color = tex2D(s0, input.TextureCoordinates);
+    color.rgb = color.r;
+    return color;
 }
 
 technique PostProcess

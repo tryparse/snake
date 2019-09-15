@@ -19,5 +19,7 @@ namespace SnakeGame.Shared.GameLogic.Snake.Interfaces
         void Update(GameTime gameTime);
 
         void Draw(SpriteBatch spriteBatch, GameTime gameTime);
+
+        void DebugDraw(SpriteBatch spriteBatch);
     }
 }

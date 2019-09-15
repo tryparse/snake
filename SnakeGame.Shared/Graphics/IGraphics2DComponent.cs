@@ -8,5 +8,7 @@ namespace SnakeGame.Shared.Graphics
     public interface IGraphics2DComponent
     {
         void Draw(SpriteBatch spriteBatch, GameTime gameTime);
+
+        void DebugDraw(SpriteBatch spriteBatch);
     }
 }
