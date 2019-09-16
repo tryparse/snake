@@ -26,7 +26,6 @@ namespace SnakeGame.Shared.SceneManagement
         private IGameFieldEntity _gameField;
         private IGameFieldComponent _gameFieldComponent;
         private IFoodManager _foodManager;
-        private IFoodGameComponent _foodGameComponent;
         private ISnakeEntity _snakeEntity;
         private ISnakeMovementComponent _snakeMovementComponent;
         private ISnakeGameComponent _snakeGameComponent;
@@ -67,7 +66,7 @@ namespace SnakeGame.Shared.SceneManagement
             {
                 Task.Run(() =>
                 {
-                    _randomGenerator = new RandomGenerator(1);
+                    _randomGenerator = new RandomGenerator(2);
 
                     _gameFieldFactory = new GameFieldFactory(GameSettings, _randomGenerator);
                     _gameField = _gameFieldFactory.GetRandomField(GameSettings.MapWidth, GameSettings.MapHeight, .5d);
@@ -85,13 +84,13 @@ namespace SnakeGame.Shared.SceneManagement
                         _snakeMovementComponent, Logger);
 
                     _foodManager = new FoodManager(Game, _gameField, GameSettings, GraphicsSystem, Logger, _snakeEntity);
-                    //_foodGameComponent = _foodManager.GenerateRandomFood();
+                    _foodManager.Add(_foodManager.GenerateRandomFood());
 
                     #region Common
 
                     _gamePoints = new GamePoints(GameSettings.RemainingLives);
                     _gameManager = new GameManager(Logger, _foodManager, _snakeGameComponent, _gameField, GameSettings,
-                        _gamePoints, _snakeEntity)
+                        _gamePoints, _snakeEntity, SceneManager, Game, GraphicsSystem, GameKeys)
                     {
                         Enabled = true
                     };
@@ -115,7 +114,9 @@ namespace SnakeGame.Shared.SceneManagement
                     _debugInfoPanelComponent = new DebugInfoPanelComponent(GraphicsSystem, GameSettings, _gameManager);
                     
                     #endregion UI components
-                })
+                }),
+
+                Task.Delay(500)
             };
 
             await Task.WhenAll(tasks.ToArray());
@@ -130,6 +131,8 @@ namespace SnakeGame.Shared.SceneManagement
                 HandleInput();
 
                 _gameFieldComponent.Update(gameTime);
+                _snakeGameComponent.Update(gameTime);
+                _gameManager.Update(gameTime);
 
                 _fpsCounter.Update(gameTime);
                 _pointsCounterComponent.Update(gameTime);
@@ -153,13 +156,13 @@ namespace SnakeGame.Shared.SceneManagement
             }
             else
             {
-                DrawGrass();
+                DrawGrassAndFood();
 
                 DrawSnake(gameTime);
 
                 DrawTrees();
 
-                DrawUI(gameTime);
+                DrawUi(gameTime);
 
                 if (GraphicsSystem.GraphicsSettings.IsDebugRenderingEnabled)
                 {
@@ -174,20 +177,21 @@ namespace SnakeGame.Shared.SceneManagement
             }
         }
 
-        private void DrawUI(GameTime gameTime)
+        private void DrawUi(GameTime gameTime)
         {
             _uiBatch.Begin();
 
             _debugInfoPanelComponent.Draw(_uiBatch, gameTime);
             _fpsCounter.Draw(_uiBatch, gameTime);
+            _pointsCounterComponent.Draw(_uiBatch, gameTime);
+            _remainingLivesComponent.Draw(_uiBatch, gameTime);
 
             _uiBatch.End();
         }
 
         private void DrawTrees()
         {
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
+            _spriteBatch.Begin(transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
 
             _gameFieldComponent.DrawTrees(_spriteBatch);
 
@@ -196,19 +200,19 @@ namespace SnakeGame.Shared.SceneManagement
 
         private void DrawSnake(GameTime gameTime)
         {
-            _spriteBatch.Begin(samplerState: SamplerState.LinearWrap, blendState: BlendState.AlphaBlend, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(), effect: grayScaleEffect);
+            _spriteBatch.Begin(transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
 
             _snakeGameComponent.Draw(_spriteBatch, gameTime);
 
             _spriteBatch.End();
         }
 
-        private void DrawGrass()
+        private void DrawGrassAndFood()
         {
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp,
-                                sortMode: SpriteSortMode.BackToFront, transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
+            _spriteBatch.Begin(transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
 
             _gameFieldComponent.DrawGrass(_spriteBatch);
+            _foodManager.Draw(_spriteBatch);
 
             _spriteBatch.End();
         }

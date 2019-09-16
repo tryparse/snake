@@ -22,14 +22,14 @@ namespace SnakeGame.Shared.SceneManagement
         private Vector2 _textPosition;
         private Vector2 _loadingTextPosition;
 
-        private SpriteBatch _uiSpriteBatch;
+        private readonly SpriteBatch _uiBatch;
 
         public LoadingScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, ILogger logger, IGameKeys gameKeys) :
             base(game, sceneManager, graphicsSystem, gameSettings, logger, gameKeys)
         {
             IsLoaded = false;
 
-            _uiSpriteBatch = new SpriteBatch(Game.GraphicsDevice);
+            _uiBatch = new SpriteBatch(Game.GraphicsDevice);
         }
 
         public override void Load()
@@ -46,8 +46,6 @@ namespace SnakeGame.Shared.SceneManagement
                     _screenBounds = new Rectangle(0, 0, GameSettings.ScreenWidth, GameSettings.ScreenHeight);
 
                     CalculateTextPosition();
-
-                    
                 }),
 
                 Task.Delay(300)
@@ -82,21 +80,21 @@ namespace SnakeGame.Shared.SceneManagement
 
         public override void Draw(GameTime gameTime)
         {
-            _uiSpriteBatch.Begin();
+            _uiBatch.Begin();
 
-            _uiSpriteBatch.DrawString(GraphicsSystem.SpriteFont, gameTime.TotalGameTime.ToString(),
+            _uiBatch.DrawString(GraphicsSystem.SpriteFont, gameTime.TotalGameTime.ToString(),
                 Vector2.One, Color.Red);
 
             if (!IsLoaded)
             {
-                _uiSpriteBatch.DrawString(GraphicsSystem.SpriteFont, LoadingText, _loadingTextPosition, Color.White);
+                _uiBatch.DrawString(GraphicsSystem.SpriteFont, LoadingText, _loadingTextPosition, Color.White);
             }
             else
             {
-                _uiSpriteBatch.DrawString(GraphicsSystem.SpriteFont, _titleText, _textPosition, Color.DarkGreen);
+                _uiBatch.DrawString(GraphicsSystem.SpriteFont, _titleText, _textPosition, Color.DarkGreen);
             }
 
-            _uiSpriteBatch.End();
+            _uiBatch.End();
         }
 
         public override void Unload()

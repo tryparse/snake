@@ -26,9 +26,9 @@ namespace SnakeGame.Shared.GameLogic.Food
             
         }
 
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            _graphicsComponent.Draw(spriteBatch, gameTime);
+            _graphicsComponent.Draw(spriteBatch);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _gameField = gameField ?? throw new ArgumentNullException(nameof(gameField));
         }
 
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch)
         {
             if (_graphicsSystem.GraphicsSettings.IsRenderingEnabled)
             {

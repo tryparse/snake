@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SnakeGame.Shared.GameLogic.Food.Interfaces
 {
@@ -20,5 +21,7 @@ namespace SnakeGame.Shared.GameLogic.Food.Interfaces
         void Remove(IFoodGameComponent food);
 
         void Reset();
+
+        void Draw(SpriteBatch spriteBatch);
     }
 }

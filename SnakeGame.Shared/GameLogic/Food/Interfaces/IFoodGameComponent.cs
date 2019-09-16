@@ -12,6 +12,6 @@ namespace SnakeGame.Shared.GameLogic.Food.Interfaces
 
         void Update(GameTime gameTime);
 
-        void Draw(SpriteBatch spriteBatch, GameTime gameTime);
+        void Draw(SpriteBatch spriteBatch);
     }
 }

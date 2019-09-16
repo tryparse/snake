@@ -7,6 +7,8 @@ using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.Settings;
 using SnakeGame.Shared.Settings.Interfaces;
 using System;
+using SnakeGame.Shared.Graphics;
+using SnakeGame.Shared.SceneManagement;
 
 namespace SnakeGame.Shared.GameLogic
 {
@@ -19,6 +21,10 @@ namespace SnakeGame.Shared.GameLogic
         private readonly IGameSettings _gameSettings;
         private readonly IGamePoints _gamePoints;
         private readonly ISnakeEntity _snakeEntity;
+        private readonly ISceneManager _sceneManager;
+        private readonly Game _game;
+        private readonly IGraphicsSystem _graphicsSystem;
+        private readonly IGameKeys _gameKeys;
 
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
@@ -28,7 +34,7 @@ namespace SnakeGame.Shared.GameLogic
         public int UpdateOrder { get; set; }
 
         public GameManager(ILogger logger, IFoodManager foodManager, ISnakeGameComponent snake, IGameFieldEntity gameField,
-            IGameSettings gameSettings, IGamePoints gamePoints, ISnakeEntity snakeEntity)
+            IGameSettings gameSettings, IGamePoints gamePoints, ISnakeEntity snakeEntity, ISceneManager sceneManager, Game game, IGraphicsSystem graphicsSystem, IGameKeys gameKeys)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _foodManager = foodManager ?? throw new ArgumentNullException(nameof(foodManager));
@@ -37,6 +43,10 @@ namespace SnakeGame.Shared.GameLogic
             _gameSettings = gameSettings ?? throw new ArgumentNullException(nameof(gameSettings));
             _gamePoints = gamePoints ?? throw new ArgumentNullException(nameof(gamePoints));
             _snakeEntity = snakeEntity ?? throw new ArgumentNullException(nameof(snakeEntity));
+            _sceneManager = sceneManager ?? throw new ArgumentNullException(nameof(sceneManager));
+            _game = game ?? throw new ArgumentNullException(nameof(game));
+            _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));
+            _gameKeys = gameKeys ?? throw new ArgumentNullException(nameof(gameKeys));
 
             Initialize();
         }
@@ -54,7 +64,17 @@ namespace SnakeGame.Shared.GameLogic
             _gamePoints.Reset();
             _gamePoints.DecrementLives();
 
+            if (_gamePoints.RemainingLives <= 0)
+            {
+                GameOver();
+            }
+
             _logger.Debug("GameManager.NewGame(): COMPLETE");
+        }
+
+        private void GameOver()
+        {
+            _sceneManager.Load(new GameOverScene(_game, _sceneManager, _graphicsSystem, _gameSettings, _logger, _gameKeys));
         }
 
         public bool CheckSnakeCollision()

@@ -43,7 +43,9 @@ namespace SnakeGame.Shared.GameLogic.GameField
         {
             var segments = new List<ISnakeSegment>(snake.Tail) {snake.Head};
 
-            var snakeCells = segments.Select(x => GetCellByCoordinates(x.Position))
+            var snakeCells = segments
+                .Select(x => GetCellByCoordinates(x.Position))
+                .Where(x => x != null)
                 .ToList();
 
             var cells = (from ICell c in Cells where !snakeCells.Contains(c) select c).ToList();

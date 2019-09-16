@@ -29,11 +29,12 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
         private void DebugDrawTreeCell(SpriteBatch spriteBatch, ICell cell)
         {
-            var verticies = cell.Bounds.GetCorners();
-            var topLeft = verticies[0].ToVector2();
-            var topRight = verticies[1].ToVector2();
-            var bottomRight = verticies[2].ToVector2();
-            var bottomLeft = verticies[3].ToVector2();
+            // TODO: Refactor this
+            var vertices = cell.Bounds.GetCorners();
+            var topLeft = vertices[0].ToVector2();
+            var topRight = vertices[1].ToVector2();
+            var bottomRight = vertices[2].ToVector2();
+            var bottomLeft = vertices[3].ToVector2();
 
             spriteBatch.DrawRectangle(cell.Bounds.ToRectangleF(), Color.DarkGreen, 1);
             spriteBatch.DrawLine(topLeft, bottomRight, Color.DarkGreen, 1);
@@ -43,13 +44,14 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
         private void DebugDrawGrass(SpriteBatch spriteBatch, ICell cell)
         {
-            var verticies = cell.Bounds.GetCorners();
-            var topLeft = verticies[0].ToVector2();
-            var topRight = verticies[1].ToVector2();
-            var bottomRight = verticies[2].ToVector2();
-            var bottomLeft = verticies[3].ToVector2();
+            // TODO: Refactor this
+            var vertices = cell.Bounds.GetCorners();
+            var topLeft = vertices[0].ToVector2();
+            var topRight = vertices[1].ToVector2();
+            var bottomRight = vertices[2].ToVector2();
+            var bottomLeft = vertices[3].ToVector2();
 
-            var color = Color.LightGreen;
+            var color = Color.LightSeaGreen;
 
             spriteBatch.DrawRectangle(cell.Bounds.ToRectangleF(), color, 1);
             spriteBatch.DrawLine(topLeft, bottomRight, color, 1);

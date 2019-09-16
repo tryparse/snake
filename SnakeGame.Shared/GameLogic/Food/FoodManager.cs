@@ -7,6 +7,7 @@ using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.Settings.Interfaces;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic.Food
@@ -94,6 +95,14 @@ namespace SnakeGame.Shared.GameLogic.Food
             foreach (var c in FoodComponents)
             {
                 //_game.Components.Remove(c);
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            foreach (var foodGameComponent in _foods)
+            {
+                foodGameComponent.Draw(spriteBatch);
             }
         }
     }

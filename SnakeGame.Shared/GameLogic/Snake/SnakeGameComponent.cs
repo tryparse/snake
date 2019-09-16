@@ -40,7 +40,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            _graphicsComponent.Draw(spriteBatch, gameTime);
+            _graphicsComponent.Draw(spriteBatch);
         }
 
         public void DebugDraw(SpriteBatch spriteBatch)

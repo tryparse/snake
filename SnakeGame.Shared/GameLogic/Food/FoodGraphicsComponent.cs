@@ -19,7 +19,7 @@ namespace SnakeGame.Shared.GameLogic.Food
             _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));
         }
 
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch)
         {
             if (_graphicsSystem.GraphicsSettings.IsRenderingEnabled)
             {
