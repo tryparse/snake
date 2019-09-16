@@ -23,7 +23,6 @@ namespace snake
     public class SnakeGame : Game
     {
         private readonly GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
         private SpriteFont _spriteFont;
         private SpriteFont _debugSpriteFont;
         private TextureAtlas _textureRegions;
@@ -111,15 +110,12 @@ namespace snake
         {
             _logger.Debug("Game.LoadContent()");
 
-            // Create a new SpriteBatch, which can be used to draw textures.
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
             LoadFonts();
 
             LoadTextures();
 
             _textureManager = new TextureManager(_textureRegions);
-            _graphicsSystem = new GraphicsSystem(_graphicsSettings, Content, _spriteBatch, _spriteFont, _debugSpriteFont, _textureManager, _camera);
+            _graphicsSystem = new GraphicsSystem(_graphicsSettings, Content, _spriteFont, _debugSpriteFont, _textureManager, _camera);
 
             _sceneManager = new SceneManager(this);
 
@@ -140,25 +136,25 @@ namespace snake
 
             _textureRegions = new TextureAtlas("Textures", texture);
 
-            const int TEXTURE_ATLAS_CONSTANT = 384;
+            const int textureAtlasConstant = 384;
 
-            _textureRegions.CreateRegion("Tail", 0, 0, TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
-            _textureRegions.CreateRegion("Part", TEXTURE_ATLAS_CONSTANT, 0, TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
-            _textureRegions.CreateRegion("Head", TEXTURE_ATLAS_CONSTANT * 2, 0, TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
-            _textureRegions.CreateRegion("Fruit", TEXTURE_ATLAS_CONSTANT * 3, 0, TEXTURE_ATLAS_CONSTANT,
-                TEXTURE_ATLAS_CONSTANT);
-            _textureRegions.CreateRegion("Grass", TEXTURE_ATLAS_CONSTANT * 4, 0, TEXTURE_ATLAS_CONSTANT,
-                TEXTURE_ATLAS_CONSTANT);
-            _textureRegions.CreateRegion("TopLeft", 0, TEXTURE_ATLAS_CONSTANT * 1, TEXTURE_ATLAS_CONSTANT,
-                TEXTURE_ATLAS_CONSTANT);
-            _textureRegions.CreateRegion("TopRight", TEXTURE_ATLAS_CONSTANT * 1, TEXTURE_ATLAS_CONSTANT * 1,
-                TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
-            _textureRegions.CreateRegion("BottomLeft", TEXTURE_ATLAS_CONSTANT * 2, TEXTURE_ATLAS_CONSTANT * 1,
-                TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
-            _textureRegions.CreateRegion("BottomRight", TEXTURE_ATLAS_CONSTANT * 3, TEXTURE_ATLAS_CONSTANT * 1,
-                TEXTURE_ATLAS_CONSTANT, TEXTURE_ATLAS_CONSTANT);
-            _textureRegions.CreateRegion("Tree", TEXTURE_ATLAS_CONSTANT * 4, TEXTURE_ATLAS_CONSTANT * 1, TEXTURE_ATLAS_CONSTANT,
-                TEXTURE_ATLAS_CONSTANT);
+            _textureRegions.CreateRegion("Tail", 0, 0, textureAtlasConstant, textureAtlasConstant);
+            _textureRegions.CreateRegion("Part", textureAtlasConstant, 0, textureAtlasConstant, textureAtlasConstant);
+            _textureRegions.CreateRegion("Head", textureAtlasConstant * 2, 0, textureAtlasConstant, textureAtlasConstant);
+            _textureRegions.CreateRegion("Fruit", textureAtlasConstant * 3, 0, textureAtlasConstant,
+                textureAtlasConstant);
+            _textureRegions.CreateRegion("Grass", textureAtlasConstant * 4, 0, textureAtlasConstant,
+                textureAtlasConstant);
+            _textureRegions.CreateRegion("TopLeft", 0, textureAtlasConstant * 1, textureAtlasConstant,
+                textureAtlasConstant);
+            _textureRegions.CreateRegion("TopRight", textureAtlasConstant * 1, textureAtlasConstant * 1,
+                textureAtlasConstant, textureAtlasConstant);
+            _textureRegions.CreateRegion("BottomLeft", textureAtlasConstant * 2, textureAtlasConstant * 1,
+                textureAtlasConstant, textureAtlasConstant);
+            _textureRegions.CreateRegion("BottomRight", textureAtlasConstant * 3, textureAtlasConstant * 1,
+                textureAtlasConstant, textureAtlasConstant);
+            _textureRegions.CreateRegion("Tree", textureAtlasConstant * 4, textureAtlasConstant * 1, textureAtlasConstant,
+                textureAtlasConstant);
         }
 
         /// <summary>
@@ -167,17 +163,8 @@ namespace snake
         /// </summary>
         protected override void UnloadContent()
         {
+            _logger.Debug("SnakeGame.UnloadContent()");
             // TODO: Unload any non ContentManager content here
-        }
-
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
         }
 
         /// <summary>

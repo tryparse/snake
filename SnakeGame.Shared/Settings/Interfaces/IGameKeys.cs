@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SnakeGame.Shared.Settings.Interfaces
 {
+    /// <summary>
+    /// Interface for encapsulating game keyboard controls
+    /// </summary>
     public interface IGameKeys
     {
         Keys SwitchPause { get; }

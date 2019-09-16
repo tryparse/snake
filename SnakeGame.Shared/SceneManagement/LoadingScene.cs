@@ -70,20 +70,11 @@ namespace SnakeGame.Shared.SceneManagement
         public override void Update(GameTime gameTime)
         {
             HandleInput();
-
-            if (IsLoaded
-                && InputHandler.IsKeyPressed(Keys.Enter))
-            {
-                SceneManager.Load(new GameScene(Game, SceneManager, GraphicsSystem, GameSettings, Logger, GameKeys));
-            }
         }
 
         public override void Draw(GameTime gameTime)
         {
             _uiBatch.Begin();
-
-            _uiBatch.DrawString(GraphicsSystem.SpriteFont, gameTime.TotalGameTime.ToString(),
-                Vector2.One, Color.Red);
 
             if (!IsLoaded)
             {
@@ -107,6 +98,12 @@ namespace SnakeGame.Shared.SceneManagement
             if (InputHandler.IsKeyPressed(GameKeys.Exit))
             {
                 Game.Exit();
+            }
+
+            if (IsLoaded
+                && InputHandler.IsKeyPressed(Keys.Enter))
+            {
+                SceneManager.Load(new GameScene(Game, SceneManager, GraphicsSystem, GameSettings, Logger, GameKeys));
             }
         }
     }

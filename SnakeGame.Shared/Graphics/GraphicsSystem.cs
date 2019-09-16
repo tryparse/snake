@@ -11,11 +11,10 @@ namespace SnakeGame.Shared.Graphics
     {
         private readonly ContentManager _contentManager;
 
-        public GraphicsSystem(IGraphicsSettings graphicsSettings, ContentManager contentManager, SpriteBatch spriteBatch, SpriteFont spriteFont, SpriteFont debugSpriteFont, ITextureManager textureManager, Camera2D camera2D)
+        public GraphicsSystem(IGraphicsSettings graphicsSettings, ContentManager contentManager, SpriteFont spriteFont, SpriteFont debugSpriteFont, ITextureManager textureManager, Camera2D camera2D)
         {
             GraphicsSettings = graphicsSettings;
             _contentManager = contentManager ?? throw new ArgumentNullException(nameof(contentManager));
-            SpriteBatch = spriteBatch;
             SpriteFont = spriteFont;
             DebugSpriteFont = debugSpriteFont;
             TextureManager = textureManager;
@@ -23,8 +22,6 @@ namespace SnakeGame.Shared.Graphics
         }
 
         public IGraphicsSettings GraphicsSettings { get; }
-
-        public SpriteBatch SpriteBatch { get; }
 
         public SpriteFont DebugSpriteFont { get; }
 
