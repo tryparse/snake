@@ -105,5 +105,13 @@ namespace SnakeGame.Shared.GameLogic.Food
                 foodGameComponent.Draw(spriteBatch);
             }
         }
+
+        public void DebugDraw(SpriteBatch spriteBatch)
+        {
+            foreach (var foodGameComponent in _foods)
+            {
+                //foodGameComponent
+            }
+        }
     }
 }

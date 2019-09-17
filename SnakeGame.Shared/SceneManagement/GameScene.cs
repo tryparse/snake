@@ -69,7 +69,7 @@ namespace SnakeGame.Shared.SceneManagement
                     _randomGenerator = new RandomGenerator(2);
 
                     _gameFieldFactory = new GameFieldFactory(GameSettings, _randomGenerator);
-                    _gameField = _gameFieldFactory.GetRandomField(GameSettings.MapWidth, GameSettings.MapHeight, .5d);
+                    _gameField = _gameFieldFactory.GetRandomField(GameSettings.MapWidth, GameSettings.MapHeight, .8d);
                     _gameFieldComponent = new GameFieldComponent(_gameField,
                         new GameFieldGraphicsComponent(_gameField, GraphicsSystem.GraphicsSettings, GraphicsSystem,
                             GameSettings));
@@ -170,6 +170,7 @@ namespace SnakeGame.Shared.SceneManagement
 
                     _gameFieldComponent.DrawGrassDebug(_debugBatch);
                     _gameFieldComponent.DrawTreesDebug(_debugBatch);
+                    _foodManager.DebugDraw(_debugBatch);
                     _snakeGameComponent.DebugDraw(_debugBatch);
 
                     _debugBatch.End();
