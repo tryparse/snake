@@ -42,6 +42,11 @@ namespace SnakeGame.Shared.UIComponents
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
+            if (!_gameSettings.IsShowDebugInfo)
+            {
+                return;;
+            }
+
             spriteBatch.DrawString(_graphicsSystem.DebugSpriteFont, _stringBuilder.ToString(), Vector2.One, Color.Red);
         }
     }
