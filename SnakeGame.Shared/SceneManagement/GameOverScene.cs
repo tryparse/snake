@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SnakeGame.Shared.Common;
+using SnakeGame.Shared.GameLogic;
 using SnakeGame.Shared.Graphics;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.Settings.Interfaces;
@@ -18,16 +19,21 @@ namespace SnakeGame.Shared.SceneManagement
         private Rectangle _screenBounds;
         private readonly SpriteBatch _spriteBatch;
 
+        private readonly IGamePoints _gamePoints;
+        
         private readonly string _gameOverText = $"GAME OVER{Environment.NewLine}" +
+                                             $"your result: {{0}} point(s){Environment.NewLine}" + 
                                              $"press enter to try again{Environment.NewLine}" + 
                                              $"press esc to exit";
 
         private Vector2 _textPosition;
 
         public GameOverScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem,
-            IGameSettings gameSettings, ILogger logger, IGameKeys gameKeys) : base(game,
+            IGameSettings gameSettings, ILogger logger, IGameKeys gameKeys, IGamePoints gamePoints) : base(game,
             sceneManager, graphicsSystem, gameSettings, logger, gameKeys)
         {
+            _gamePoints = gamePoints ?? throw new ArgumentNullException(nameof(gamePoints));
+
             _spriteBatch = new SpriteBatch(game.GraphicsDevice);
         }
 
@@ -66,7 +72,7 @@ namespace SnakeGame.Shared.SceneManagement
             {
                 _spriteBatch.Begin();
 
-                _spriteBatch.DrawString(GraphicsSystem.SpriteFont, _gameOverText, _textPosition, Color.ForestGreen);
+                _spriteBatch.DrawString(GraphicsSystem.SpriteFont, string.Format(_gameOverText, _gamePoints.MaxPoints), _textPosition, Color.ForestGreen);
 
                 _spriteBatch.End();
             }

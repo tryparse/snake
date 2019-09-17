@@ -1,10 +1,14 @@
-﻿namespace SnakeGame.Shared.GameLogic
+﻿using System;
+
+namespace SnakeGame.Shared.GameLogic
 {
     public class GamePoints : IGamePoints
     {
         private readonly int _startRemainingLives;
 
         public int Points { get; private set; }
+
+        public int MaxPoints { get; private set; }
 
         public int RemainingLives { get; private set; }
 
@@ -26,6 +30,7 @@
 
         public void Reset()
         {
+            MaxPoints = Math.Max(MaxPoints, Points);
             Points = 0;
         }
     }

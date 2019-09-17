@@ -74,7 +74,7 @@ namespace SnakeGame.Shared.GameLogic
 
         private void GameOver()
         {
-            _sceneManager.Load(new GameOverScene(_game, _sceneManager, _graphicsSystem, _gameSettings, _logger, _gameKeys));
+            _sceneManager.Load(new GameOverScene(_game, _sceneManager, _graphicsSystem, _gameSettings, _logger, _gameKeys, _gamePoints));
         }
 
         public bool CheckSnakeCollision()
@@ -90,7 +90,6 @@ namespace SnakeGame.Shared.GameLogic
                     foreach (var part in tail)
                     {
                         if (Vector2.Distance(head.Position, part.Position) < _gameSettings.TileSize)
-                        //if (head.Bounds.Intersects(part.Bounds))
                         {
                             _logger.Debug($"Collision: r1={head.Bounds} r2={part.Bounds}");
                             return true;

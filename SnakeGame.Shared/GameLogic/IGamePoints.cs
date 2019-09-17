@@ -10,6 +10,8 @@ namespace SnakeGame.Shared.GameLogic
     {
         int Points { get; }
 
+        int MaxPoints { get; }
+
         void IncrementPoints();
 
         int RemainingLives { get; }
