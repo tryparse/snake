@@ -9,17 +9,18 @@ namespace SnakeGame.Shared.GameLogic.Food
     public class FoodComponent : IFoodGameComponent
     {
         private readonly IGraphics2DComponent _graphicsComponent;
+        private readonly IFoodEntity _food;
 
         public FoodComponent(IFoodEntity food, IGraphics2DComponent graphicsComponent, string id)
         {
-            Food = food;
+            _food = food;
             ID = id;
             _graphicsComponent = graphicsComponent;
         }
 
         public string ID { get; }
 
-        public IFoodEntity Food { get; }
+        public Rectangle Bounds => _food.Bounds;
 
         public void Update(GameTime gameTime)
         {

@@ -8,7 +8,7 @@ namespace SnakeGame.Shared.GameLogic.Food.Interfaces
     {
         string ID { get; }
 
-        IFoodEntity Food { get; }
+        Rectangle Bounds { get; }
 
         void Update(GameTime gameTime);
 

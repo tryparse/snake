@@ -117,7 +117,7 @@ namespace SnakeGame.Shared.GameLogic
 
             foreach (var foodComponent in _foodManager.FoodComponents)
             {
-                if (!head.Bounds.Intersects(foodComponent.Food.Bounds))
+                if (!head.Bounds.Intersects(foodComponent.Bounds))
                 {
                     continue;
                 }
