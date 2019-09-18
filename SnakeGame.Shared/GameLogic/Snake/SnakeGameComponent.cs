@@ -11,31 +11,20 @@ namespace SnakeGame.Shared.GameLogic.Snake
     {
         private readonly IGraphics2DComponent _graphicsComponent;
         private readonly ILogger _logger;
+        private readonly ISnakeMovementComponent _snakeMovementComponent;
+        private readonly ISnakeEntity _snake;
 
         public SnakeGameComponent(ISnakeEntity snake, IGraphics2DComponent graphicsComponent, ISnakeMovementComponent snakeMovement, ILogger logger)
         {
-            Snake = snake ?? throw new ArgumentNullException(nameof(snake));
+            _snake = snake ?? throw new ArgumentNullException(nameof(snake));
             _graphicsComponent = graphicsComponent ?? throw new ArgumentNullException(nameof(graphicsComponent));
-            SnakeMovementComponent = snakeMovement ?? throw new ArgumentNullException(nameof(snakeMovement));
+            _snakeMovementComponent = snakeMovement ?? throw new ArgumentNullException(nameof(snakeMovement));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
-
-        public ISnakeEntity Snake { get; }
-
-        #region ISnakeGameComponent
-
-        public ISnakeMovementComponent SnakeMovementComponent { get; }
-
-        #endregion ISnakeGameComponent
-
-        public void ToggleEnabled(bool enabled)
-        {
-            throw new NotImplementedException();
         }
 
         public void Update(GameTime gameTime)
         {
-            SnakeMovementComponent.Update(gameTime);
+            _snakeMovementComponent.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -50,8 +39,13 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public void Reset()
         {
-            Snake.Reset();
-            SnakeMovementComponent.Reset();
+            _snake.Reset();
+            _snakeMovementComponent.Reset();
+        }
+
+        public void ToggleEnabled(bool enabled)
+        {
+            throw new NotImplementedException();
         }
 
         public void ToggleEnabled()
