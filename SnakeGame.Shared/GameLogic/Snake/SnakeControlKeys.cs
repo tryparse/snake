@@ -2,9 +2,9 @@
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
-    public class SnakeControls
+    public class SnakeControlKeys
     {
-        public SnakeControls(Keys up, Keys down, Keys left, Keys right)
+        public SnakeControlKeys(Keys up, Keys down, Keys left, Keys right)
         {
             this.Up = up;
             this.Down = down;

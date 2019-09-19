@@ -83,7 +83,8 @@
     <Compile Include="GameLogic\Snake\SnakeEntity.cs" />
     <Compile Include="GameLogic\Snake\SnakeGameComponent.cs" />
     <Compile Include="GameLogic\Snake\SnakeGraphicsComponent.cs" />
-    <Compile Include="GameLogic\Snake\SnakeMovementComponent.cs" />
+    <Compile Include="GameLogic\Snake\SnakeMovementSmoothComponent.cs" />
+    <Compile Include="GameLogic\Snake\SnakeMovementTurnBasedComponent.cs" />
     <Compile Include="GameLogic\Snake\SnakeSegment.cs" />
     <Compile Include="Graphics\GraphicsSettings.cs" />
     <Compile Include="Graphics\IGraphics2DComponent.cs" />
@@ -93,7 +94,7 @@
     <Compile Include="Graphics\IGraphicsSystem.cs" />
     <Compile Include="GameLogic\Snake\IMovingCalculator.cs" />
     <Compile Include="GameLogic\Snake\MovingCalculator.cs" />
-    <Compile Include="GameLogic\Snake\SnakeControls.cs" />
+    <Compile Include="GameLogic\Snake\SnakeControlKeys.cs" />
     <Compile Include="GameLogic\Snake\SnakeState.cs" />
     <Compile Include="Graphics\ISpriteBatchManager.cs" />
     <Compile Include="Logging\ILogger.cs" />

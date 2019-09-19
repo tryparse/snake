@@ -78,7 +78,7 @@ namespace SnakeGame.Shared.SceneManagement
                     _snakeEntity.Grow();
                     _snakeMovementComponent =
                         new SnakeMovementTurnBased(_snakeEntity, _gameField, GameSettings,
-                            new SnakeControls(Keys.Up, Keys.Down, Keys.Left, Keys.Right));
+                            new SnakeControlKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right));
                     _snakeGameComponent = new SnakeGameComponent(_snakeEntity,
                         new SnakeGraphicsComponent(_snakeEntity, GraphicsSystem, _snakeMovementComponent, _gameField),
                         _snakeMovementComponent, Logger);

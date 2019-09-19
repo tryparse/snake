@@ -13,7 +13,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly ISnakeEntity _snake;
         private readonly IGameFieldEntity _gameField;
         private readonly IGameSettings _gameSettings;
-        private readonly SnakeControls _controls;
+        private readonly SnakeControlKeys _controls;
 
         private TimeSpan _elapsedTime;
         private TimeSpan _movingInterval;
@@ -22,7 +22,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private Direction? _nextDirection;
 
-        public SnakeMovementTurnBased(ISnakeEntity snake, IGameFieldEntity gameField, IGameSettings gameSettings, SnakeControls controls)
+        public SnakeMovementTurnBased(ISnakeEntity snake, IGameFieldEntity gameField, IGameSettings gameSettings, SnakeControlKeys controls)
         {
             _snake = snake;
             _gameField = gameField;
