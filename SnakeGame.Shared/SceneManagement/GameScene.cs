@@ -45,7 +45,7 @@ namespace SnakeGame.Shared.SceneManagement
         private SpriteBatch _debugBatch;
         private SpriteBatch _uiBatch;
 
-        public GameScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, ILogger logger, IGameKeys gameKeys) : base(
+        public GameScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, IGameLogger logger, IGameKeys gameKeys) : base(
             game, sceneManager, graphicsSystem, gameSettings, logger, gameKeys)
         {
             _spriteBatch = new SpriteBatch(Game.GraphicsDevice);

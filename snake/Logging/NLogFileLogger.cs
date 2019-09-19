@@ -3,7 +3,7 @@ using SnakeGame.Shared.Settings.Interfaces;
 
 namespace snake.Logging
 {
-    internal class NLogFileLogger : ILogger
+    internal class NLogFileLogger : IGameLogger
     {
         private readonly NLog.ILogger _logger;
         private readonly IGameSettings _configuration;

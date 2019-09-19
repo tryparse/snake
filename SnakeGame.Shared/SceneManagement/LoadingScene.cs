@@ -24,7 +24,7 @@ namespace SnakeGame.Shared.SceneManagement
 
         private readonly SpriteBatch _uiBatch;
 
-        public LoadingScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, ILogger logger, IGameKeys gameKeys) :
+        public LoadingScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, IGameLogger logger, IGameKeys gameKeys) :
             base(game, sceneManager, graphicsSystem, gameSettings, logger, gameKeys)
         {
             IsLoaded = false;

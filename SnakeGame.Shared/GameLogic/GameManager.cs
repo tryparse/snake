@@ -14,7 +14,7 @@ namespace SnakeGame.Shared.GameLogic
 {
     public class GameManager : IGameManager
     {
-        private readonly ILogger _logger;
+        private readonly IGameLogger _logger;
         private readonly IFoodManager _foodManager;
         private readonly ISnakeGameComponent _snakeComponent;
         private readonly IGameFieldEntity _gameField;
@@ -33,7 +33,7 @@ namespace SnakeGame.Shared.GameLogic
 
         public int UpdateOrder { get; set; }
 
-        public GameManager(ILogger logger, IFoodManager foodManager, ISnakeGameComponent snake, IGameFieldEntity gameField,
+        public GameManager(IGameLogger logger, IFoodManager foodManager, ISnakeGameComponent snake, IGameFieldEntity gameField,
             IGameSettings gameSettings, IGamePoints gamePoints, ISnakeEntity snakeEntity, ISceneManager sceneManager, Game game, IGraphicsSystem graphicsSystem, IGameKeys gameKeys)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

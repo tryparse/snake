@@ -29,7 +29,7 @@ namespace SnakeGame.Shared.SceneManagement
         private Vector2 _textPosition;
 
         public GameOverScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem,
-            IGameSettings gameSettings, ILogger logger, IGameKeys gameKeys, IGamePoints gamePoints) : base(game,
+            IGameSettings gameSettings, IGameLogger logger, IGameKeys gameKeys, IGamePoints gamePoints) : base(game,
             sceneManager, graphicsSystem, gameSettings, logger, gameKeys)
         {
             _gamePoints = gamePoints ?? throw new ArgumentNullException(nameof(gamePoints));

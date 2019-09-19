@@ -19,11 +19,11 @@ namespace SnakeGame.Shared.GameLogic.Food
         private readonly IGameFieldEntity _gameField;
         private readonly IGameSettings _gameSettings;
         private readonly IGraphicsSystem _graphicsSystem;
-        private readonly ILogger _logger;
+        private readonly IGameLogger _logger;
         private readonly ISnakeEntity _snake;
         private int _counter;
 
-        public FoodManager(Game game, IGameFieldEntity field, IGameSettings gameSettings, IGraphicsSystem graphicsSystem, ILogger logger, ISnakeEntity snake)
+        public FoodManager(Game game, IGameFieldEntity field, IGameSettings gameSettings, IGraphicsSystem graphicsSystem, IGameLogger logger, ISnakeEntity snake)
         {
             _game = game ?? throw new ArgumentNullException(nameof(game));
             _gameField = field ?? throw new ArgumentNullException(nameof(field));

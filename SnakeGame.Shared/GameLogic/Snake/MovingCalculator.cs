@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 using SnakeGame.Shared.Logging;
 using SnakeGame.Shared.GameLogic.GameField;
 using SnakeGame.Shared.GameLogic.GameField.Interfaces;
+using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic.Snake
 {
     public class MovingCalculator : IMovingCalculator
     {
-        private readonly ILogger _logger;
+        private readonly IGameLogger _logger;
         private readonly IGameFieldEntity _gameField;
 
-        public MovingCalculator(ILogger logger, IGameFieldEntity gameField)
+        public MovingCalculator(IGameLogger logger, IGameFieldEntity gameField)
         {
             _logger = logger;
             _gameField = gameField;

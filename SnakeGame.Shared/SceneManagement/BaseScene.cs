@@ -12,11 +12,11 @@ namespace SnakeGame.Shared.SceneManagement
         protected readonly ISceneManager SceneManager;
         protected readonly IGraphicsSystem GraphicsSystem;
         protected readonly IGameSettings GameSettings;
-        protected readonly ILogger Logger;
+        protected readonly IGameLogger Logger;
         protected readonly IGameKeys GameKeys;
         protected bool IsLoaded;
 
-        protected BaseScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, ILogger logger, IGameKeys gameKeys)
+        protected BaseScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, IGameLogger logger, IGameKeys gameKeys)
         {
             Game = game ?? throw new ArgumentNullException(nameof(game));
             SceneManager = sceneManager ?? throw new ArgumentNullException(nameof(sceneManager));

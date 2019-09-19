@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SnakeGame.Shared.Logging
 {
-    public interface ILogger
+    public interface IGameLogger
     {
         void Debug(string message);
     }

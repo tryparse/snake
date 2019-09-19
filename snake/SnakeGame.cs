@@ -36,7 +36,7 @@ namespace snake
         private IGameSettings _gameSettings;
         private IGraphicsSettings _graphicsSettings;
         private ITextureManager _textureManager;
-        private readonly ILogger _logger;
+        private readonly IGameLogger _logger;
 
         private Camera2D _camera;
 

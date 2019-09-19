@@ -13,7 +13,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 {
     public class SnakeEntity : ISnakeEntity
     {
-        private readonly ILogger _logger;
+        private readonly IGameLogger _logger;
         private readonly IGameFieldEntity _gameField;
         private readonly IGameSettings _gameSettings;
 
@@ -21,7 +21,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         private Vector2 _unitVector;
 
-        public SnakeEntity(ILogger logger, IGameFieldEntity gameField, IGameSettings gameSettings)
+        public SnakeEntity(IGameLogger logger, IGameFieldEntity gameField, IGameSettings gameSettings)
         {
             _logger = logger;
             _gameField = gameField;
