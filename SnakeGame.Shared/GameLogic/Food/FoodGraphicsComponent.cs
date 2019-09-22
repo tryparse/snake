@@ -52,7 +52,7 @@ namespace SnakeGame.Shared.GameLogic.Food
             {
                 spriteBatch.DrawRectangle(_food.Bounds, Color.Orange, 2);
                 spriteBatch.DrawString(_graphicsSystem.DebugSpriteFont, _food.Position.ToString(), _food.Position,
-                    Color.Black);
+                    Color.Orange);
             }
         }
 

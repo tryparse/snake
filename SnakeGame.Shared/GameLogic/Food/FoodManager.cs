@@ -92,10 +92,7 @@ namespace SnakeGame.Shared.GameLogic.Food
 
         public void Reset()
         {
-            foreach (var c in FoodComponents)
-            {
-                //_game.Components.Remove(c);
-            }
+            _foods.Clear();
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -110,7 +107,7 @@ namespace SnakeGame.Shared.GameLogic.Food
         {
             foreach (var foodGameComponent in _foods)
             {
-                //foodGameComponent
+                foodGameComponent.DrawDebug(spriteBatch);
             }
         }
     }

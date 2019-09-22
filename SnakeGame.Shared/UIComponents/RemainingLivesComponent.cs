@@ -21,7 +21,10 @@ namespace SnakeGame.Shared.UIComponents
             _graphicsSystem = graphicsSystem;
             _gamePoints = gamePoints;
 
-            _headTexture2D = graphicsSystem.TextureManager.TextureRegions.GetRegion("Head");
+            _headTexture2D = graphicsSystem
+                .TextureManager
+                .TextureRegions
+                .GetRegion("Head");
         }
 
         public void Update(GameTime gameTime)

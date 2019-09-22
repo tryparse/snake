@@ -45,6 +45,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
         public void Update(GameTime gameTime)
         {
             UpdateNextDirection();
+
+
         }
 
         /// <summary>

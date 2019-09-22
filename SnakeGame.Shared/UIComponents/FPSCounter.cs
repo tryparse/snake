@@ -12,16 +12,14 @@ namespace SnakeGame.Shared.UIComponents
         private readonly Color _color;
         private readonly SpriteFont _font;
         private readonly FramesPerSecondCounter _fps;
-        private readonly IGraphicsSystem _graphicsSystem;
 
-        public FpsCounter(Vector2 position, SpriteFont font, Color color, IGraphicsSystem graphicsSystem)
+        public FpsCounter(Vector2 position, SpriteFont font, Color color)
         {
-            this._position = position;
-            this._color = color;
-            this._font = font;
-            _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));
+            _position = position;
+            _color = color;
+            _font = font;
 
-            this._fps = new FramesPerSecondCounter();
+            _fps = new FramesPerSecondCounter();
         }
 
         public void Update(GameTime gameTime)

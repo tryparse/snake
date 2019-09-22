@@ -10,6 +10,8 @@ namespace SnakeGame.Shared.GameLogic.Snake.Interfaces
 {
     public interface ISnakeGameComponent
     {
+        bool Enabled { get; }
+
         void Reset();
 
         void ToggleEnabled();

@@ -101,7 +101,7 @@ namespace SnakeGame.Shared.SceneManagement
 
                     #region UI components
 
-                    _fpsCounter = new FpsCounter(new Vector2(Game.GraphicsDevice.Viewport.Width - 50, 0), GraphicsSystem.SpriteFont, Color.Black, GraphicsSystem);
+                    _fpsCounter = new FpsCounter(new Vector2(Game.GraphicsDevice.Viewport.Width - 50, 0), GraphicsSystem.SpriteFont, Color.Black);
 
                     var pointsCounterPosition = Vector2.Add(new Vector2(_gameField.Bounds.Right, _gameField.Bounds.Top),
                         new Vector2(10, 0));

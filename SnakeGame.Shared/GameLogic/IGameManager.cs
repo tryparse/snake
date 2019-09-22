@@ -1,7 +1,4 @@
 ﻿using SnakeGame.Shared.GameLogic.Food.Interfaces;
-using SnakeGame.Shared.GameLogic.Snake;
-using System.Collections.Generic;
-using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using Microsoft.Xna.Framework;
 
 namespace SnakeGame.Shared.GameLogic

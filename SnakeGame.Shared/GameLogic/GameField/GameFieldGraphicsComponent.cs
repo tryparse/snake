@@ -154,14 +154,11 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
         public void DrawTrees(SpriteBatch spriteBatch)
         {
-            var fieldWidth = _gameFieldEntity.Columns;
-            var fieldHeight = _gameFieldEntity.Rows;
-
             if (_graphicsSettings.IsRenderingEnabled)
             {
-                for (var x = 0; x < fieldWidth; x++)
+                for (var x = 0; x < _gameFieldEntity.Columns; x++)
                 {
-                    for (var y = 0; y < fieldHeight; y++)
+                    for (var y = 0; y < _gameFieldEntity.Rows; y++)
                     {
                         var cell = _gameFieldEntity.Cells[x, y];
 
@@ -184,14 +181,11 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
         public void DrawTreesDebug(SpriteBatch spriteBatch)
         {
-            var fieldWidth = _gameFieldEntity.Columns;
-            var fieldHeight = _gameFieldEntity.Rows;
-
             if (_graphicsSettings.IsDebugRenderingEnabled)
             {
-                for (var x = 0; x < fieldWidth; x++)
+                for (var x = 0; x < _gameFieldEntity.Columns; x++)
                 {
-                    for (var y = 0; y < fieldHeight; y++)
+                    for (var y = 0; y < _gameFieldEntity.Rows; y++)
                     {
                         var cell = _gameFieldEntity.Cells[x, y];
 

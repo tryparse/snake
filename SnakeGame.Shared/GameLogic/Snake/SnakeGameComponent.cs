@@ -14,17 +14,24 @@ namespace SnakeGame.Shared.GameLogic.Snake
         private readonly ISnakeMovementComponent _snakeMovementComponent;
         private readonly ISnakeEntity _snake;
 
+        public bool Enabled { get; private set; }
+
         public SnakeGameComponent(ISnakeEntity snake, IGraphics2DComponent graphicsComponent, ISnakeMovementComponent snakeMovement, IGameLogger logger)
         {
             _snake = snake ?? throw new ArgumentNullException(nameof(snake));
             _graphicsComponent = graphicsComponent ?? throw new ArgumentNullException(nameof(graphicsComponent));
             _snakeMovementComponent = snakeMovement ?? throw new ArgumentNullException(nameof(snakeMovement));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+            Enabled = true;
         }
 
         public void Update(GameTime gameTime)
         {
-            _snakeMovementComponent.Update(gameTime);
+            if (Enabled)
+            {
+                _snakeMovementComponent.Update(gameTime);
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -45,12 +52,12 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public void ToggleEnabled(bool enabled)
         {
-            throw new NotImplementedException();
+            Enabled = enabled;
         }
 
         public void ToggleEnabled()
         {
-            
+            Enabled = !Enabled;
         }
     }
 }

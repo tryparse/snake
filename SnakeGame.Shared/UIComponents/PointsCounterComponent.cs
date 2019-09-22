@@ -20,7 +20,7 @@ namespace SnakeGame.Shared.UIComponents
         {
             _position = position;
             _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));
-            this._gamePoints = gamePoints;
+            _gamePoints = gamePoints ?? throw new ArgumentNullException(nameof(gamePoints));
 
             _foodTexture2D = graphicsSystem.TextureManager.TextureRegions.GetRegion("Fruit");
         }
