@@ -8,6 +8,7 @@
 #endif
 
 sampler inputTexture;
+float2 pov;
 
 struct VertexShaderOutput
 {  
@@ -16,17 +17,24 @@ struct VertexShaderOutput
     float2 TextureCoordinates : TEXCOORD0;
 };
 
-float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
+float4 MainPS(VertexShaderOutput input) : COLOR
 {
-    float4 color = tex2D(inputTexture, input.TextureCoordinates);
-    color.rgb = color.r;
-    return color;
+	float4 pixel = tex2D(inputTexture, input.TextureCoordinates);
+
+	if (input.TextureCoordinates.x > pov.x)
+	{
+		pixel.r = pixel.r * 0.7f;
+		pixel.g = pixel.g * 0.7f;
+		pixel.b = pixel.b * 0.7f;
+	}
+
+	return pixel;
 }
 
-technique PostProcess
+technique BasicColorDrawing
 {
-    pass P0
-    {  
-        PixelShader = compile PS_SHADERMODEL PixelShaderFunction();
-    }
-}
+	pass P0
+	{
+		PixelShader = compile PS_SHADERMODEL MainPS();
+	}
+};

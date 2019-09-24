@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Effects/dark.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/dark.fx
+
 #begin Effects/grayscale.fx
 /importer:EffectImporter
 /processor:EffectProcessor

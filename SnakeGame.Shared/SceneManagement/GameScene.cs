@@ -32,6 +32,7 @@ namespace SnakeGame.Shared.SceneManagement
         private IGamePoints _gamePoints;
         private IGameManager _gameManager;
         private Effect grayScaleEffect;
+        private Effect shadeEffect;
 
         private FpsCounter _fpsCounter;
         private PointsCounterComponent _pointsCounterComponent;
@@ -98,6 +99,7 @@ namespace SnakeGame.Shared.SceneManagement
                     #endregion Common
 
                     grayScaleEffect = Game.Content.Load<Effect>("Effects/grayscale");
+                    shadeEffect = Game.Content.Load<Effect>("Effects/dark");
 
                     #region UI components
 
@@ -210,8 +212,10 @@ namespace SnakeGame.Shared.SceneManagement
 
         private void DrawGrassAndFood()
         {
-            _spriteBatch.Begin(transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
+            
+            _spriteBatch.Begin(transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(), effect: shadeEffect);
 
+            shadeEffect.Parameters["pov"].SetValue(_snakeEntity.Head.Position);
             _gameFieldComponent.DrawGrass(_spriteBatch);
             _foodManager.Draw(_spriteBatch);
 
