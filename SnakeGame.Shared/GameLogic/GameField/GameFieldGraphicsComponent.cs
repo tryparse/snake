@@ -103,7 +103,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
                 layerDepth: LayerDepths.Tree);
         }
 
-        public void DrawGrass(SpriteBatch spriteBatch)
+        public void DrawGrass(SpriteBatch spriteBatch, Vector2 pointOfView, float viewRadius)
         {
             var fieldWidth = _gameFieldEntity.Columns;
             var fieldHeight = _gameFieldEntity.Rows;
@@ -116,7 +116,10 @@ namespace SnakeGame.Shared.GameLogic.GameField
                     {
                         var cell = _gameFieldEntity.Cells[x, y];
 
-                        DrawGrassCell(spriteBatch, cell);
+                        if (Vector2.Distance(cell.Position, pointOfView) < viewRadius)
+                        {
+                            DrawGrassCell(spriteBatch, cell);
+                        }
                     }
                 }
             }
@@ -203,6 +206,14 @@ namespace SnakeGame.Shared.GameLogic.GameField
                         }
                     }
                 }
+            }
+        }
+
+        public void DrawBorders(SpriteBatch spriteBatch)
+        {
+            if (_graphicsSettings.IsRenderingEnabled)
+            {
+                spriteBatch.DrawRectangle(_gameFieldEntity.Bounds, Color.Black, 3);
             }
         }
     }

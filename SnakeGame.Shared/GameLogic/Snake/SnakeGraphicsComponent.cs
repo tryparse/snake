@@ -55,6 +55,8 @@ namespace SnakeGame.Shared.GameLogic.Snake
                 {
                     DebugDrawSegment(spriteBatch, segment);
                 }
+
+                spriteBatch.DrawCircle(_snake.Head.Position, 200, 20, Color.Red);
             }
         }
 

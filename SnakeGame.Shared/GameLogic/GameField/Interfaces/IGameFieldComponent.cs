@@ -13,12 +13,14 @@ namespace SnakeGame.Shared.GameLogic.GameField.Interfaces
     {
         void Update(GameTime gameTime);
 
-        void DrawGrass(SpriteBatch spriteBatch);
+        void DrawGrass(SpriteBatch spriteBatch, Vector2 pointOfView, float viewRadius);
 
         void DrawGrassDebug(SpriteBatch spriteBatch);
 
         void DrawTrees(SpriteBatch spriteBatch);
 
         void DrawTreesDebug(SpriteBatch spriteBatch);
+
+        void DrawBorders(SpriteBatch spriteBatch);
     }
 }

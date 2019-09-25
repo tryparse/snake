@@ -1,40 +1,49 @@
 ﻿#if OPENGL
-	#define SV_POSITION POSITION
-	#define VS_SHADERMODEL vs_3_0
-	#define PS_SHADERMODEL ps_3_0
+#define SV_POSITION POSITION
+#define VS_SHADERMODEL vs_3_0
+#define PS_SHADERMODEL ps_3_0
 #else
-	#define VS_SHADERMODEL vs_4_0_level_9_1
-	#define PS_SHADERMODEL ps_4_0_level_9_1
+#define VS_SHADERMODEL vs_4_0_level_9_1
+#define PS_SHADERMODEL ps_4_0_level_9_1
 #endif
 
-sampler inputTexture;
-float2 pov;
+matrix WorldViewProjection;
+sampler inputSampler;
+
+struct VertexShaderInput
+{
+    float4 Position : POSITION0;
+    float4 Color : COLOR0;
+};
 
 struct VertexShaderOutput
-{  
-    float4 Position : SV_POSITION;  
-    float4 Color : COLOR0;  
-    float2 TextureCoordinates : TEXCOORD0;
+{
+    float4 Position : SV_POSITION;
+    float4 Color : COLOR0;
+    float2 TextureCooridinates : TEXCOORD0;
 };
+
+VertexShaderOutput MainVS(in VertexShaderInput input)
+{
+    VertexShaderOutput output = (VertexShaderOutput) 0;
+
+    output.Position = mul(input.Position, WorldViewProjection);
+    output.Color = input.Color;
+
+    return output;
+}
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-	float4 pixel = tex2D(inputTexture, input.TextureCoordinates);
-
-	if (input.TextureCoordinates.x > pov.x)
-	{
-		pixel.r = pixel.r * 0.7f;
-		pixel.g = pixel.g * 0.7f;
-		pixel.b = pixel.b * 0.7f;
-	}
-
-	return pixel;
+    float4 color = tex2D(inputSampler, input.TextureCooridinates);
+    return color;
 }
 
 technique BasicColorDrawing
 {
-	pass P0
-	{
-		PixelShader = compile PS_SHADERMODEL MainPS();
-	}
+    pass P0
+    {
+        //VertexShader = compile VS_SHADERMODEL MainVS();
+        PixelShader = compile PS_SHADERMODEL MainPS();
+    }
 };

@@ -166,6 +166,8 @@ namespace SnakeGame.Shared.SceneManagement
 
                 DrawUi(gameTime);
 
+                DrawBorders();
+
                 if (GraphicsSystem.GraphicsSettings.IsDebugRenderingEnabled)
                 {
                     _debugBatch.Begin();
@@ -212,12 +214,27 @@ namespace SnakeGame.Shared.SceneManagement
 
         private void DrawGrassAndFood()
         {
-            
-            _spriteBatch.Begin(transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(), effect: shadeEffect);
+            var basicEffect = new BasicEffect(Game.GraphicsDevice);
+            //basicEffect.View = GraphicsSystem.Camera2D.GetViewMatrix();
+            //basicEffect.World = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
+            //basicEffect.FogEnabled = true;
+            //basicEffect.FogColor = Color.CornflowerBlue.ToVector3();
+            //basicEffect.FogStart = -1f;
+            //basicEffect.FogEnd = 1f;
 
-            shadeEffect.Parameters["pov"].SetValue(_snakeEntity.Head.Position);
-            _gameFieldComponent.DrawGrass(_spriteBatch);
+            _spriteBatch.Begin(transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(), effect: basicEffect);
+
+            _gameFieldComponent.DrawGrass(_spriteBatch, _snakeEntity.Head.Position, 200f);
             _foodManager.Draw(_spriteBatch);
+
+            _spriteBatch.End();
+        }
+
+        private void DrawBorders()
+        {
+            _spriteBatch.Begin(transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
+
+            _gameFieldComponent.DrawBorders(_spriteBatch);
 
             _spriteBatch.End();
         }
