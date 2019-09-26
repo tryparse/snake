@@ -169,7 +169,7 @@ namespace SnakeGame.Shared.SceneManagement
 
                 DrawUi(gameTime);
 
-                DrawBorders();
+                DrawBorders(pointOfView, viewRadius);
 
                 if (GraphicsSystem.GraphicsSettings.IsDebugRenderingEnabled)
                 {
@@ -225,11 +225,12 @@ namespace SnakeGame.Shared.SceneManagement
             _spriteBatch.End();
         }
 
-        private void DrawBorders()
+        private void DrawBorders(Vector2 pov, float radius)
         {
             _spriteBatch.Begin(transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
 
             _gameFieldComponent.DrawBorders(_spriteBatch);
+            _gameFieldComponent.DrawLOSRays(_spriteBatch, pov, radius);
 
             _spriteBatch.End();
         }

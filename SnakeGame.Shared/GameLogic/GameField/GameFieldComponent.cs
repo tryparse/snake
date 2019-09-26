@@ -44,5 +44,10 @@ namespace SnakeGame.Shared.GameLogic.GameField
         {
             _gameFieldGraphicsComponent.DrawBorders(spriteBatch);
         }
+
+        public void DrawLOSRays(SpriteBatch spriteBatch, Vector2 pov, float viewRadius)
+        {
+            _gameFieldGraphicsComponent.DrawLOSRays(spriteBatch, pov, viewRadius);
+        }
     }
 }

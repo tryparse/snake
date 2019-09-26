@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,7 @@ namespace SnakeGame.Shared.GameLogic.GameField.Cells.Interfaces
         int Row { get; }
         CellType CellType { get; }
         Rectangle Bounds { get; }
+
+        BoundingRectangle BoundingRectangle { get; }
     }
 }

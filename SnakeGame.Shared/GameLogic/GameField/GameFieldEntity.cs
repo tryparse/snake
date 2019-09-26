@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
+using MonoGame.Extended;
 
 namespace SnakeGame.Shared.GameLogic.GameField
 {
@@ -30,6 +31,18 @@ namespace SnakeGame.Shared.GameLogic.GameField
         public int Rows => Cells.GetLength(1);
 
         public ICell[,] Cells { get; }
+
+        public IEnumerable<ICell> GetCells()
+        {
+            var result = new List<ICell>();
+
+            foreach (var cell in Cells)
+            {
+                result.Add(cell);
+            }
+
+            return result;
+        }
 
         public ICell GetRandomCell()
         {
@@ -66,6 +79,69 @@ namespace SnakeGame.Shared.GameLogic.GameField
             var y = (int) Math.Floor((position.Y / Bounds.Height) * Rows);
 
             return Cells[x, y];
+        }
+
+        private ICollection<ICell> GetCellsOfType(CellType type)
+        {
+            var result = new List<ICell>();
+
+            foreach (var cell in Cells)
+            {
+                result.Add(cell);
+            }
+
+            return result
+                .Where(x => x.CellType == type)
+                .ToList();
+        }
+
+        public IEnumerable<ICell> GetVisibleCells(Vector2 pov, float radius)
+        {
+            var visible = GetCells();
+
+            var obstacles = GetCellsOfType(CellType.Tree)
+                .Where(x => Vector2.Distance(x.Bounds.Center.ToVector2(), pov) < radius);
+
+            visible = visible
+                .Where(x => Vector2.Distance(x.Bounds.Center.ToVector2(), pov) < radius);
+
+            var notVisible = new List<ICell>();
+
+            foreach (var cell in visible)
+            {
+                var ray = new Ray2D(pov, cell.Bounds.Center.ToVector2());
+
+                foreach (var obstacle in obstacles)
+                {
+                    if (ray.Intersects(obstacle.BoundingRectangle, out var rayNearDistance, out var rayFarDistance))
+                    {
+                        notVisible.Add(cell);
+                        break;
+                    }
+                }
+            }
+
+            visible = visible
+                .Except(notVisible);
+
+            return visible;
+        }
+
+        public IEnumerable<Ray2D> GetRays(Vector2 pov, float radius)
+        {
+            var rays = new List<Ray2D>();
+
+            var visible = GetCells();
+
+            visible = visible
+                .Where(x => Vector2.Distance(x.Bounds.Center.ToVector2(), pov) < radius);
+
+            foreach (var cell in visible)
+            {
+                rays.Add(new Ray2D(pov, cell.Bounds.Center.ToVector2()));
+            }
+
+            return rays;
         }
     }
 }

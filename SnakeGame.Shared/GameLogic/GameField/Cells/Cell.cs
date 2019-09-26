@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using SnakeGame.Shared.GameLogic.GameField.Cells.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic.GameField.Cells
@@ -30,9 +31,12 @@ namespace SnakeGame.Shared.GameLogic.GameField.Cells
 
         public Rectangle Bounds { get; private set; }
 
+        public BoundingRectangle BoundingRectangle { get; private set; }
+
         private void RecalculateBounds()
         {
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+            BoundingRectangle = new BoundingRectangle(new Point2(Position.X, Position.Y), new Size2(Width, Height));
         }
     }
 }

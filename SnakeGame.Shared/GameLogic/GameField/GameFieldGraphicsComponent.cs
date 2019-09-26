@@ -8,6 +8,7 @@ using SnakeGame.Shared.Graphics;
 using SnakeGame.Shared.Settings.Interfaces;
 using System;
 using MonoGame.Extended.Sprites;
+using System.Linq;
 
 namespace SnakeGame.Shared.GameLogic.GameField
 {
@@ -110,13 +111,18 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
             if (_graphicsSettings.IsRenderingEnabled)
             {
+                var visibleGrass = _gameFieldEntity.GetVisibleCells(pointOfView, viewRadius)
+                    .Where(x => x.CellType == CellType.Grass);
+
+                var cells = _gameFieldEntity.GetCells();
+
                 for (var x = 0; x < fieldWidth; x++)
                 {
                     for (var y = 0; y < fieldHeight; y++)
                     {
                         var cell = _gameFieldEntity.Cells[x, y];
 
-                        if (Vector2.Distance(cell.Bounds.Center.ToVector2(), pointOfView) < viewRadius)
+                        if (visibleGrass.Contains(cell))
                         {
                             DrawGrassCell(spriteBatch, cell, Color.White);
                         }
@@ -163,31 +169,31 @@ namespace SnakeGame.Shared.GameLogic.GameField
         {
             if (_graphicsSettings.IsRenderingEnabled)
             {
-                for (var x = 0; x < _gameFieldEntity.Columns; x++)
-                {
-                    for (var y = 0; y < _gameFieldEntity.Rows; y++)
-                    {
-                        var cell = _gameFieldEntity.Cells[x, y];
+                var visibleTrees = _gameFieldEntity.GetVisibleCells(pointOfView, viewRadius)
+                    .Where(x => x.CellType == CellType.Tree);
 
-                        switch (cell.CellType)
-                        {
-                            case CellType.Tree:
+                var cells = _gameFieldEntity.GetCells();
+
+                foreach (var cell in cells)
+                {
+                    switch (cell.CellType)
+                    {
+                        case CellType.Tree:
+                            {
+                                if (visibleTrees.Contains(cell))
                                 {
-                                    if (Vector2.Distance(cell.Bounds.Center.ToVector2(), pointOfView) < viewRadius)
-                                    {
-                                        DrawTreeCell(spriteBatch, cell, Color.White);
-                                    }
-                                    else
-                                    {
-                                        DrawTreeCell(spriteBatch, cell, Color.DarkGreen);
-                                    }
-                                    break;
+                                    DrawTreeCell(spriteBatch, cell, Color.White);
                                 }
-                            default:
+                                else
                                 {
-                                    break;
+                                    DrawTreeCell(spriteBatch, cell, Color.DarkGreen);
                                 }
-                        }
+                                break;
+                            }
+                        default:
+                            {
+                                break;
+                            }
                     }
                 }
             }
@@ -225,6 +231,16 @@ namespace SnakeGame.Shared.GameLogic.GameField
             if (_graphicsSettings.IsRenderingEnabled)
             {
                 spriteBatch.DrawRectangle(_gameFieldEntity.Bounds, Color.Black, 3);
+            }
+        }
+
+        public void DrawLOSRays(SpriteBatch spriteBatch, Vector2 pov, float viewRadius)
+        {
+            var rays = _gameFieldEntity.GetRays(pov, viewRadius);
+
+            foreach (var ray in rays)
+            {
+                spriteBatch.DrawLine(ray.Position, ray.Direction, Color.Red);
             }
         }
     }

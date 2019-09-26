@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SnakeGame.Shared.GameLogic.Snake.Interfaces;
+using MonoGame.Extended;
 
 namespace SnakeGame.Shared.GameLogic.GameField.Interfaces
 {
@@ -19,10 +20,16 @@ namespace SnakeGame.Shared.GameLogic.GameField.Interfaces
 
         ICell[,] Cells { get; }
 
+        IEnumerable<ICell> GetCells();
+
         ICell GetRandomCell();
 
         ICell GetRandomCellWithoutSnake(ISnakeEntity snake);
 
         ICell GetCellByCoordinates(Vector2 position);
+
+        IEnumerable<ICell> GetVisibleCells(Vector2 pov, float radius);
+
+        IEnumerable<Ray2D> GetRays(Vector2 pov, float radius);
     }
 }
