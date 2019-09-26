@@ -95,11 +95,14 @@ namespace SnakeGame.Shared.GameLogic.Food
             _foods.Clear();
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Vector2 pointOfView, float viewRadius)
         {
             foreach (var foodGameComponent in _foods)
             {
-                foodGameComponent.Draw(spriteBatch);
+                if (Vector2.Distance(foodGameComponent.Bounds.Center.ToVector2(), pointOfView) < viewRadius)
+                {
+                    foodGameComponent.Draw(spriteBatch);
+                }
             }
         }
 

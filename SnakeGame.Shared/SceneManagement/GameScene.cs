@@ -158,7 +158,10 @@ namespace SnakeGame.Shared.SceneManagement
             }
             else
             {
-                DrawGrassAndFood();
+                var pointOfView = _snakeEntity.Head.Position;
+                var viewRadius = 200f;
+
+                DrawGrassAndFood(pointOfView, viewRadius);
 
                 DrawSnake(gameTime);
 
@@ -198,7 +201,7 @@ namespace SnakeGame.Shared.SceneManagement
         {
             _spriteBatch.Begin(transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
 
-            _gameFieldComponent.DrawTrees(_spriteBatch);
+            _gameFieldComponent.DrawTrees(_spriteBatch, _snakeEntity.Head.Position, 200f);
 
             _spriteBatch.End();
         }
@@ -212,20 +215,12 @@ namespace SnakeGame.Shared.SceneManagement
             _spriteBatch.End();
         }
 
-        private void DrawGrassAndFood()
+        private void DrawGrassAndFood(Vector2 pointOfView, float viewRadius)
         {
-            var basicEffect = new BasicEffect(Game.GraphicsDevice);
-            //basicEffect.View = GraphicsSystem.Camera2D.GetViewMatrix();
-            //basicEffect.World = Matrix.CreateWorld(Vector3.Zero, Vector3.Forward, Vector3.Up);
-            //basicEffect.FogEnabled = true;
-            //basicEffect.FogColor = Color.CornflowerBlue.ToVector3();
-            //basicEffect.FogStart = -1f;
-            //basicEffect.FogEnd = 1f;
+            _spriteBatch.Begin(transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
 
-            _spriteBatch.Begin(transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix(), effect: basicEffect);
-
-            _gameFieldComponent.DrawGrass(_spriteBatch, _snakeEntity.Head.Position, 200f);
-            _foodManager.Draw(_spriteBatch);
+            _gameFieldComponent.DrawGrass(_spriteBatch, pointOfView, viewRadius);
+            _foodManager.Draw(_spriteBatch, pointOfView, viewRadius);
 
             _spriteBatch.End();
         }

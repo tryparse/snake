@@ -22,7 +22,7 @@ namespace SnakeGame.Shared.GameLogic.Food.Interfaces
 
         void Reset();
 
-        void Draw(SpriteBatch spriteBatch);
+        void Draw(SpriteBatch spriteBatch, Vector2 pointOfView, float radius);
 
         void DebugDraw(SpriteBatch spriteBatch);
     }

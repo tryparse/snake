@@ -30,9 +30,9 @@ namespace SnakeGame.Shared.GameLogic.GameField
             _gameFieldGraphicsComponent.DrawGrassDebug(spriteBatch);
         }
 
-        public void DrawTrees(SpriteBatch spriteBatch)
+        public void DrawTrees(SpriteBatch spriteBatch, Vector2 pointOfView, float viewRadius)
         {
-            _gameFieldGraphicsComponent.DrawTrees(spriteBatch);
+            _gameFieldGraphicsComponent.DrawTrees(spriteBatch, pointOfView, viewRadius);
         }
 
         public void DrawTreesDebug(SpriteBatch spriteBatch)

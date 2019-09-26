@@ -73,7 +73,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
                         layerDepth: LayerDepths.Debug);
         }
 
-        private void DrawGrassCell(SpriteBatch spriteBatch, ICell cell)
+        private void DrawGrassCell(SpriteBatch spriteBatch, ICell cell, Color color)
         {
             var textureRegion = _graphicsSystem.TextureManager.TextureRegions["Grass"];
             var scale = new Vector2((float)cell.Width / (float)textureRegion.Width, (float)cell.Height / (float)textureRegion.Height);
@@ -82,7 +82,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
             {
                 Origin = Vector2.Zero,
                 Position = cell.Position,
-                Color = Color.White,
+                Color = color,
                 Depth = LayerDepths.Grass,
                 Scale = scale
             };
@@ -90,13 +90,13 @@ namespace SnakeGame.Shared.GameLogic.GameField
             spriteBatch.Draw(sprite);
         }
 
-        private void DrawTreeCell(SpriteBatch spriteBatch, ICell cell)
+        private void DrawTreeCell(SpriteBatch spriteBatch, ICell cell, Color color)
         {
             spriteBatch.Draw(
                 texture: _graphicsSystem.TextureManager.TextureRegions["Tree"].Texture,
                 destinationRectangle: cell.Bounds,
                 sourceRectangle: _graphicsSystem.TextureManager.TextureRegions["Tree"].Bounds,
-                color: Color.White,
+                color: color,
                 rotation: 0,
                 origin: Vector2.Zero,
                 effects: SpriteEffects.None,
@@ -116,9 +116,13 @@ namespace SnakeGame.Shared.GameLogic.GameField
                     {
                         var cell = _gameFieldEntity.Cells[x, y];
 
-                        if (Vector2.Distance(cell.Position, pointOfView) < viewRadius)
+                        if (Vector2.Distance(cell.Bounds.Center.ToVector2(), pointOfView) < viewRadius)
                         {
-                            DrawGrassCell(spriteBatch, cell);
+                            DrawGrassCell(spriteBatch, cell, Color.White);
+                        }
+                        else
+                        {
+                            DrawGrassCell(spriteBatch, cell, Color.DarkGreen);
                         }
                     }
                 }
@@ -155,7 +159,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
             }
         }
 
-        public void DrawTrees(SpriteBatch spriteBatch)
+        public void DrawTrees(SpriteBatch spriteBatch, Vector2 pointOfView, float viewRadius)
         {
             if (_graphicsSettings.IsRenderingEnabled)
             {
@@ -169,7 +173,14 @@ namespace SnakeGame.Shared.GameLogic.GameField
                         {
                             case CellType.Tree:
                                 {
-                                    DrawTreeCell(spriteBatch, cell);
+                                    if (Vector2.Distance(cell.Bounds.Center.ToVector2(), pointOfView) < viewRadius)
+                                    {
+                                        DrawTreeCell(spriteBatch, cell, Color.White);
+                                    }
+                                    else
+                                    {
+                                        DrawTreeCell(spriteBatch, cell, Color.DarkGreen);
+                                    }
                                     break;
                                 }
                             default:
