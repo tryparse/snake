@@ -46,12 +46,18 @@ namespace SnakeGame.Shared.SceneManagement
         private SpriteBatch _debugBatch;
         private SpriteBatch _uiBatch;
 
+        private MonoGame.Extended.Entities.World world;
+
         public GameScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, IGameLogger logger, IGameKeys gameKeys) : base(
             game, sceneManager, graphicsSystem, gameSettings, logger, gameKeys)
         {
             _spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             _debugBatch = new SpriteBatch(Game.GraphicsDevice);
             _uiBatch = new SpriteBatch(Game.GraphicsDevice);
+
+            var worldBuilder = new MonoGame.Extended.Entities.WorldBuilder();
+            world = worldBuilder
+                .Build();
         }
 
         public override void Load()
