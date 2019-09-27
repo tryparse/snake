@@ -45,7 +45,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
             }
         }
 
-        public void DebugDraw(SpriteBatch spriteBatch)
+        public void DebugDraw(SpriteBatch spriteBatch, Vector2 pov, float radius)
         {
             if (_graphicsSystem.GraphicsSettings.IsDebugRenderingEnabled)
             {
@@ -56,7 +56,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
                     DebugDrawSegment(spriteBatch, segment);
                 }
 
-                spriteBatch.DrawCircle(_snake.Head.Position, 200, 20, Color.Red);
+                spriteBatch.DrawCircle(pov, radius, 20, Color.Red);
             }
         }
 

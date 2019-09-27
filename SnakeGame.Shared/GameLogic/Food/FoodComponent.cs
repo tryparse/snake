@@ -34,7 +34,7 @@ namespace SnakeGame.Shared.GameLogic.Food
 
         public void DrawDebug(SpriteBatch spriteBatch)
         {
-            _graphicsComponent.DebugDraw(spriteBatch);
+            _graphicsComponent.DebugDraw(spriteBatch, Vector2.One, 0f);
         }
     }
 }

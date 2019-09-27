@@ -22,6 +22,6 @@ namespace SnakeGame.Shared.GameLogic.Snake.Interfaces
 
         void Draw(SpriteBatch spriteBatch, GameTime gameTime);
 
-        void DebugDraw(SpriteBatch spriteBatch);
+        void DebugDraw(SpriteBatch spriteBatch, Vector2 pov, float radius);
     }
 }

@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Sprites;
 using SnakeGame.Shared.Common;
-using SnakeGame.Shared.ECS;
 using SnakeGame.Shared.GameLogic;
 using SnakeGame.Shared.GameLogic.Food;
 using SnakeGame.Shared.GameLogic.Food.Interfaces;
@@ -46,8 +45,6 @@ namespace SnakeGame.Shared.SceneManagement
         private SpriteBatch _spriteBatch;
         private SpriteBatch _debugBatch;
         private SpriteBatch _uiBatch;
-
-        private MonoGame.Extended.Entities.World world;
 
         public GameScene(Game game, ISceneManager sceneManager, IGraphicsSystem graphicsSystem, IGameSettings gameSettings, IGameLogger logger, IGameKeys gameKeys) : base(
             game, sceneManager, graphicsSystem, gameSettings, logger, gameKeys)
@@ -119,11 +116,6 @@ namespace SnakeGame.Shared.SceneManagement
                     _debugInfoPanelComponent = new DebugInfoPanelComponent(GraphicsSystem, GameSettings, _gameManager);
                     
                     #endregion UI components
-
-                    world = new MonoGame.Extended.Entities.WorldBuilder()
-                        .AddSystem(new CollisionSystem())
-                        .AddSystem(new RenderSystem())
-                        .Build();
                 }),
 
                 Task.Delay(500)
@@ -167,13 +159,13 @@ namespace SnakeGame.Shared.SceneManagement
             else
             {
                 var pointOfView = _snakeEntity.Head.Position;
-                var viewRadius = 200f;
+                var viewRadius = 151;
 
                 DrawGrassAndFood(pointOfView, viewRadius);
 
                 DrawSnake(gameTime);
 
-                DrawTrees();
+                DrawTrees(pointOfView, viewRadius);
 
                 DrawUi(gameTime);
 
@@ -186,7 +178,8 @@ namespace SnakeGame.Shared.SceneManagement
                     _gameFieldComponent.DrawGrassDebug(_debugBatch);
                     _gameFieldComponent.DrawTreesDebug(_debugBatch);
                     _foodManager.DebugDraw(_debugBatch);
-                    _snakeGameComponent.DebugDraw(_debugBatch);
+                    _snakeGameComponent.DebugDraw(_debugBatch, pointOfView, viewRadius);
+                    _gameFieldComponent.DrawLOSRays(_debugBatch, pointOfView, viewRadius);
 
                     _debugBatch.End();
                 }
@@ -205,11 +198,11 @@ namespace SnakeGame.Shared.SceneManagement
             _uiBatch.End();
         }
 
-        private void DrawTrees()
+        private void DrawTrees(Vector2 pov, float radius)
         {
             _spriteBatch.Begin(transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
 
-            _gameFieldComponent.DrawTrees(_spriteBatch, _snakeEntity.Head.Position, 200f);
+            _gameFieldComponent.DrawTrees(_spriteBatch, pov, radius);
 
             _spriteBatch.End();
         }
@@ -238,7 +231,6 @@ namespace SnakeGame.Shared.SceneManagement
             _spriteBatch.Begin(transformMatrix: GraphicsSystem.Camera2D.GetViewMatrix());
 
             _gameFieldComponent.DrawBorders(_spriteBatch);
-            _gameFieldComponent.DrawLOSRays(_spriteBatch, pov, radius);
 
             _spriteBatch.End();
         }

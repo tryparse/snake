@@ -11,7 +11,7 @@ namespace SnakeGame.Shared.Graphics
     {
         private readonly ContentManager _contentManager;
 
-        public GraphicsSystem(IGraphicsSettings graphicsSettings, ContentManager contentManager, SpriteFont spriteFont, SpriteFont debugSpriteFont, ITextureManager textureManager, Camera2D camera2D)
+        public GraphicsSystem(IGraphicsSettings graphicsSettings, ContentManager contentManager, SpriteFont spriteFont, SpriteFont debugSpriteFont, ITextureManager textureManager, OrthographicCamera camera2D)
         {
             GraphicsSettings = graphicsSettings;
             _contentManager = contentManager ?? throw new ArgumentNullException(nameof(contentManager));
@@ -29,7 +29,7 @@ namespace SnakeGame.Shared.Graphics
 
         public SpriteFont SpriteFont { get; }
 
-        public Camera2D Camera2D { get; }
+        public OrthographicCamera Camera2D { get; }
 
         public Effect LoadEffect(string path)
         {

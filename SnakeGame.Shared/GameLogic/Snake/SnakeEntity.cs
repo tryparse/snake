@@ -39,7 +39,9 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
         public void Initialize()
         {
-            Head = GenerateRandomSegment();
+            //Head = GenerateRandomSegment();
+            Head = new SnakeSegment(new Vector2((float) _gameSettings.TileSize / 2),
+                new Size2(_gameSettings.TileSize, _gameSettings.TileSize), Direction.Right);
             _tail = new List<ISnakeSegment>();
 
             _unitVector = new Vector2(_gameSettings.TileSize, 0);
@@ -58,7 +60,7 @@ namespace SnakeGame.Shared.GameLogic.Snake
 
             if (Head == null)
             {
-                Head = GenerateRandomSegment();
+                Head = new SnakeSegment(new Vector2((float)_gameSettings.TileSize), new Size2(_gameSettings.TileSize, _gameSettings.TileSize), Direction.Left); //GenerateRandomSegment();
             }
             else
             {

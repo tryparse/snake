@@ -39,9 +39,9 @@ namespace SnakeGame.Shared.GameLogic.Snake
             _graphicsComponent.Draw(spriteBatch);
         }
 
-        public void DebugDraw(SpriteBatch spriteBatch)
+        public void DebugDraw(SpriteBatch spriteBatch, Vector2 pov, float radius)
         {
-            _graphicsComponent.DebugDraw(spriteBatch);
+            _graphicsComponent.DebugDraw(spriteBatch, pov, radius);
         }
 
         public void Reset()

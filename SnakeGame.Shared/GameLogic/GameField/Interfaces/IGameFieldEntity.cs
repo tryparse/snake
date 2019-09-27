@@ -30,6 +30,6 @@ namespace SnakeGame.Shared.GameLogic.GameField.Interfaces
 
         IEnumerable<ICell> GetVisibleCells(Vector2 pov, float radius);
 
-        IEnumerable<Ray2D> GetRays(Vector2 pov, float radius);
+        IEnumerable<Ray2> GetRays(Vector2 pov, float radius);
     }
 }

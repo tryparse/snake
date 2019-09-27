@@ -40,6 +40,9 @@
     <Reference Include="MonoGame.Extended.Entities, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoGame.Extended.Entities.3.7.0\lib\netstandard2.0\MonoGame.Extended.Entities.dll</HintPath>
     </Reference>
+    <Reference Include="MonoGame.Extended.Graphics, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoGame.Extended.Graphics.3.7.0\lib\netstandard2.0\MonoGame.Extended.Graphics.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Framework, Version=3.7.1.189, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -63,9 +66,6 @@
     <Compile Include="Common\ResourceManagers\ITextureManager.cs" />
     <Compile Include="Common\LayerDepth.cs" />
     <Compile Include="Common\ResourceManagers\TextureManager.cs" />
-    <Compile Include="ECS\CollisionSystem.cs" />
-    <Compile Include="ECS\EntityFactory.cs" />
-    <Compile Include="ECS\RenderSystem.cs" />
     <Compile Include="GameLogic\Food\FoodEntity.cs" />
     <Compile Include="GameLogic\Food\FoodManager.cs" />
     <Compile Include="GameLogic\Food\Interfaces\IFoodEntity.cs" />
@@ -115,6 +115,7 @@
     <Compile Include="SceneManagement\IScene.cs" />
     <Compile Include="SceneManagement\ISceneManager.cs" />
     <Compile Include="SceneManagement\LoadingScene.cs" />
+    <Compile Include="SceneManagement\NewGameScene.cs" />
     <Compile Include="SceneManagement\SceneManager.cs" />
     <Compile Include="Settings\Implementation\GameKeys.cs" />
     <Compile Include="Settings\Implementation\GameSettings.cs" />
@@ -128,6 +129,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ECS\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

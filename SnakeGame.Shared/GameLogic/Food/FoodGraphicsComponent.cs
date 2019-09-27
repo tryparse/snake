@@ -14,6 +14,7 @@ namespace SnakeGame.Shared.GameLogic.Food
         private readonly IFoodEntity _food;
         private readonly IGraphicsSystem _graphicsSystem;
         private readonly Sprite _sprite;
+        private readonly Transform2 _transform;
 
         public FoodGraphicsComponent(IFoodEntity food, IGraphicsSystem graphicsSystem)
         {
@@ -22,13 +23,15 @@ namespace SnakeGame.Shared.GameLogic.Food
 
             var textureRegion = _graphicsSystem.TextureManager.TextureRegions["Fruit"];
 
+            _transform = new Transform2(
+                position: _food.Position, 
+                rotation: _food.Rotation,
+                scale: new Vector2(_food.Size.Width / (float) textureRegion.Bounds.Width,
+                    _food.Size.Height / (float) textureRegion.Bounds.Height));
+
             _sprite = new Sprite(textureRegion)
             {
-                Position = _food.Position,
                 Color = Color.White,
-                Rotation = _food.Rotation,
-                Scale = new Vector2(_food.Size.Width / (float)textureRegion.Bounds.Width,
-                    _food.Size.Height / (float)textureRegion.Bounds.Height),
                 Origin = new Vector2(textureRegion.Width / 2f, textureRegion.Height / 2f),
                 Effect = SpriteEffects.None
             };
@@ -40,11 +43,11 @@ namespace SnakeGame.Shared.GameLogic.Food
 
             if (_graphicsSystem.GraphicsSettings.IsRenderingEnabled)
             {
-                _sprite.Draw(spriteBatch);
+                spriteBatch.Draw(_sprite, _transform);
             }
         }
 
-        public void DebugDraw(SpriteBatch spriteBatch)
+        public void DebugDraw(SpriteBatch spriteBatch, Vector2 pov, float radius)
         {
             UpdateSprite();
 
@@ -58,8 +61,8 @@ namespace SnakeGame.Shared.GameLogic.Food
 
         private void UpdateSprite()
         {
-            _sprite.Position = _food.Position;
-            _sprite.Rotation = _food.Rotation;
+            _transform.Position = _food.Position;
+            _transform.Rotation = _food.Rotation;
         }
     }
 }

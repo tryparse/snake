@@ -79,16 +79,18 @@ namespace SnakeGame.Shared.GameLogic.GameField
             var textureRegion = _graphicsSystem.TextureManager.TextureRegions["Grass"];
             var scale = new Vector2((float)cell.Width / (float)textureRegion.Width, (float)cell.Height / (float)textureRegion.Height);
 
+            var transform = new Transform2(
+                position: cell.Position,
+                scale: scale);
+
             var sprite = new Sprite(textureRegion)
             {
                 Origin = Vector2.Zero,
-                Position = cell.Position,
                 Color = color,
                 Depth = LayerDepths.Grass,
-                Scale = scale
             };
 
-            spriteBatch.Draw(sprite);
+            spriteBatch.Draw(sprite, transform);
         }
 
         private void DrawTreeCell(SpriteBatch spriteBatch, ICell cell, Color color)
@@ -240,7 +242,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
             foreach (var ray in rays)
             {
-                spriteBatch.DrawLine(ray.Position, ray.Direction, Color.Red);
+                spriteBatch.DrawLine(ray.Position, Vector2.Add(ray.Position, ray.Direction), Color.Red);
             }
         }
     }

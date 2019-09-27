@@ -6,8 +6,8 @@ using SnakeGame.Shared.Settings.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 using MonoGame.Extended;
+using SnakeGame.Shared.GameLogic.Snake.Interfaces;
 
 namespace SnakeGame.Shared.GameLogic.GameField
 {
@@ -104,19 +104,22 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
             visible = visible
                 .Where(x => Vector2.Distance(x.Bounds.Center.ToVector2(), pov) < radius);
-
+;
             var notVisible = new List<ICell>();
 
             foreach (var cell in visible)
             {
-                var ray = new Ray2D(pov, cell.Bounds.Center.ToVector2());
+                var ray = new Ray2(pov, cell.Bounds.Center.ToVector2());
 
                 foreach (var obstacle in obstacles)
                 {
-                    if (ray.Intersects(obstacle.BoundingRectangle, out var rayNearDistance, out var rayFarDistance))
+                    if (!cell.Equals(obstacle))
                     {
-                        notVisible.Add(cell);
-                        break;
+                        if (ray.Intersects(obstacle.BoundingRectangle, out var rayNearDistance, out var rayFarDistance))
+                        {
+                            notVisible.Add(cell);
+                            break;
+                        }
                     }
                 }
             }
@@ -127,9 +130,9 @@ namespace SnakeGame.Shared.GameLogic.GameField
             return visible;
         }
 
-        public IEnumerable<Ray2D> GetRays(Vector2 pov, float radius)
+        public IEnumerable<Ray2> GetRays(Vector2 pov, float radius)
         {
-            var rays = new List<Ray2D>();
+            var rays = new List<Ray2>();
 
             var visible = GetCells();
 
@@ -138,7 +141,12 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
             foreach (var cell in visible)
             {
-                rays.Add(new Ray2D(pov, cell.Bounds.Center.ToVector2()));
+                var direction = Vector2.Subtract(cell.Bounds.Center.ToVector2(), pov);
+                //direction.Normalize();
+
+                var ray = new Ray2(pov, direction);
+
+                rays.Add(ray);
             }
 
             return rays;

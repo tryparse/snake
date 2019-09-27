@@ -9,6 +9,6 @@ namespace SnakeGame.Shared.Graphics
     {
         void Draw(SpriteBatch spriteBatch);
 
-        void DebugDraw(SpriteBatch spriteBatch);
+        void DebugDraw(SpriteBatch spriteBatch, Vector2 pov, float radius);
     }
 }

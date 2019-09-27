@@ -38,9 +38,9 @@ namespace snake
         private ITextureManager _textureManager;
         private readonly IGameLogger _logger;
 
-        private Camera2D _camera;
-
         private ISceneManager _sceneManager;
+
+        private OrthographicCamera _camera;
 
         public SnakeGame()
         {
@@ -81,7 +81,7 @@ namespace snake
             _inputHandler = new InputHandler(this);
             Components.Add(_inputHandler);
 
-            _camera = new Camera2D(GraphicsDevice);
+            _camera = new OrthographicCamera(GraphicsDevice);
 
             base.Initialize();
         }
