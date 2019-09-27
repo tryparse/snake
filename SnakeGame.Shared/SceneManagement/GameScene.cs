@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Sprites;
 using SnakeGame.Shared.Common;
+using SnakeGame.Shared.ECS;
 using SnakeGame.Shared.GameLogic;
 using SnakeGame.Shared.GameLogic.Food;
 using SnakeGame.Shared.GameLogic.Food.Interfaces;
@@ -54,10 +55,6 @@ namespace SnakeGame.Shared.SceneManagement
             _spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             _debugBatch = new SpriteBatch(Game.GraphicsDevice);
             _uiBatch = new SpriteBatch(Game.GraphicsDevice);
-
-            var worldBuilder = new MonoGame.Extended.Entities.WorldBuilder();
-            world = worldBuilder
-                .Build();
         }
 
         public override void Load()
@@ -122,6 +119,11 @@ namespace SnakeGame.Shared.SceneManagement
                     _debugInfoPanelComponent = new DebugInfoPanelComponent(GraphicsSystem, GameSettings, _gameManager);
                     
                     #endregion UI components
+
+                    world = new MonoGame.Extended.Entities.WorldBuilder()
+                        .AddSystem(new CollisionSystem())
+                        .AddSystem(new RenderSystem())
+                        .Build();
                 }),
 
                 Task.Delay(500)
