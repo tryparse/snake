@@ -70,7 +70,7 @@ namespace SnakeGame.Shared.SceneManagement
                     _randomGenerator = new RandomGenerator(2);
 
                     _gameFieldFactory = new GameFieldFactory(GameSettings, _randomGenerator);
-                    _gameField = _gameFieldFactory.GetRandomField(GameSettings.MapWidth, GameSettings.MapHeight, .8d);
+                    _gameField = _gameFieldFactory.GetRandomField(GameSettings.MapWidth, GameSettings.MapHeight, 1d);
                     _gameFieldComponent = new GameFieldComponent(_gameField,
                         new GameFieldGraphicsComponent(_gameField, GraphicsSystem.GraphicsSettings, GraphicsSystem,
                             GameSettings));

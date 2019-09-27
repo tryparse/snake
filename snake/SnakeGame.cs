@@ -76,7 +76,7 @@ namespace snake
                 IsRenderingEnabled = _gameSettings.IsRenderingEnabled
             };
 
-            _gameKeys = new GameKeys(Keys.Pause, Keys.D, Keys.R, Keys.Escape, Keys.OemTilde);
+            _gameKeys = new GameKeys(Keys.Space, Keys.D, Keys.R, Keys.Escape, Keys.OemTilde);
             
             _inputHandler = new InputHandler(this);
             Components.Add(_inputHandler);

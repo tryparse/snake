@@ -36,7 +36,7 @@ namespace SnakeGame.Shared.GameLogic.GameField.Cells
         private void RecalculateBounds()
         {
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
-            BoundingRectangle = new BoundingRectangle(new Point2(Position.X, Position.Y), new Size2(Width, Height));
+            BoundingRectangle = new BoundingRectangle(Bounds.Center, new Size2((float)Width / 2f, (float)Height / 2f));
         }
     }
 }

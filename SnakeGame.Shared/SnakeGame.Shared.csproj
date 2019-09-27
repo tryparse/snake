@@ -37,6 +37,9 @@
     <Reference Include="MonoGame.Extended.Animations, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoGame.Extended.Animations.3.7.0\lib\netstandard2.0\MonoGame.Extended.Animations.dll</HintPath>
     </Reference>
+    <Reference Include="MonoGame.Extended.Collisions, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoGame.Extended.Collisions.3.7.0\lib\netstandard2.0\MonoGame.Extended.Collisions.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Extended.Entities, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoGame.Extended.Entities.3.7.0\lib\netstandard2.0\MonoGame.Extended.Entities.dll</HintPath>
     </Reference>

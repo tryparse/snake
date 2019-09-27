@@ -104,12 +104,13 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
             visible = visible
                 .Where(x => Vector2.Distance(x.Bounds.Center.ToVector2(), pov) < radius);
-;
+
             var notVisible = new List<ICell>();
 
             foreach (var cell in visible)
             {
-                var ray = new Ray2(pov, cell.Bounds.Center.ToVector2());
+                var direction = Vector2.Subtract(cell.Bounds.Center.ToVector2(), pov);
+                var ray = new Ray2(pov, direction);
 
                 foreach (var obstacle in obstacles)
                 {
