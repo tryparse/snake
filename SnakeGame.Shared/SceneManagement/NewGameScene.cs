@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Entities;
 using MonoGame.Extended.Entities.Systems;
@@ -27,9 +28,12 @@ namespace SnakeGame.Shared.SceneManagement
         public override void Load()
         {
             _world = new WorldBuilder()
-                .AddSystem(new CollisionSystem())
-                .AddSystem(new RenderingSystem(GraphicsSystem))
+                .AddSystem(new TileMapRenderingSystem(GraphicsSystem))
                 .Build();
+
+            var entityFactory = new EntityFactory(_world);
+
+            entityFactory.CreateMap(new Size(5, 5), new Size2(100, 100));
         }
 
         public override void Update(GameTime gameTime)
@@ -48,37 +52,6 @@ namespace SnakeGame.Shared.SceneManagement
         }
     }
 
-    class CollisionSystem : UpdateSystem
-    {
-        public override void Update(GameTime gameTime)
-        {
-            
-        }
-    }
-
-    class RenderingSystem : EntityDrawSystem
-    {
-        private IGraphicsSystem _graphicsSystem;
-        private ComponentMapper<Transform2> _transformMapper;
-        private ComponentMapper<Sprite> _spriteMapper;
-
-        public RenderingSystem(IGraphicsSystem graphicsSystem) : base(new AspectBuilder().All(typeof(Sprite), typeof(Transform2)))
-        {
-            _graphicsSystem = graphicsSystem ?? throw new ArgumentNullException(nameof(graphicsSystem));
-        }
-
-        public override void Initialize(IComponentMapperService mapperService)
-        {
-            _transformMapper = mapperService.GetMapper<Transform2>();
-            _spriteMapper = mapperService.GetMapper<Sprite>();
-        }
-
-        public override void Draw(GameTime gameTime)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     class EntityFactory
     {
         private readonly World _world;
@@ -88,38 +61,115 @@ namespace SnakeGame.Shared.SceneManagement
             _world = world;
         }
 
-        public Entity CreateSnake(Vector2 position)
+        public Entity CreateMap(Size mapSize, Size2 tileSize)
         {
             var entity = _world.CreateEntity();
-            entity.Attach(new Transform2());
 
-            return entity;
-        }
+            var tileMap = new TileMapComponent(mapSize);
 
-        public Entity CreateFood(Vector2 position)
-        {
-            var entity = _world.CreateEntity();
-            entity.Attach(new Transform2(position));
+            for (var x = 0; x < mapSize.Width; x++)
+            {
+                for (var y = 0; y < mapSize.Height; y++)
+                {
+                    tileMap.Grid[x, y] = new TileCell(new Transform2(x * tileSize.Width, y * tileSize.Height), new Size2(tileSize.Width, tileSize.Height));
+                }
+            }
+
+            entity.Attach<TileMapComponent>(tileMap);
 
             return entity;
         }
     }
 
-    class NGSnakeEntity
+    class TileMapComponent
     {
-        private Transform2 _transform;
+        private TileCell[,] _grid;
+        private Size _size;
 
-        public NGSnakeEntity(Vector2 position)
+        public TileMapComponent(Size size)
         {
+            _size = size;
+            _grid = new TileCell[size.Width, size.Height];
+        }
 
+        public TileCell[,] Grid => _grid;
+
+        public IEnumerable<TileCell> GetCells()
+        {
+            var cells = new List<TileCell>();
+
+            foreach (var cell in _grid)
+            {
+                cells.Add(cell);
+            }
+
+            return cells;
         }
     }
 
-    class SnakeMovingSystem : UpdateSystem
+    class TileCell
     {
-        public override void Update(GameTime gameTime)
+        public Size2 Size;
+        public Transform2 Transform;
+        private TileCellLayer[] _layers;
+
+        public TileCell(Transform2 transform, Size2 size)
         {
-            throw new NotImplementedException();
+            Transform = transform;
+            Size = size;
+
+            Rectangle = new RectangleF(transform.Position.X, transform.Position.Y, size.Width, size.Height);
+        }
+
+        public RectangleF Rectangle { get; }
+
+        public TileCellLayer[] Layers => _layers;
+    }
+
+    class TileCellLayer
+    {
+        private Tile _tile;
+    }
+
+    class Tile
+    {
+        public Sprite Sprite;
+    }
+
+    class TileMapRenderingSystem : EntityDrawSystem
+    {
+        private ComponentMapper<TileMapComponent> _tileMapMapper;
+        private readonly MonoGame.Extended.Graphics.Batcher2D _batcher2D;
+        private readonly SpriteBatch _spriteBatch;
+
+        public TileMapRenderingSystem(IGraphicsSystem graphicsSystem) : base(new AspectBuilder().One(typeof(TileMapComponent)))
+        {
+            _batcher2D = new MonoGame.Extended.Graphics.Batcher2D(graphicsSystem.GraphicsDevice);
+            _spriteBatch = new SpriteBatch(graphicsSystem.GraphicsDevice);
+        }
+
+        public override void Initialize(IComponentMapperService mapperService)
+        {
+            _tileMapMapper = mapperService.GetMapper<TileMapComponent>();
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            foreach (var entityId in ActiveEntities)
+            {
+                var tileMap = _tileMapMapper.Get(entityId);
+
+                _spriteBatch.Begin();
+
+                var cells = tileMap.GetCells();
+
+                foreach (var cell in cells)
+                {
+                    _spriteBatch.DrawRectangle(cell.Rectangle, Color.Black);
+                }
+
+                _spriteBatch.End();
+            }
         }
     }
 }

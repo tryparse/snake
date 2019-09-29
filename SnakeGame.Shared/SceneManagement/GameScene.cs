@@ -70,7 +70,7 @@ namespace SnakeGame.Shared.SceneManagement
                     _randomGenerator = new RandomGenerator(2);
 
                     _gameFieldFactory = new GameFieldFactory(GameSettings, _randomGenerator);
-                    _gameField = _gameFieldFactory.GetRandomField(GameSettings.MapWidth, GameSettings.MapHeight, 1d);
+                    _gameField = _gameFieldFactory.GetRandomField(GameSettings.MapWidth, GameSettings.MapHeight, 0.9d);
                     _gameFieldComponent = new GameFieldComponent(_gameField,
                         new GameFieldGraphicsComponent(_gameField, GraphicsSystem.GraphicsSettings, GraphicsSystem,
                             GameSettings));
@@ -159,7 +159,7 @@ namespace SnakeGame.Shared.SceneManagement
             else
             {
                 var pointOfView = _snakeEntity.Head.Position;
-                var viewRadius = 151;
+                var viewRadius = GameSettings.TileSize * 4.5f;
 
                 DrawGrassAndFood(pointOfView, viewRadius);
 

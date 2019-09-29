@@ -18,5 +18,7 @@ namespace SnakeGame.Shared.Graphics
         Effect LoadEffect(string path);
 
         OrthographicCamera Camera2D { get; }
+
+        GraphicsDevice GraphicsDevice { get; }
     }
 }

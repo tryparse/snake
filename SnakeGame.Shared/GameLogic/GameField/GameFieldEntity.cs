@@ -81,7 +81,7 @@ namespace SnakeGame.Shared.GameLogic.GameField
             return Cells[x, y];
         }
 
-        private ICollection<ICell> GetCellsOfType(CellType type)
+        private IEnumerable<ICell> GetCellsOfType(CellType type)
         {
             var result = new List<ICell>();
 
@@ -107,26 +107,34 @@ namespace SnakeGame.Shared.GameLogic.GameField
 
             var notVisible = new List<ICell>();
 
-            foreach (var cell in visible)
+            foreach (var obstacle in obstacles)
             {
-                var direction = Vector2.Subtract(cell.Bounds.Center.ToVector2(), pov);
-                var ray = new Ray2(pov, direction);
+                var ray = new Ray2(
+                    pov,
+                    Vector2.Subtract(obstacle.BoundingRectangle.Center, pov));
 
-                foreach (var obstacle in obstacles)
+                foreach (var cell in visible)
                 {
-                    if (!cell.Equals(obstacle))
+                    if (cell.Equals(obstacle))
                     {
-                        if (ray.Intersects(obstacle.BoundingRectangle, out var rayNearDistance, out var rayFarDistance))
+                        continue;
+                    }
+
+                    if  (ray.Intersects(cell.BoundingRectangle, out var rayNearDistance, out var rayFarDistance))
+                    {
+                        var distanceToCell = Vector2.Distance(pov, cell.BoundingRectangle.Center);
+                        var distanceToObstacle = Vector2.Distance(pov, obstacle.BoundingRectangle.Center);
+
+                        if (rayNearDistance >= 0 && rayFarDistance >= 0
+                            && distanceToCell > distanceToObstacle)
                         {
                             notVisible.Add(cell);
-                            break;
                         }
                     }
                 }
-            }
 
-            visible = visible
-                .Except(notVisible);
+                visible = visible.Except(notVisible);
+            }
 
             return visible;
         }
@@ -135,17 +143,14 @@ namespace SnakeGame.Shared.GameLogic.GameField
         {
             var rays = new List<Ray2>();
 
-            var visible = GetCells();
+            var obstacles = GetCellsOfType(CellType.Tree);
 
-            visible = visible
+            obstacles = obstacles
                 .Where(x => Vector2.Distance(x.Bounds.Center.ToVector2(), pov) < radius);
 
-            foreach (var cell in visible)
+            foreach (var cell in obstacles)
             {
-                var direction = Vector2.Subtract(cell.Bounds.Center.ToVector2(), pov);
-                //direction.Normalize();
-
-                var ray = new Ray2(pov, direction);
+                var ray = new Ray2(pov, Vector2.Subtract(cell.Bounds.Center.ToVector2(), pov));
 
                 rays.Add(ray);
             }

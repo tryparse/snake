@@ -100,10 +100,16 @@ namespace SnakeGame.Shared.SceneManagement
                 Game.Exit();
             }
 
-            if (IsLoaded
-                && InputHandler.IsKeyPressed(Keys.Enter))
+            if (IsLoaded)
+
+            if (InputHandler.IsKeyPressed(Keys.Enter))
             {
                 SceneManager.Load(new GameScene(Game, SceneManager, GraphicsSystem, GameSettings, Logger, GameKeys));
+            }
+
+            if (InputHandler.IsKeyPressed(Keys.D2))
+            {
+                SceneManager.Load(new NewGameScene(Game, SceneManager, GraphicsSystem, GameSettings, Logger, GameKeys));
             }
         }
     }
