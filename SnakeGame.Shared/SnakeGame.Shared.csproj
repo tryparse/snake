@@ -69,6 +69,9 @@
     <Compile Include="Common\ResourceManagers\ITextureManager.cs" />
     <Compile Include="Common\LayerDepth.cs" />
     <Compile Include="Common\ResourceManagers\TextureManager.cs" />
+    <Compile Include="ECS\Tile.cs" />
+    <Compile Include="ECS\TileCell.cs" />
+    <Compile Include="ECS\TileCellLayer.cs" />
     <Compile Include="GameLogic\Food\FoodEntity.cs" />
     <Compile Include="GameLogic\Food\FoodManager.cs" />
     <Compile Include="GameLogic\Food\Interfaces\IFoodEntity.cs" />
@@ -113,6 +116,7 @@
     <Compile Include="Graphics\IGraphicsSettings.cs" />
     <Compile Include="Graphics\GraphicsSystem.cs" />
     <Compile Include="SceneManagement\BaseScene.cs" />
+    <Compile Include="ECS\EntityFactory.cs" />
     <Compile Include="SceneManagement\GameOverScene.cs" />
     <Compile Include="SceneManagement\GameScene.cs" />
     <Compile Include="SceneManagement\IScene.cs" />
@@ -120,6 +124,8 @@
     <Compile Include="SceneManagement\LoadingScene.cs" />
     <Compile Include="SceneManagement\NewGameScene.cs" />
     <Compile Include="SceneManagement\SceneManager.cs" />
+    <Compile Include="ECS\TileMapRenderingSystem.cs" />
+    <Compile Include="ECS\TileMapComponent.cs" />
     <Compile Include="Settings\Implementation\GameKeys.cs" />
     <Compile Include="Settings\Implementation\GameSettings.cs" />
     <Compile Include="Settings\Interfaces\IGameKeys.cs" />
@@ -133,8 +139,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ECS\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
